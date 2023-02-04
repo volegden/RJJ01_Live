@@ -1,0 +1,4512 @@
+settings
+{
+	main
+	{
+		Description: "<FGE983D8BFF>♥A Friendly Server♥<FGFFFFFFFF>\n last updated (24 Jan 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added delay to FOV changes \n* Implemented map teleport \n* Added new party painting mode \n* Bugfixes \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa and xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
+		Mode Name: "<FGFF8AC4FF> Friendly ♥ No Kill <FGFFFFFFFF>"
+	}
+
+	lobby
+	{
+		Allow Players Who Are In Queue: Yes
+		Map Rotation: After A Game
+		Match Voice Chat: Enabled
+		Max Team 1 Players: 6
+		Max Team 2 Players: 6
+		Return To Lobby: Never
+		Swap Teams After Match: No
+	}
+
+	modes
+	{
+		Skirmish
+		{
+			disabled maps
+			{
+				Blizzard World 0
+				Eichenwalde 0
+				Hanamura 0
+				Hollywood 0
+				Horizon Lunar Colony 0
+				King's Row 0
+				Numbani 0
+				Paris 0
+				Temple of Anubis 0
+				Volskaya Industries 0
+				Watchpoint: Gibraltar 0
+				Workshop Chamber 0
+				Workshop Expanse 0
+				Workshop Expanse Night 0
+				Workshop Green Screen 0
+				Workshop Island 0
+			}
+		}
+
+		General
+		{
+			Game Mode Start: Immediately
+			Health Pack Respawn Time Scalar: 10%
+			Hero Limit: Off
+			Kill Cam: Off
+			Limit Valid Control Points: Second
+			Spawn Health Packs: Enabled
+		}
+	}
+
+	heroes
+	{
+		General
+		{
+			Ability Cooldown Time: 100%
+			No Ammunition Requirement: Off
+			Ultimate Duration: 200%
+			Ultimate Generation: 300%
+			Ultimate Generation - Combat: 300%
+			Ultimate Generation - Passive: 300%
+
+			Ana
+			{
+				Sleep Dart Cooldown Time: 200%
+			}
+
+			Baptiste
+			{
+				Regenerative Burst Cooldown Time: 0%
+			}
+
+			Cassidy
+			{
+				Combat Roll Cooldown Time: 0%
+				Magnetic Grenade Cooldown Time: 200%
+			}
+
+			D.Va
+			{
+				Boosters Cooldown Time: 0%
+				Defense Matrix Maximum Time: 500%
+				Defense Matrix Recharge Rate: 500%
+				Spawn Without Mech: On
+			}
+
+			Echo
+			{
+				Flight Cooldown Time: 0%
+			}
+
+			Genji
+			{
+				Deflect Cooldown Time: 20%
+				Swift Strike Cooldown Time: 20%
+			}
+
+			Hanzo
+			{
+				Lunge Cooldown Time: 0%
+				Lunge Distance Scalar: 150%
+			}
+
+			Junker Queen
+			{
+				Commanding Shout Cooldown Time: 10%
+				Jagged Blade Delay Before Automatic Recall: 100%
+			}
+
+			Kiriko
+			{
+				Protection Suzu Cooldown Time: 100%
+				Swift Step Distance Scalar: 100%
+			}
+
+			Lúcio
+			{
+				Amp It Up Cooldown Time: 20%
+			}
+
+			Mei
+			{
+				Cryo-Freeze Cooldown Time: 500%
+				Ice Wall Cooldown Time: 500%
+			}
+
+			Mercy
+			{
+				Guardian Angel Cooldown Time: 10%
+			}
+
+			Pharah
+			{
+				Jump Jet Cooldown Time: 0%
+			}
+
+			Reaper
+			{
+				Shadow Step Cooldown Time: 10%
+				Wraith Form Cooldown Time: 10%
+			}
+
+			Sojourn
+			{
+				Power Slide Cooldown Time: 10%
+			}
+
+			Soldier: 76
+			{
+				Biotic Field Cooldown Time: 10%
+			}
+
+			Sombra
+			{
+				Translocator Cooldown Time: 0%
+			}
+
+			Symmetra
+			{
+				Teleporter Cooldown Time: 20%
+			}
+
+			Tracer
+			{
+				Blink Cooldown Time: 0%
+				Recall Cooldown Time: 50%
+			}
+
+			Widowmaker
+			{
+				Grappling Hook Cooldown Time: 0%
+			}
+		}
+	}
+}
+
+variables
+{
+	global:
+		0: High_Rank
+		1: Perma_Banned
+		2: Red
+		3: Green
+		4: Blue
+		5: Rainbow_Color
+		6: Mod_Rank
+		7: Temp_Banned
+		8: AI_Target_Hud_ID
+		9: Savezone_Radius
+		10: Savezone_ID
+		11: Savezone_Active
+		12: Savezone_Position
+		13: Gravity
+		14: Slowmotion
+		15: AI_Client
+		16: AI_Target
+		17: Bodyguards
+		18: AI_Status
+		19: AI_Range_1_Color
+		20: AI_Range_2_Color
+		21: Hero
+		22: Anti_Crash
+		23: Lijiang_Teleports
+		24: Havana_Teleports
+		25: Rialto_Teleports
+		26: Drawing_Obj_Storage
+		27: Blue_Color_Sequence
+		28: Blue_Color
+		29: Players_Global_Array
+		30: Each_Player_Array
+		31: Titles_And_Outlines
+		32: Jail_List
+		33: Jail_Helper
+		34: Drawing_Obj_Size
+		35: Drawing_Obj_Colors
+		36: Drawing_Obj_Effects
+		37: Modification_Mode_String
+
+	player:
+		0: High_Rank
+		1: Mod_Rank
+		2: Player_Modification
+		3: Verification_Key
+		4: Mod_Name_ID
+		5: Protection_ID
+		6: Allow_Teleport
+		7: Scale_Prev
+		8: Scale_Real
+		9: Is_Crouch_On
+		10: Gravity
+		11: Target_Effect
+		12: Mode_Cycle
+		13: Mode_Headline
+		14: Mode_Hud_ID
+		15: DMG_Time
+		16: Target_Tag_ID
+		17: Target_Arrow_ID
+		18: Protection
+		19: Target_Lock
+		20: Camera
+		21: Scale_Hud_ID
+		22: Progress_Lock
+		23: Remote_Scale
+		24: Grap_Line
+		25: Mode_Description
+		26: Last_Position_Facing
+		27: Restricted
+		28: Savezone_Access
+		29: Damage_Reflect
+		30: Voice_Pitch
+		31: Heaven_Strike_Radius
+		32: Heaven_Strike_ID
+		33: Icon_ID
+		34: Ghost_Mode
+		35: Slow_Projectile
+		36: In_Action
+		37: Progress_Stop
+		38: Teleported
+		39: Drawing_Obj_Colors_Selector
+		40: Drawing_Obj_Size_Selector
+		41: Drawing_Obj_Effects_Selector
+		42: Drawing_Obj_Preview
+		43: Player_Title_And_Outline
+		44: Player_Nameplates
+		45: Is_Title_Given
+		46: Usage_Info
+		47: Index_Help
+		48: Modification_Mode_Selector
+		49: Modification_Scalar_Selector
+		50: Invisibility
+}
+
+subroutines
+{
+	0: Protection
+	1: Scale_Progress
+	2: Hud_Elements
+	3: Target_Check
+	4: Custom_Nameplate
+	5: Scale_Progress_Slow
+	6: Drawing_Objects_Preview
+	7: Give_Custom_Nameplate
+	8: Give_Custom_Outline
+	9: Jail_Leaver
+}
+
+rule("Anti-Crash-ON")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.Slowmotion == False;
+		Global.Anti_Crash == False;
+		Server Load > 200;
+	}
+
+	actions
+	{
+		Wait(1, Abort When False);
+		Small Message(All Players(All Teams), Custom String("Anti Crash System Activated"));
+		Set Slow Motion(10);
+		Global.Anti_Crash = True;
+	}
+}
+
+rule("Anti-Crash-OFF")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.Slowmotion == False;
+		Global.Anti_Crash == True;
+		Server Load < 100;
+	}
+
+	actions
+	{
+		Set Slow Motion(100);
+		Global.Anti_Crash = False;
+	}
+}
+
+rule("Game_Description")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Set Objective Description(All Players(All Teams), Custom String("{0} » Be Friendly & Chill | No killing allowed « {0}",
+			Icon String(Heart)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String(
+			"{0} » Originally Created by TbyCoLive. Edited by Warloy & Leafa « {0}", Icon String(Spade)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (1 sec) | Enable Protection « {1}",
+			Input Binding String(Button(Reload)), Icon String(No)), Visible To and String);
+		Wait(10, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (1 sec) | Switch Camera « {1}",
+			Input Binding String(Button(Interact)), Icon String(Eye)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (1 sec) | Change Hero « {1}",
+			Input Binding String(Button(Melee)), Icon String(Recycle)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{1} » See A Rose Ring On The Floor? Walk into it to TP « {1}",
+			Input Binding String(Button(Interact)), Icon String(Eye)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{0} » Harassment of any kind is not permitted! « {0}",
+			Icon String(Spade)), Visible To and String);
+		Wait(12, Ignore Condition);
+		Set Objective Description(All Players(All Teams), Custom String("{0} » Have a great day! « {0}", Icon String(Heart)),
+			Visible To and String);
+		Wait(12, Ignore Condition);
+		Loop;
+	}
+}
+
+rule("Global_Settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		"Dev Tools"
+		Disable Inspector Recording;
+		disabled Create HUD Text(All Players(All Teams), Custom String("Server Load: {0}", Server Load), Null, Null, Top, 0, Color(White), Color(
+			White), Color(White), Visible To and String, Visible Never);
+		"Global Default"
+		Disable Built-In Game Mode Announcer;
+		Disable Built-In Game Mode Completion;
+		Disable Built-In Game Mode Scoring;
+		Disable Built-In Game Mode Music;
+		Modify Global Variable(Mod_Rank, Remove From Array By Value, 0);
+		Modify Global Variable(Temp_Banned, Remove From Array By Value, 0);
+		"Default Color"
+		Global.Red = 0;
+		Global.Green = 255;
+		Global.Blue = 0;
+		"Savezone"
+		Global.Savezone_Radius = Null;
+		Global.Savezone_ID = Null;
+		Global.Savezone_Active = False;
+		Global.Savezone_Position = Null;
+		"Another Defaults"
+		Global.Gravity = 100;
+		Global.Slowmotion = False;
+		Global.AI_Target_Hud_ID = Null;
+		Global.AI_Client = Null;
+		Global.AI_Target = Null;
+		Global.Bodyguards = False;
+		Global.AI_Status = Custom String("Is Out Of Range");
+		Global.AI_Range_1_Color = Color(White);
+		Global.AI_Range_2_Color = Color(Sky Blue);
+		Global.Hero = Workshop Setting Hero(Custom String("Bodyguards"), Custom String("Set Hero"), Widowmaker, 3);
+		Global.Drawing_Obj_Storage = Empty Array;
+		Global.Jail_List = Array(Empty Array, Empty Array, Empty Array);
+		Global.Jail_Helper = Null;
+	}
+}
+
+rule("Skip_Workshop_Maps")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		(Current Map == Map (Workshop Chamber) || Current Map == Map(Workshop Expanse) || Current Map == Map(Workshop Expanse Night) 
+			|| Current Map == Map(Workshop Green Screen) || Current Map == Map(Workshop Island) || Current Map == Map(Workshop Island Night)) == True;
+	}
+
+	actions
+	{
+		Set Match Time(10);
+		Wait(8, Ignore Condition);
+		Big Message(All Players(All Teams), Custom String("*Sigh...* skipping Map {0}...", Current Map));
+	}
+}
+
+rule("Global_Text")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0}", Hero Icon String(Hero Of(Host Player))), Custom String("Guardian"),
+			Host Player, Right, -1, Global.Rainbow_Color, Global.Rainbow_Color, Global.Rainbow_Color, Visible To String and Color,
+			Default Visibility);
+		Create HUD Text(All Players(All Teams), Null, Custom String("┌───★ Angels ★───┐"), Null, Right, 1, Null, Global.Rainbow_Color,
+			Null, Visible To String and Color, Default Visibility);
+	}
+}
+
+rule("Default_Player_Settings")
+{
+	event
+	{
+		Player Joined Match;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Array Contains(Global.Perma_Banned, Custom String("{0}", Event Player)) || Array Contains(Global.Temp_Banned, Custom String("{0}",
+			Event Player))) == False;
+	}
+
+	actions
+	{
+		Abort If(Is Dummy Bot(Event Player) == True);
+		Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == True), Event Player,
+			Event Player, 1, Do Not Clip, Visible To Position and String, Color(White), Default Visibility);
+		Event Player.Target_Tag_ID = Last Text ID;
+		"Default Variable"
+		Event Player.High_Rank = False;
+		Event Player.Mod_Rank = False;
+		Event Player.Player_Modification = Array(100, 100, 100, 100);
+		Event Player.Verification_Key = False;
+		Event Player.Mod_Name_ID = Null;
+		Event Player.Protection_ID = Null;
+		Event Player.Allow_Teleport = False;
+		Event Player.Scale_Prev = 1;
+		Event Player.Scale_Real = 1;
+		Event Player.Is_Crouch_On = False;
+		Event Player.Gravity = 100;
+		Event Player.Target_Effect = Null;
+		Event Player.Mode_Cycle = 0;
+		Event Player.Mode_Headline = Custom String("Kill & Resurrection");
+		Event Player.Mode_Hud_ID = Null;
+		Event Player.DMG_Time = Null;
+		Event Player.Target_Arrow_ID = Null;
+		Event Player.Protection = Workshop Setting Toggle(Custom String("Safemode"), Custom String("Automatic Enabled"), False, 1);
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+		Event Player.Camera = Workshop Setting Integer(Custom String("Camera"), Custom String(
+			"Third Person [0][1] - Front Cam [2][3] - First Person [4]"), 5, 0, 5, 2);
+		Event Player.Scale_Hud_ID = Null;
+		Event Player.Progress_Lock = False;
+		Event Player.Remote_Scale = False;
+		Event Player.Grap_Line = Array(Null, Null, False);
+		Event Player.Mode_Description = Null;
+		Event Player.Last_Position_Facing = Array(Null, Null);
+		Event Player.Savezone_Access = False;
+		Event Player.Damage_Reflect = False;
+		Event Player.Voice_Pitch = 1;
+		Event Player.Heaven_Strike_Radius = Null;
+		Event Player.Heaven_Strike_ID = Array(Null, Null);
+		Event Player.Icon_ID = Null;
+		Event Player.Ghost_Mode = False;
+		Event Player.Slow_Projectile = False;
+		Event Player.In_Action = False;
+		Event Player.Progress_Stop = False;
+		Event Player.Invisibility = False;
+
+		Event Player.Modification_Mode_Selector = 0;
+		Event Player.Modification_Scalar_Selector = 1;
+		
+		Event Player.Drawing_Obj_Preview = Null;
+		Event Player.Drawing_Obj_Effects_Selector = 0;
+		Event Player.Drawing_Obj_Size_Selector = 0;
+		
+		Wait(0.1, Ignore Condition);
+		If(Array Contains(Global.Jail_List[0],Custom String("{0}",Event Player)) == True);	
+			Event Player.Restricted = True;
+			Disable Text Chat(Event Player);
+			Disable Voice Chat(Event Player, True, True, True);
+		Else;
+			Event Player.Restricted = False;
+		End;
+		
+		"Sequence Completed"
+		Wait Until(Has Spawned(Event Player) == True, 300);
+		
+		Call Subroutine(Custom_Nameplate);
+
+		If(Event Player.Restricted == True);
+			Big Message(All Players(All Teams), Custom String("{0} tried to escape the jail LMAO", Event Player));
+			Call Subroutine(Jail_Leaver);
+		Else;
+			Small Message(All Players(All Teams), Custom String("Welcome {1} {0}", Event Player, Hero Icon String(Hero Of(Event Player))));
+		End;
+	}
+}
+
+rule("Default_Bot_Settings")
+{
+	event
+	{
+		Player Joined Match;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Abort If(Is Dummy Bot(Event Player) == False);
+		Start Forcing Dummy Bot Name(Event Player, Custom String("Guardian by: {0}", Global.AI_Client));
+		Set Status(Event Player, Null, Phased Out, 9999);
+		Event Player.Protection = True;
+	}
+}
+
+rule("Dynamic_Color")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		"Green => Red"
+		While(Global.Red < 255);
+			Global.Red += 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		While(Global.Green > 0);
+			Global.Green -= 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		"Red => Blue"
+		While(Global.Blue < 255);
+			Global.Blue += 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		While(Global.Red > 0);
+			Global.Red -= 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		"Blue => Green"
+		While(Global.Green < 255);
+			Global.Green += 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		While(Global.Blue > 0);
+			Global.Blue -= 5;
+			Global.Rainbow_Color = Custom Color(Global.Red, Global.Green, Global.Blue, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		Loop;
+	}
+}
+
+rule("Dynamic Blue Color")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		While(Global.Blue_Color_Sequence < 255);
+			Global.Blue_Color_Sequence += 1.500;
+			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		While(Global.Blue_Color_Sequence > 80);
+			Global.Blue_Color_Sequence -= 1.500;
+			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		Loop;
+	}
+}
+
+rule ("Custom Strings") 
+{
+    event 
+	{
+        Ongoing - Global;
+    }
+
+    actions 
+	{
+		Global.Modification_Mode_String = Array(Custom String("Damage"), Custom String("Speed"), Custom String("Knockback"));
+		
+		Global.Drawing_Obj_Effects = Array(Custom String("Sphere"), Custom String("Sparkles"), Custom String("Light Shaft"),
+			Custom String("Orb"), Custom String("Ring"), Custom String("Cloud"), Custom String("Good Aura"), Custom String("Bad Aura"));
+		Global.Drawing_Obj_Size = Array(0.050, 0.070, 0.150, 0.400, 0.700, 1, 1.700, 2, 3, 4, 6, 8, 10);
+		Global.Drawing_Obj_Colors = Array(Color(White), Color(Aqua), Color(Black), Color(Blue), Color(Gray), Color(Green), Color(
+			Lime Green), Color(Orange), Color(Purple), Color(Red), Color(Rose), Color(Sky Blue), Color(Turquoise), Color(Violet), Color(
+			Yellow));
+	}
+
+}
+
+rule ("Custom nameplates list") 
+{
+    event 
+	{
+        Ongoing - Global;
+    }
+
+    actions 
+	{
+		Global.Titles_And_Outlines = Array(
+			Array(Custom String("LƐafa"), Array(Custom String("☆ Leafa me alone ☆")), Custom Color(201, 161, 251, 255)),
+			Array(Custom String("ORCHȊD"), Array(Custom String("• SERVER MOM •")), Color(Black)),
+			Array(Custom String("TbyCoLive"), Array(Custom String("♣ ★ D.vastation ★ ♣")), Custom String("Rainbow")),
+			Array(Custom String("Ƙenzai"), Array(Custom String("♠ ★ Ƙenzai ★ ♠")), Custom String("Rainbow")),
+			Array(Custom String("Gregi"), Array(Custom String("♥ ★ Baby D.va ★ ♥")), Custom String("Rainbow")), 
+			Array(Custom String("Khale"), Array(Custom String("KawaiiChan")), Custom String("Rainbow")),
+			Array(Custom String("Afyyy"), Array(Custom String("I Have A Sword In My As.s")), Custom String("Rainbow")),
+			Array(Custom String("Isabella"), Array(Custom String("♥ ★ Little Kitty ★ ♥")), Custom String("Rainbow")), 
+			Array(Custom String("BabyLooperxo"), Array(Custom String("♥ ★ BabyLooperxo ★ ♥")), Custom String("Rainbow")),
+			Array(Custom String("ǀƑIREǀ"), Array(Custom String("ALT F4")), Custom String("Rainbow")),
+			Array(Custom String("CatToast"), Array(Custom String("CatToast")), Custom String("Rainbow")),
+			Array(Custom String("JJelly"), Array(Custom String("Putin")), Custom String("Rainbow")), 
+			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
+			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
+			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Rock'N'Sugar")), Custom String("Rainbow")),
+			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
+			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
+			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
+				Ability Icon String(Hero(Kiriko), Button(Ultimate)))), Custom String("Rainbow")), 
+			Array(Custom String("Lostshadow"), Array(Custom String("★ Your Shadow ★")), Custom String("Rainbow")),
+			Array(Custom String("Lou"), Array(Custom String("Lou")), Custom String("Rainbow")), 
+			Array(Custom String("だ６９"), Array(Custom String("WINTON")), Custom Color(33, 12, 168, 255)),
+			Array(Custom String("Serenus"), Array(Custom String("~ Serenity ~")), Color(Black)),
+			Array(Custom String("Visydia"), Array(Custom String("† Vidya gayma †")), Custom Color(201, 161, 251, 255)),
+			Array(Custom String("FaLLz"), Array(Custom String("♥ The Sun ♥")), Color(Orange)),
+			Array(Custom String("Westwife"), Array(Custom String("♥ The Moon ♥")), Color(Sky Blue)),
+			Array(Custom String("SteamedHams"), Array(Custom String("Steamed Chicken ♥")), Color(Purple)),
+			Array(Custom String("DȈŦǾ"), Array(Custom String("♡ DORITO DITO ♡")), Custom Color(229, 144, 171, 255)),
+			Array(Custom String("Wyvern"), Array(Custom String("† Lord †")), Color(Black)), 
+			Array(Custom String("DEATH"), Array(Custom String("† E D E N †")), Color(Purple)),
+			Array(Custom String("Aurora"), Array(Custom String("! warning: violent !")), Custom Color(176, 42, 112, 255)),
+			Array(Custom String("Elora"), Array(Custom String("! warning: violent !")), Custom Color(176, 42, 112, 255)), 
+			Array(Custom String("TEAMEPǃC"), Array(Custom String("epǃc")), Color(Green)),
+			Array(Custom String("ItsRui"), Array(Custom String("♥ ~ R u I ~ ♥")), Custom String("Rainbow")),
+			Array(Custom String("xSKIJ"), Array(Custom String("ŜKȈJ")), Custom String("Rainbow")), 
+			Array(Custom String("Kaezy"), Array(Custom String("♥ Caring Soul ♥")), Custom Color(201, 122, 250, 255)),
+			Array(Custom String("Misu"), Array(Custom String("★ ~ Their Star ~ ★ ")), Custom Color(201, 122, 250, 255)),
+			Array(Custom String("Matze199"), Array(Custom String("♥ ★ Nutella King ★ ♥ ")), Color(Rose)),
+			Array(Custom String("Sadness"), Array(Custom String("• PROTECTOR • ")), Color(Black)), 
+			Array(Custom String("ArtOfSorrow"), Array(Custom String("★ ♥ Edgerunner Art ♥ ★")), Color(Yellow)),
+			Array(Custom String("ĄŋxƗƐŧŷǃ"), Array(Custom String("♥ Quiet ♥")), Custom String("Rainbow")), 
+			Array(Custom String("DrMonti"), Array(Custom String("★♪★BANDANA★♪★")), Color(White)), 
+			Array(Custom String("Catgirl"), Array(Custom String("★ Femboi Gayming ★")), Custom Color(242, 135, 190, 255)),
+			Array(Custom String("Eŧhereal"), Array(Custom String("♥ E T H E R ♥")), Custom Color(254, 202, 203, 255)), 
+			Array(Custom String("Boney"), Array(Custom String("Boney")), Color(Green)),
+			Array(Custom String("AsyCorn"), Array(Custom String("AsyCorn")), Custom Color(200, 134, 238, 255)),
+			Array(Custom String("Mustika"), Array(Custom String("♣ M u s t i k a ♣")), Custom Color(18, 12, 219, 255)),
+			Array(Custom String("ElDiablo"), Array(Custom String("† DIABLO †")), Color(Red)),
+			Array(Custom String("Eggman"), Array(Custom String("† ata gorem li lir'tzot lihyot †")), Color(Yellow)), 
+			Array(Custom String("Emitzu"), Array(Custom String("K W E E N")), Color(Orange)),
+			Array(Custom String("Frikadelle"), Array(Custom String("《 Kitty! 》")), Custom Color(245, 198, 215, 255)),
+			Array(Custom String("x7eVeN"), Array(Custom String("7")), Custom Color(90, 21, 200, 255)), 
+			Array(Custom String("Empurios"), Array(Custom String("Princess")), Custom Color(248, 124, 190, 255)),
+			Array(Custom String("ȂĴǃ"), Array(Custom String("♥ ȂĴǃ ♥")), Custom String("Rainbow")), 
+			Array(Custom String("Satoshi"), Array(Custom String("! warning: cute !")), Custom Color(255, 215, 0, 255)), 
+			Array(Custom String("Leg"), Array(Custom String("Cowboy")), Color(Orange)),
+			Array(Custom String("AliceRowe"), Array(Custom String("69 with 7")), Custom Color(204, 204, 255, 255)),
+			Array(Custom String("Shiun"), Array(Custom String("♥ ~ Her Moon ~ ♥")), Custom Color(255, 108, 125, 255)),
+			Array(Custom String("Tari"), Array(Custom String("Tari ùwú")), Custom String("Rainbow")),
+			Array(Custom String("Katt"), Array(Custom String("Enemy Spy")), Color(Sky Blue)),
+			Array(Custom String("Kaïd"), Array(Custom String("Whole Hog")), Color(Red)),
+			Array(Custom String("jigzax"), Array(Custom String("♥ Zax ♥")), Custom Color(255, 192, 203, 255)), 
+			Array(Custom String("sonwukong"), Array(Custom String("wukong")), Custom Color(160, 32, 240, 255)),
+			Array(Custom String("Cat"), Array(Custom String("Hyua")), Color(White)), 
+			Array(Custom String("Fuji"), Array(Custom String("J★ESTAR")), Custom String("Rainbow")), 
+			Array(Custom String("Daisy"), Array(Custom String("J★ESTAR")), Custom String("Rainbow")), 
+			Array(Custom String("Xenolysith"), Array(Custom String("Stargazer")), Custom Color(241, 196, 15, 255)), 
+			Array(Custom String("Sexypudding"), Array(Custom String("Edgerunner")), Custom Color(248, 139, 231, 255)),
+			Array(Custom String("kwally"), Array(Custom String("tsuki"), Custom String("月"), Custom String("Луна"), Custom String("Luna")), Custom String("Blue")),
+			Array(Custom String("Dead"), Array(Custom String("Supernova")), Color(Black)), 
+			Array(Custom String("Darling"), Array(Custom String("♥ Darl ♥")), Custom Color(175, 118, 250, 255)),
+			Array(Custom String("DerBomber"), Array(Custom String("Are you piece of cake?")), Custom Color(109, 0, 255, 255)), 
+			Array(Custom String("PapaRomeo"), Array(Custom String("• PAPA •")), Color(White)), 
+			Array(Custom String("KAMƐROŊ"), Array(Custom String("★★ KAM THE DJ ★★")), Custom String("Rainbow")), 
+			Array(Custom String("Nightfire"), Array(Custom String("• UNCLE •")), Color(Orange)),
+			Array(Custom String("JeyJey79"), Array(Custom String("♥ Jey Jey ♥")), Custom Color(235, 109, 255, 255)), 
+			Array(Custom String("BoraGone"), Array(Custom String("♥ BORADORABLE ♥")), Custom String("Rainbow")), 
+			Array(Custom String("IloveBirds"), Array(Custom String("♥ FULL MOON ♥")), Color(White)), 
+			Array(Custom String("Bluberrycow"), Array(Custom String("♥ Burning Sun ♥")), Color(Orange)),
+			Array(Custom String("Wishy"), Array(Custom String("♥ LYN LOVEBOT ♥")), Custom String("Rainbow")), 
+			Array(Custom String("Seli"), Array(Custom String("† Saros  †")), Custom Color(247, 187, 229, 255)), 
+			Array(Custom String("KNG"), Array(Custom String("Let's Fly")), Custom Color(0, 52, 255, 255)),
+			Array(Custom String("xCleo"), Array(Custom String("Cleo")), Custom Color(247, 187, 229, 255)), 
+			Array(Custom String("J0K3R"), Array(Custom String("♥ JOKER ♥")), Custom Color(255, 174, 229, 255)), 
+			Array(Custom String("skilledBOT"), Array(Custom String("† Hannibal †")), Custom Color(148, 0, 0, 255)), 
+			Array(Custom String("Erin"), Array(Custom String("♥ Emma's Mommy ♥")), Color(Rose)),
+			Array(Custom String("RUBY"), Array(Custom String("☆ RUBYX CUBE ☆")), Color(Lime Green)),
+			Array(Custom String("ori6072"), Array(Custom String("♣ DEMON KING DIO ♣")), Color(Black)), 
+			Array(Custom String("FlowRow"), Array(Custom String("最大的鳥")), Custom Color(5, 228, 1, 255)), 
+			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥")), Color(Red)), 
+			Array(Custom String("valkaP"), Array(Custom String("♥ Cutty Ramji ♥")), Custom Color(0, 240, 252, 255)), 
+			Array(Custom String("Katsuki"), Array(Custom String("☆ ♪ Streetrunner ♪ ★")), Custom Color(99, 5, 156, 255)), 
+			Array(Custom String("OperativeLyn"), Array(Custom String("♥ WISHY WASHY's ♥")), Color(Rose)), 
+			Array(Custom String("MOOOUSH"), Array(Custom String(" † 4-inch King  †"), 
+				Custom String("{0}  Ky's Hasbulla  {0}", Ability Icon String(Hero(Torbjörn), Button(Ultimate)))), Color(White)),
+			Array(Custom String("Metalgy"), Array(Custom String("♥ Metalgy ♥")), Custom Color(245, 14, 10, 255)),
+			Array(Custom String("NNkGame"), Array(Custom String(" • SAD  •")), Custom Color(107, 186, 255, 255)),
+			Array(Custom String("Neo"), Array(Custom String("★ PET MASTER ★")), Color(Blue)), 
+			Array(Custom String("Hecatia"), Array(Custom String("★ Friendly DJ Reindeer ★")), Custom String("Rainbow")), 
+			Array(Custom String("Mikasa"), Array(Custom String("♥ Mikasa ♥")), Custom Color(86, 0, 99, 255)), 
+			Array(Custom String("BananaMercy"), Array(Custom String("Banana Karlik")), Custom Color(255, 255, 0, 255)), 
+			Array(Custom String("Leestick"), Array(Custom String("LeafLover")), Color(Green)), 
+			Array(Custom String("Nutzee"), Array(Custom String("☆ DEEZ NUTZ ☆")), Color(Blue)), 
+			Array(Custom String("ThatAspect"), Array(Custom String("† ASPECT †")), Color(Purple)), 
+			Array(Custom String("DONUT"), Array(Custom String("ALPHA DONUT")), Color(Red)), 
+			Array(Custom String("xMaxuss"), Array(Custom String("{0}  TO THE MAX  {0}", Ability Icon String(Hero(Sombra), Button(Ultimate)))), Color(Sky Blue)), 
+			Array(Custom String("Ghost"), Array(Custom String("sad ghost")), Color(Black)),
+			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
+			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
+				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate)))), Color(Gray)),
+			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
+			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
+			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
+			Array(Custom String("fa89"), Array(Custom String("{0}  fa89  {1}", Ability Icon String(Hero(Zenyatta), Button(Ability 1)),
+				Ability Icon String(Hero(Zenyatta), Button(Ability 2)))), Color(Red)),
+			Array(Custom String("MÎÜ"), Array(Custom String("♥ Eggroll - Pastel Pink ♥")), Color(Violet)),
+			Array(Custom String("Eggman"), Array(Custom String("The only orthodox")), Color(Yellow)),
+			Array(Custom String("PHEINU"), Array(Custom String("◆ SALMIAKKI ◆")), Color(Black)),
+			Array(Custom String("Vanessav"), Array(Custom String("♥ Assassin ♥"),Custom String("♥ Wrathful One ♥")), Color(Purple)),
+			Array(Custom String("Slafii"), Array(Custom String("{0}  TOUCH AND DIE  {0}", Ability Icon String(Hero(Kiriko), Button(Ability 2))),
+				Custom String("{0}  THE BIG RAT SLAFII  {0}", Ability Icon String(Hero(Ana), Button(Ability 1))),
+				Custom String("{0}  Tracy my beloved  {0}", Ability Icon String(Hero(Tracer), Button(Ability 2)))), Custom String("Rainbow"))
+		);
+	}
+}
+
+rule ("Search for players in custom nameplates list and call subroutines")
+{
+    event 
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+    }
+	
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+    actions 
+	{
+        For Global Variable(Players_Global_Array, 0, Count Of(Global.Titles_And_Outlines), 1);
+			For Global Variable(Each_Player_Array, 0, 3, 1);
+				If(Custom String("{0}", Event Player) == Global.Titles_And_Outlines[Global.Players_Global_Array][0]); 
+					Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
+						Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2]);
+					Start Rule(Give_Custom_Nameplate, Do Nothing);
+					Start Rule(Give_Custom_Outline, Do Nothing);
+				End;
+    		End;
+		End;
+    }
+}
+
+rule ("Subroutine: Give_Custom_Nameplate")
+{
+    event 
+	{
+		Subroutine;
+		Give_Custom_Nameplate;
+    }
+
+    actions 
+	{	
+		If(Event Player.Invisibility == False);
+			Disable Nameplates(Event Player, All Players(All Teams));
+			If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
+				Destroy In-World Text(Event Player.Player_Nameplates);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+					Global.Rainbow_Color, Default Visibility);
+			Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
+				Destroy In-World Text(Event Player.Player_Nameplates);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+					Global.Blue_Color, Default Visibility);
+			Else;
+				Destroy In-World Text(Event Player.Player_Nameplates);
+				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+					Event Player.Player_Title_And_Outline[2], Default Visibility);
+			End;
+			Event Player.Player_Nameplates = Last Text Id;
+			Wait(29, Ignore Condition);
+		End;
+		Wait(1, Ignore Condition);
+		Loop;
+    }
+}
+
+rule ("Subroutine: Give_Custom_Outline")
+{
+    event 
+	{
+		Subroutine;
+		Give_Custom_Outline;
+    }
+
+    actions 
+	{
+		Event Player.Is_Title_Given = True;
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Rainbow_Color, Always);
+			Wait(0.036, Ignore Condition);
+			Loop;
+		End;
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Blue_Color, Always);
+			Wait(0.036, Ignore Condition);
+			Loop;
+		Else;
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Event Player.Player_Title_And_Outline[2], Always);
+			Wait(1, Ignore Condition);
+			Loop;
+		End; 
+    }
+}
+
+rule("Re-evaluate nameplates (name covers title hardcode fix)")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Event Player.Is_Title_Given == True;
+	}
+
+	actions
+	{
+		Disable Nameplates(Event Player, All Players(All Teams));
+		Wait(30, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
+rule("Listed_Player")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		"Automatic High Rank"
+		Global.High_Rank = Array(Custom String("LƐafa"), Custom String("ORCHȊD"), Custom String("Warloy"), Custom String("TbyCoLive"),
+			Custom String("Serenus"), Custom String("Hoxy"), Custom String("Sadness"), Custom String("Eŧhereal"), Custom String("FaLLz"),
+			Custom String("だ６９"), Custom String("Wyvern"), Custom String("Kaezy"), Custom String("Matze199"), Custom String("Lostshadow"),
+			Custom String("Khale"), Custom String("Visydia"), Custom String("Windchancer"), Custom String("SteamedHams"), Custom String(
+			"xSKIJ"), Custom String("Joyy"), Custom String("Ciri"), Custom String("ŜǓƘǓŊǍ"), Custom String("Fuji"), Custom String("Daisy"),
+			Custom String("AsyCorn"), Custom String("Miowell"), Custom String("HOjjAT"), Custom String("kai"), Custom String("Geo"),
+			Custom String("Larfleeze"), Custom String("DEATH"), Custom String("Aurora"), Custom String("DȈŦǾ"), Custom String("ItsRui"),
+			Custom String("TEAMEPǃC"), Custom String("Minee"), Custom String("ArtOfSorrow"), Custom String("Phil"), Custom String("Lou"),
+			Custom String("Xenolysith"), Custom String("Shyro"), Custom String("Misu"), Custom String("Ƙenzai"), Custom String("Gregi"),
+			Custom String("Mars"), Custom String("Jarvis"), Custom String("Diamond"), Custom String("ǀƑIREǀ"), Custom String("Elora"),
+			Custom String("Catgirl"), Custom String("CatToast"), Custom String("Boney"), Custom String("Mustika"), Custom String("Emitzu"),
+			Custom String("ElDiablo"), Custom String("Eggman"), Custom String("Frikadelle"), Custom String("x7eVeN"), Custom String(
+			"Empurios"), Custom String("ȂĴǃ"), Custom String("Satoshi"), Custom String("Leg"), Custom String("Soup"), Custom String(
+			"Charukin"), Custom String("tsunde"), Custom String("Tari"), Custom String("ÃŅĞĘŁŘØM"), Custom String("sonwukong"),
+			Custom String("AliceRowe"), Custom String("Shiun"), Custom String("Katt"), Custom String("Kaïd"), Custom String("jigzax"),
+			Custom String("Cat"), Custom String("kwally"), Custom String("Toguro"), Custom String("Dead"), Custom String("Darling"),
+			Custom String("DerBomber"), Custom String("PapaRomeo"), Custom String("LightWolf"), Custom String("KAMƐROŊ"), Custom String(
+			"Nightfire"), Custom String("JeyJey79"), Custom String("BoraGone"), Custom String("IloveBirds"), Custom String("Westwife"),
+			Custom String("Wishy"), Custom String("Bluberrycow"), Custom String("Seli"), Custom String("xCleo"), Custom String("J0K3R"),
+			Custom String("Erin"), Custom String("skilledBOT"), Custom String("RUBY"), Custom String("MopuD"), Custom String("FlowRow"),
+			Custom String("ori6072"), Custom String("BebeUwU"), Custom String("valkaP"), Custom String("Katsuki"), Custom String(
+			"OperativeLyn"), Custom String("DONUT"), Custom String("BabyLooperxo"), Custom String("NNkGame"),
+			Custom String("Metalgy"), Custom String("Leestick"), Custom String("Nutzee"), Custom String("Hecatia"), Custom String(
+			"Mikasa"), Custom String("BananaMercy"), Custom String("MÎÜ"), Custom String("ThatAspect"), Custom String("KNG"),
+			Custom String("Ghost"), Custom String("solevaya"), Custom String("Moistra"), Custom String("fa89"),
+			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), Custom String(
+			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("Kysp"), Custom String("BlueSky"), 
+			Custom String("xMaxuss"),Custom String("Vanessav"));
+		"Automatic Mod"
+		Global.Mod_Rank = Array(Custom String("BigeN"));
+		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("Nishiki"),
+			Custom String("MOONJIN"), Custom String("Mizuki"), Custom String("Millennium"), Custom String("TrickyHunter"), Custom String(
+			"minsu"), Custom String("Gerike27"), Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
+			Custom String("sanji"), Custom String("Miku"), Custom String("Amon"), Custom String("Axel"), Custom String("newyves"),
+			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("DontCry"),
+			Custom String("Justin"), Custom String("ColdIcePanda"), Custom String("Slahs"), Custom String("GhostDragon"), Custom String(
+			"Bankai"), Custom String("ŜŦƑ"), Custom String("zanji3abd"), Custom String("PƐPPƐR"), Custom String("Sigve456"), Custom String(
+			"papa"), Custom String("Mihael"), Custom String("darthmaul"), Custom String("Sylriff"), Custom String("S5tz"), Custom String(
+			"PolQuus"), Custom String("River"), Custom String("Hąnzo"), Custom String("xCRASHTESTx"), Custom String("Shamonef"),
+			Custom String("Alucard"), Custom String("KoHaKuH"), Custom String("Ikawu"), Custom String("ƑĿǍMĔŜ"), Custom String("ÖmeŔRX"),
+			Custom String("Kimiko"), Custom String("Pascal69"), Custom String("Divalicious"), Custom String("TitanJolt"), Custom String(
+			"NotRehmy"), Custom String("Nitro"), Custom String("Aconitum"), Custom String("Giokstorm"), Custom String("MrCookie"),
+			Custom String("tartarus"), Custom String("LittleMelody"), Custom String("Libertot"), Custom String("Bambus"), Custom String(
+			"Astaroth"), Custom String("ASTAROTH"), Custom String("LIGHT"), Custom String("Saad"), Custom String("BigPapa"));
+	}
+}
+
+
+rule("Host_Player_Rank")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) || Array Contains(Global.Mod_Rank, Custom String("{0}",
+			Event Player))) == False;
+		Event Player == Host Player;
+	}
+
+	actions
+	{
+		Modify Global Variable(Mod_Rank, Append To Array, Custom String("{0}", Host Player));
+	}
+}
+
+rule("Player_Rank_Execute")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) || Array Contains(Global.Mod_Rank, Custom String("{0}",
+			Event Player))) == True;
+		Event Player.Verification_Key == False;
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Event Player.High_Rank = True;
+			Event Player.Verification_Key = 2611;
+			If(Event Player != Host Player);
+				Call Subroutine(Hud_Elements);
+			End;
+		Else If(Array Contains(Global.Mod_Rank, Custom String("{0}", Event Player)) == True);
+			Event Player.Mod_Rank = True;
+			Event Player.Verification_Key = 1991;
+			If(Event Player != Host Player);
+				Big Message(All Players(All Teams), Custom String("{0} got promoted!", Event Player));
+				Call Subroutine(Hud_Elements);
+			End;
+		End;
+		Event Player.Player_Modification[0] = 100;
+		Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
+		Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+		Event Player.Mode_Hud_ID = Last Text ID;
+		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Event Player.Usage_Info = Last Text ID;
+		Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2} : Kill | Rez Yourself", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Event Player.Mode_Description = Last Text ID;
+		
+	}
+}
+
+rule("Player_Rank_Revoke")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Array Contains(Global.Mod_Rank, Custom String("{0}", Event Player)) != True;
+		Event Player.High_Rank == False;
+		Event Player.Mod_Rank == True;
+		Event Player.Verification_Key == 1991;
+	}
+
+	actions
+	{
+		Big Message(All Players(All Teams), Custom String("{0} got demoted!", Event Player));
+		Event Player.Mod_Rank = False;
+		Event Player.Verification_Key = False;
+		Destroy HUD Text(Event Player.Mod_Name_ID);
+		Event Player.Mod_Name_ID = Null;
+		Destroy HUD Text(Event Player.Mode_Hud_ID);
+		Event Player.Mode_Hud_ID = Null;
+		Destroy HUD Text(Event Player.Mode_Description);
+		Event Player.Mode_Description = Null;
+		Destroy HUD Text(Event Player.Usage_Info);
+		Event Player.Usage_Info = Null;
+	}
+}
+
+rule("Hud_Elements (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Hud_Elements;
+	}
+
+	actions
+	{
+		If(Entity Exists(Event Player) == True);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{1} {0} ┤", Event Player, Hero Icon String(Hero Of(
+				Event Player))), Right, 2, Null, Null, Color(White), Visible To and String, Default Visibility);
+			Event Player.Mod_Name_ID = Last Text ID;
+		Else;
+			Destroy In-World Text(Event Player.Target_Tag_ID);
+			Destroy HUD Text(Event Player.Mod_Name_ID);
+			Destroy HUD Text(Event Player.Mode_Hud_ID);
+			Destroy HUD Text(Event Player.Mode_Description);
+			Destroy HUD Text(Event Player.Usage_Info);
+		End;
+	}
+}
+
+rule("Hero_Switch")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Melee)) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.Is_Crouch_On == False;
+		Event Player.Restricted == False;
+		Is Alive(Event Player) == True;
+		Has Status(Event Player, Knocked Down) == False;
+		Has Status(Event Player, Hacked) == False;
+		Has Status(Event Player, Frozen) == False;
+		Has Status(Event Player, Burning) == False;
+		Has Status(Event Player, Stunned) == False;
+	}
+
+	actions
+	{
+		Wait(0.500, Abort When False);
+		Event Player.Last_Position_Facing[0] = Position Of(Event Player);
+		Event Player.Last_Position_Facing[1] = Facing Direction Of(Event Player);
+		Set Player Allowed Heroes(Event Player, Filtered Array(All Heroes, Current Array Element != Hero Of(Event Player)));
+		Wait(0.250, Ignore Condition);
+		Set Player Allowed Heroes(Event Player, All Heroes);
+		Wait Until(Has Spawned(Event Player) == True, 99999);
+		Teleport(Event Player, Event Player.Last_Position_Facing[0]);
+		Set Facing(Event Player, Event Player.Last_Position_Facing[1], To World);
+		Event Player.Last_Position_Facing[0] = Null;
+		Event Player.Last_Position_Facing[1] = Null;
+	}
+}
+
+rule("Protection_4_Free")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Reload)) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.Is_Crouch_On == False;
+		Event Player.Restricted == False;
+		Is Alive(Event Player) == True;
+		Has Status(Event Player, Knocked Down) == False;
+		Has Status(Event Player, Stunned) == False;
+	}
+
+	actions
+	{
+		Wait(0.500, Abort When False);
+		If(Event Player.Protection == False);
+			Event Player.Protection = True;
+		Else If(Event Player.Protection == True);
+			Event Player.Protection = False;
+		End;
+	}
+}
+
+rule("Protection_ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Protection == True;
+		Is Dummy Bot(Event Player) == False;
+	}
+
+	actions
+	{
+		Abort If(Has Spawned(Event Player) != True);
+		Call Subroutine(Protection);
+	}
+}
+
+rule("Protection_OFF")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Protection == False;
+		Is Dummy Bot(Event Player) == False;
+	}
+
+	actions
+	{
+		Abort If(Has Spawned(Event Player) != True);
+		Call Subroutine(Protection);
+	}
+}
+
+rule("Mod_Ability_ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Verification_Key != False;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+	}
+
+	actions
+	{
+		Create Effect(Event Player, Good Aura, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1,
+			Visible To Position and Radius);
+		Event Player.Target_Effect = Last Created Entity;
+		Create Icon(Event Player, Player Closest To Reticle(Event Player, All Teams), Arrow: Down, Visible To and Position, Color(White),
+			False);
+		Event Player.Target_Arrow_ID = Last Created Entity;
+		Event Player.Is_Crouch_On = True;
+		Disallow Button(Event Player, Button(Primary Fire));
+		Disallow Button(Event Player, Button(Secondary Fire));
+		Disallow Button(Event Player, Button(Ability 1));
+		Disallow Button(Event Player, Button(Ability 2));
+		Disallow Button(Event Player, Button(Ultimate));
+		Disallow Button(Event Player, Button(Interact));
+		Disallow Button(Event Player, Button(Jump));
+		Disallow Button(Event Player, Button(Melee));
+		Disallow Button(Event Player, Button(Reload));
+	}
+}
+
+rule("Mod_Ability_OFF")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Crouch)) == False;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.Target_Effect);
+		Event Player.Target_Effect = Null;
+		Destroy Icon(Event Player.Target_Arrow_ID);
+		Event Player.Target_Arrow_ID = Null;
+		Event Player.Is_Crouch_On = False;
+		Allow Button(Event Player, Button(Primary Fire));
+		Allow Button(Event Player, Button(Secondary Fire));
+		Allow Button(Event Player, Button(Ability 1));
+		Allow Button(Event Player, Button(Ability 2));
+		Allow Button(Event Player, Button(Ultimate));
+		Allow Button(Event Player, Button(Interact));
+		Allow Button(Event Player, Button(Jump));
+		Allow Button(Event Player, Button(Melee));
+		Allow Button(Event Player, Button(Reload));
+	}
+}
+
+rule("Mode_Cycle")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Crouch_On == True;
+		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
+		Event Player.Gravity == 100;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Interact)) == True);
+			If(Event Player.Mode_Cycle >= 31);
+				Event Player.Mode_Cycle = 0;
+			Else;
+				Event Player.Mode_Cycle += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Jump)) == True);
+			If(Event Player.Mode_Cycle <= 0);
+				Event Player.Mode_Cycle = 31;
+			Else;
+				Event Player.Mode_Cycle -= 1;
+			End;
+		End;
+	}
+}
+
+
+rule("Mode_Headline_Desc")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Crouch_On == True;
+		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
+		(Event Player.Mode_Description != Null && Event Player.Usage_Info != Null) == True;
+	}
+
+	actions
+	{
+		
+		Destroy HUD Text(Event Player.Mode_Description);
+		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+		
+		If(Event Player.Mode_Cycle == 0);
+			Event Player.Mode_Headline = Custom String("Kill | Resurrection");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2} : Kill | Rez Yourself", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 1);
+			Event Player.Mode_Headline = Custom String("Teleport");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Teleport You to Target\r\n{1} : Teleport Target To You\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Teleport All To You\r\n{1} : Teleport Target Back To Spawn",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 2);
+			Event Player.Mode_Headline = Custom String("Hacked");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Hack The Target\r\n{1} : Remove Hack from Target\r\n{2} : Hack Yourself", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 3);
+			Event Player.Mode_Headline = Custom String("Frozen");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Freeze The Target\r\n{1} : Remove Freeze from Target\r\n{2} : Freeze Yourself", Input Binding String(Button(
+				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
+				Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 4);
+			Event Player.Mode_Headline = Custom String("Protection");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Give Target Immunity\r\n{1} : Revoke Target Immunity", Input Binding String(Button(Primary Fire)), Input Binding String(
+				Button(Secondary Fire))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 5);
+			Event Player.Mode_Headline = Custom String("Knocked Down");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Knockdown The Target\r\n{1} : Remove Knockdown from Target\r\n{2} : Knockdown Yourself", Input Binding String(Button(
+				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
+				Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 6);
+			Event Player.Mode_Headline = Custom String("Burning");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Flame The Target\r\n{1} : Remove Flame from Target\r\n{2} : Flame Yourself", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 7);
+			Event Player.Mode_Headline = Custom String("Stunned");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Stun The Target\r\n{1} : Remove Stun from Target\r\n{2} : Stun Yourself", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 8);
+			Event Player.Mode_Headline = Custom String("Flying | Gravity");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Set Gravity To Space\r\n{1} : Set Gravity Back To Normal\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Give Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch)))), Left, 1,
+				Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 9);
+			Event Player.Mode_Headline = Custom String("Damage | Speed | Knockback");
+			Create HUD Text(Event Player, Null, Null, 
+				Custom String("{0} is currently set to: {1}%!\r\n{2}", 
+					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Player_Modification[Event Player.Modification_Mode_Selector],
+				Custom String("{0} : Increase by {1}%\r\n{2}", Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
+				Custom String("{0} : Decrease by {1}%\r\n{2}", Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
+				Custom String("{0} : Cycle Mode [Damage, Speed, Knockback]\r\n{1}", Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Reset {1}", Input Binding String(Button (Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]
+			)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 10);
+			Event Player.Mode_Headline = Custom String("Carry | Bonk | Unstuck");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Carry Target\r\n{1} : Knockback Push\r\n{2} : Fix and Unstuck", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+			Event Player.Scale_Hud_ID = Null;
+			Event Player.Target_Lock = Custom String("--- No Target ---");
+		Else If(Event Player.Mode_Cycle == 11);
+			Create Progress Bar HUD Text(Event Player, Event Player.Scale_Real * 5, Custom String("Destination: {0}% | Current: {1}%",
+				Event Player.Scale_Prev * 100, Event Player.Scale_Real * 100), Top, 1, Color(Blue), Color(Gray), Visible To and Values,
+				Visible Never);
+			Event Player.Scale_Hud_ID = Last Text ID;
+
+			Event Player.Mode_Headline = Custom String("Growth | Shrink (Yourself)");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 12);
+			Create Progress Bar HUD Text(Event Player, Event Player.Target_Lock.Scale_Real * 5, Custom String(
+				"Destination: {0}% | Current: {1}% | {2}", Event Player.Target_Lock.Scale_Prev * 100,
+				Event Player.Target_Lock.Scale_Real * 100, Event Player.Target_Lock), Top, 1, Color(Red), Color(Gray), Visible To and Values,
+				Visible Never);
+			Event Player.Scale_Hud_ID = Last Text ID;
+
+			Event Player.Mode_Headline = Custom String("Growth | Shrink (Target)");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 13);
+			Event Player.Mode_Headline = Custom String("Attach System");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Attach Yourself To Target\r\n{1} : Target Rides You\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Detach Yourself\r\n{1} : Detach Target",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
+			Event Player.Scale_Hud_ID = Null;
+			Event Player.Target_Lock = Custom String("--- No Target ---");
+		Else If(Event Player.Mode_Cycle == 14);
+			Event Player.Mode_Headline = Custom String("Target Leash");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Create Grapplink\r\n{1} : Remove Grapplink\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Target Faces You\r\n{1} : Stop Forcing Facing", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 15);
+			Event Player.Mode_Headline = Custom String("Party Painting");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Draw\r\n{1} : Choose Effect\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(
+				Secondary Fire)), Custom String("{0} : Select Size\r\n{1} : Choose Color\r\n{2} : Clear Effects", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 16);
+			Event Player.Mode_Headline = Custom String("Lock Up In Jail");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Lock target - Chat & Skills Disabled\r\n{1} : Unlock target - Chat & Skills Enabled\r\n{2} : Lock / Unlock Yourself",
+				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 17);
+			Event Player.Mode_Headline = Custom String("Spawn Hero Forcing");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Make Target To Mercy\r\n{1} : Make Target To D.Va\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Make Target To Widow\r\n{1} : Make Target Same Hero As You\r\n{2} : Stop Forcing To Be Hero (Target and You)",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
+				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 18);
+			Event Player.Mode_Headline = Custom String("Area Of Protection");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Make Savezone Bigger\r\n{1} : Make Savezone Smaller\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Create Savezone\r\n{1} : Remove Savezone\r\n{2} : Give | Revoke Access", Input Binding String(Button(Ultimate)),
+				Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 19);
+			Event Player.Mode_Headline = Custom String("Don't Touch Me");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Activate Target DMG Reflect\r\n{1} : Deactivate Target DMG Reflect\r\n{2} : Set Damage Reflect Yourself",
+				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 20);
+			Event Player.Mode_Headline = Custom String("Voice Options");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Moan Spam Target (Not Host And Mods)\r\n{1} : Moan Spam Yourself\r\n{2}", Input Binding String(Button(
+				Primary Fire)), Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Voice Pitch Up\r\n{1} : Voice Pitch Down\r\n{2} : Back To Normal Voice", Input Binding String(Button(Ultimate)),
+				Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 21);
+			Event Player.Mode_Headline = Custom String("Remove Player");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Kick Target (Owner Only) \r\n{1} : Ban Target Temporarily (Owner Only)", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire))), Left, 1, Color(White), Color(White), Color(White), Visible To and String,
+				Visible Never);
+		Else If(Event Player.Mode_Cycle == 22);
+			Event Player.Mode_Headline = Custom String("Goodbye Cruel World");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : You are going to Brazil\r\n{1} : I need to go, my planet needs me", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String,
+				Visible Never);
+		Else If(Event Player.Mode_Cycle == 23);
+			Event Player.Mode_Headline = Custom String("#icon #yourself");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Give Yourself - Heart\r\n{1} : Give Yourself - TrashCan\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Give Yourself  - Fire\r\n{1} : Give Yourself  - Bolt\r\n{2} : Remove Icon From Yourself", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 24);
+			Event Player.Mode_Headline = Custom String("#icon #target");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Give Target - Heart\r\n{1} : Give Target - TrashCan\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Give Target - Fire\r\n{1} : Give Target - Bolt\r\n{2} : Remove Icon From Target", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 25);
+			Event Player.Mode_Headline = Custom String("Assign Co-Owner & Team Swap");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Give Target Rights \r\n{1} : Revoke Target Rights \r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Switch Team - Yourself\r\n{1} : Switch Team - Target",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2)))),
+				Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 26);
+			Event Player.Mode_Headline = Custom String("Ghost Mode");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Disable Anti-Collision Target\r\n{1} : Enable Anti-Collision Target\r\n{2} : Set Anti-Collision For Yourself",
+				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 27);
+			Event Player.Mode_Headline = Custom String("Slow Projectile & Motion ");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Give Target Slow Projectile\r\n{1} : Revoke Target Slow Projectile\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Yourself Slow Projectile\r\n{1} : Set Slowmotion",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2)))),
+				Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 28);
+			Event Player.Mode_Headline = Custom String("Bodyguards");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Set Attackable Target\r\n{1} : Set Bots Idle\r\n{2} : Create | Destroy Bots", Input Binding String(Button(
+				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
+				Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 29);
+			Event Player.Mode_Headline = Custom String("Remote Control");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Use Targets Primary Fire\r\n{1} : Use Targets Secondary Fire\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String(
+				"{0} : Use Targets Ultimate\r\n{1} : Use Targets Ability 1\r\n{2} : Use Targets Ability 2", Input Binding String(Button(
+				Ultimate)), Input Binding String(Button(Ability 1)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
+				White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 30);
+			Event Player.Mode_Headline = Custom String("Remaining Time (Only Owner)");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Set Match Time To 60 Min\r\n{1} : Set Match Time To 30 Min\r\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 31);
+			Event Player.Mode_Headline = Custom String("Invisible");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"{0} : Turn Invisible\r\n{1} : Become VIsible\r\n", Input Binding String(Button(
+				Primary Fire)), Input Binding String(Button(Secondary Fire))), Left, 1, Color(White),
+				Color(White), Color(White), Visible To and String, Visible Never);
+		End;
+
+		Event Player.Mode_Description = Last Text ID;
+	}
+}
+
+rule("Remove_AFK_Player")
+{
+	event
+	{
+		Player Joined Match;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == False;
+	}
+
+	actions
+	{
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+		Wait(600, Abort When False);
+		Big Message(All Players(All Teams), Custom String("{0} Was \"AFK\" Too Long Without Choosing A Hero.", Event Player));
+		Remove Player(Event Player);
+		Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Event Player)) == True);
+		Wait(600, Abort When False);
+		Big Message(All Players(All Teams), Custom String("{0} Was \"AFK\" Too Long Without Choosing A Hero.", Event Player));
+		Remove Player(Event Player);
+		Abort If(Array Contains(Host Player, Custom String("{0}", Event Player)) == True);
+		Wait(600, Abort When False);
+		Big Message(All Players(All Teams), Custom String("{0} Was \"AFK\" Too Long Without Choosing A Hero.", Event Player));
+		Remove Player(Event Player);
+	}
+}
+
+rule("Remove_Banned_Player")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Array Contains(Global.Perma_Banned, Custom String("{0}", Event Player)) || Array Contains(Global.Temp_Banned, Custom String("{0}",
+			Event Player))) == True;
+	}
+
+	actions
+	{
+		Small Message(All Players(All Teams), Custom String("{0} GTFO.", Event Player));
+		Remove Player(Event Player);
+	}
+}
+
+rule("Game_Over")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Match Time <= 10;
+	}
+
+	actions
+	{
+		Big Message(All Players(All Teams), Custom String("Remaining Time: 10 Sec"));
+		Wait(10, Ignore Condition);
+		Declare Match Draw;
+		Wait(27, Ignore Condition);
+		Restart Match;
+	}
+}
+
+disabled rule("")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+}
+
+rule("Camera_Switch")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Interact)) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.Is_Crouch_On == False;
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Wait(0.400, Abort When False);
+		If(Event Player.Camera >= 5);
+			Event Player.Camera = 0;
+		Else;
+			Event Player.Camera += 1;
+		End;
+	}
+}
+
+rule("1st_Camera_0")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 5;
+	}
+
+	actions
+	{
+		Stop Camera(Event Player);
+		Small Message(Event Player, Custom String("Default Camera"));
+	}
+}
+
+rule("3rd_Camera_1")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 0;
+	}
+
+	actions
+	{
+		Start Camera(Event Player, Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 25);
+		Small Message(Event Player, Custom String("3rd Person, Far"));
+	}
+}
+
+rule("3rd_Camera_2_Zoom")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 1;
+	}
+
+	actions
+	{
+		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 25);
+		Small Message(Event Player, Custom String("3rd Person, Close"));
+	}
+}
+
+rule("3rd_Camera_3")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 2;
+	}
+
+	actions
+	{
+		Start Camera(Event Player, Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), 25);
+		Small Message(Event Player, Custom String("Front View, Far"));
+	}
+}
+
+rule("3rd_Camera_4_Zoom")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 3;
+	}
+
+	actions
+	{
+		Start Camera(Event Player, Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), 25);
+		Small Message(Event Player, Custom String("Front View, Close"));
+	}
+}
+
+rule("Cinematic_Camera")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 4;
+	}
+
+	actions
+	{
+		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 25);
+		Wait(0.5, Ignore Condition);
+		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 0.5);
+		Small Message(Event Player, Custom String("Cinematic Camera"));
+	}
+}
+
+
+rule("Mode_00 - Kill_Rez")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 0;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Is Alive(Event Player) == True);
+				Kill(Event Player, Null);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			Else If(Is Dead(Event Player) == True);
+				Resurrect(Event Player);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Is Alive(Player Closest To Reticle(Event Player, All Teams)) == True);
+			Resurrect(Player Closest To Reticle(Event Player, All Teams));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Is Dead(Player Closest To Reticle(Event Player, All Teams)) == True);
+			Kill(Player Closest To Reticle(Event Player, All Teams), Event Player);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_01 - Teleport")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 1;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Resurrect(All Dead Players(All Teams));
+			Teleport(Filtered Array(All Players(All Teams), Current Array Element.Protection == False), Event Player);
+			Play Effect(All Players(All Teams), Ring Explosion, Color(Rose), Event Player, 5);
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Teleport(Event Player, Position Of(Player Closest To Reticle(Event Player, All Teams)));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Is Dead(Player Closest To Reticle(Event Player, All Teams)) == True);
+				Resurrect(Player Closest To Reticle(Event Player, All Teams));
+			End;
+			Teleport(Player Closest To Reticle(Event Player, All Teams), Position Of(Event Player));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			If(Is Dead(Player Closest To Reticle(Event Player, All Teams)) == True);
+				Resurrect(Player Closest To Reticle(Event Player, All Teams));
+			End;
+			Teleport(Player Closest To Reticle(Event Player, All Teams), Spawn Points(Team Of(Player Closest To Reticle(Event Player,
+				All Teams))));
+			Play Effect(All Players(All Teams), Bad Explosion, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_02 - Hacked")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 2;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Has Status(Event Player, Hacked) == False);
+				Set Status(Event Player, Null, Hacked, 9999);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			Else If(Has Status(Event Player, Hacked) == True);
+				Clear Status(Event Player, Hacked);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Hacked) == True);
+			Set Status(Player Closest To Reticle(Event Player, All Teams), Event Player, Hacked, 9999);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Hacked) == False);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Hacked);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_03 - Frozen")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 3;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Has Status(Event Player, Frozen) == False);
+				If(Event Player.Protection == True);
+					Clear Status(Event Player, Phased Out);
+				End;
+				Set Status(Event Player, Null, Frozen, 9999);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+				If(Event Player.Protection == True);
+					Set Status(Event Player, Null, Phased Out, 9999);
+				End;
+			Else If(Has Status(Event Player, Frozen) == True);
+				Clear Status(Event Player, Frozen);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Frozen) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
+			End;
+			Set Status(Player Closest To Reticle(Event Player, All Teams), Event Player, Frozen, 9999);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Phased Out, 9999);
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Frozen) == False);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Frozen);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_04 - Protection")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 4;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
+		Event Player.Is_Crouch_On == True;
+		Player Closest To Reticle(Event Player, All Teams).Restricted == False;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+			Player Closest To Reticle(Event Player, All Teams).Protection = True;
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Protection == False);
+			Player Closest To Reticle(Event Player, All Teams).Protection = False;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_04 - Protection (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Protection;
+	}
+
+	actions
+	{
+		If(Event Player.Protection == True);
+			Set Status(Event Player, Null, Phased Out, 9999);
+			Big Message(Event Player, Custom String("Protection: ON"));
+			Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == True, 2);
+			Event Player.Player_Modification[0] = 0;
+			Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
+			Event Player.Allow_Teleport = True;
+			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Baptiste), Button(Ability 2))),
+				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
+			Event Player.Protection_ID = Last Text ID;
+		Else If(Event Player.Protection == False);
+			Clear Status(Event Player, Phased Out);
+			Big Message(Event Player, Custom String("Protection: OFF"));
+			Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == True, 2);
+			Event Player.Player_Modification[0] = 100;
+			Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
+			Event Player.Allow_Teleport = False;
+			Destroy In-World Text(Event Player.Protection_ID);
+			Event Player.Protection_ID = Null;
+		End;
+	}
+}
+
+rule("Mode_05 - Knocked_Down")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 5;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Has Status(Event Player, Knocked Down) == False);
+				If(Event Player.Protection == True);
+					Clear Status(Event Player, Phased Out);
+				End;
+				Set Status(Event Player, Null, Knocked Down, 9999);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+				If(Event Player.Protection == True);
+					Set Status(Event Player, Null, Phased Out, 9999);
+				End;
+			Else If(Has Status(Event Player, Knocked Down) == True);
+				Clear Status(Event Player, Knocked Down);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Knocked Down) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
+			End;
+			Set Status(Player Closest To Reticle(Event Player, All Teams), Event Player, Knocked Down, 9999);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Phased Out, 9999);
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Knocked Down) == False);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Knocked Down);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_06 - Burning")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 6;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Has Status(Event Player, Burning) == False);
+				Set Status(Event Player, Null, Burning, 9999);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			Else If(Has Status(Event Player, Burning) == True);
+				Clear Status(Event Player, Burning);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Burning) == True);
+			Set Status(Player Closest To Reticle(Event Player, All Teams), Event Player, Burning, 9999);
+			Start Damage Over Time(Player Closest To Reticle(Event Player, All Teams), Null, 9999, 50);
+			Player Closest To Reticle(Event Player, All Teams).DMG_Time = Last Damage Over Time ID;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Burning) == False);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Burning);
+			Stop Damage Over Time(Player Closest To Reticle(Event Player, All Teams).DMG_Time);
+			Player Closest To Reticle(Event Player, All Teams).DMG_Time = Null;
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_07 - Stunned")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 7;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Has Status(Event Player, Stunned) == False);
+				If(Event Player.Protection == True);
+					Clear Status(Event Player, Phased Out);
+				End;
+				Set Status(Event Player, Null, Stunned, 9999);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+				If(Event Player.Protection == True);
+					Set Status(Event Player, Null, Phased Out, 9999);
+				End;
+			Else If(Has Status(Event Player, Stunned) == True);
+				Clear Status(Event Player, Stunned);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Green), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Stunned) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
+			End;
+			Set Status(Player Closest To Reticle(Event Player, All Teams), Event Player, Stunned, 9999);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Phased Out, 9999);
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Has Status(Player Closest To Reticle(Event Player, All Teams), Stunned) == False);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Stunned);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_08 - Flying_Gravity")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 8;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Gravity == 100);
+				Event Player.Gravity = 0;
+				Set Gravity(Event Player, Event Player.Gravity);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Event Player.Gravity != 100);
+				Event Player.Gravity = 100;
+				Set Gravity(Event Player, Event Player.Gravity);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Big Message(All Players(All Teams), Custom String("Fly To The Moon"));
+			Global.Gravity = 10;
+			Set Gravity(All Players(All Teams), Global.Gravity);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Big Message(All Players(All Teams), Custom String("Welcome Back On Earth"));
+			Global.Gravity = 100;
+			Set Gravity(All Players(All Teams), Global.Gravity);
+		End;
+	}
+}
+
+rule("Mode_08 - Flying_Controls")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 8;
+		(Is Button Held(Event Player, Button(Crouch)) || Is Button Held(Event Player, Button(Jump))) == True;
+		Event Player.Gravity != 100;
+	}
+
+	actions
+	{
+		While(Is Button Held(Event Player, Button(Jump)));
+			Apply Impulse(Event Player, Up, 4, To World, Cancel Contrary Motion);
+			Wait(0.250, Ignore Condition);
+		End;
+		While(Is Button Held(Event Player, Button(Crouch)));
+			Apply Impulse(Event Player, Down, 4, To World, Cancel Contrary Motion);
+			Wait(0.025, Ignore Condition);
+		End;
+		Apply Impulse(Event Player, Up, 0.001, To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Down, 0.001, To World, Cancel Contrary Motion);
+	}
+}
+
+rule("Mode_09 - Damage_And_Speed_NEW")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 9;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)));
+			Event Player.Player_Modification[Event Player.Modification_Mode_Selector] += Raise To Power(10, Event Player.Modification_Scalar_Selector);
+			If(Event Player.Player_Modification[0] > 10000);
+				Event Player.Player_Modification[0] = 10000;
+				Small Message(Event Player, Custom String("{0} is at maximum! That's gotta sting...", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+			If(Event Player.Player_Modification[1] > 1000);
+				Event Player.Player_Modification[1] = 1000;
+				Small Message(Event Player, Custom String("{0} is at maximum! Gotta go fast!", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+			If(Event Player.Player_Modification[2] > 5000);
+				Event Player.Player_Modification[2] = 5000;
+				Small Message(Event Player, Custom String("{0} is at maximum! Don't launch them into orbit.", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
+			Event Player.Player_Modification[Event Player.Modification_Mode_Selector] -= Raise To Power(10, Event Player.Modification_Scalar_Selector);
+			If(Event Player.Player_Modification[Event Player.Modification_Mode_Selector] < 0);
+				Event Player.Player_Modification[Event Player.Modification_Mode_Selector] = 0;
+				Small Message(Event Player, Custom String("{0} is at minimum! Can't go below 0...", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Ultimate)));
+			If(Event Player.Modification_Mode_Selector >=2);
+				Event Player.Modification_Mode_Selector = 0;
+			Else;
+				Event Player.Modification_Mode_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)));
+			If(Event Player.Modification_Scalar_Selector >=3);
+				Event Player.Modification_Scalar_Selector = 0;
+			Else;
+				Event Player.Modification_Scalar_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Reload)));
+			Event Player.Player_Modification[Event Player.Modification_Mode_Selector] = 100;
+			Small Message(Event Player, Custom String("{0} has been reset back to boring default.", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+		End;
+		
+		Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
+		Set Move Speed(Event Player, Event Player.Player_Modification[1]);
+		Set Knockback Dealt(Event Player, Event Player.Player_Modification[2]);
+	}
+}
+
+rule("Mode_10 - Target_Carry_Control")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 10;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+			Set Status(Event Player.Target_Lock, Null, Rooted, 9999);
+			Disallow Button(Event Player.Target_Lock, Button(Ultimate));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player.Target_Lock, 1);
+			Start Forcing Player Position(Event Player.Target_Lock, World Vector Of(Vector(X Component Of(Event Player), (
+				Vertical Facing Angle Of(Event Player) - Vertical Facing Angle Of(Event Player) * 2) / 10, Z Component Of(Event Player) + 5),
+				Event Player, Rotation And Translation), True);
+			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Secondary Fire))
+				== True, 99999);
+			Stop Forcing Player Position(Event Player.Target_Lock);
+			If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+				Apply Impulse(Event Player.Target_Lock, Direction Towards(Event Player, Event Player.Target_Lock), 70, To World,
+					Cancel Contrary Motion);
+			End;
+			Clear Status(Event Player.Target_Lock, Rooted);
+			Allow Button(Event Player.Target_Lock, Button(Ultimate));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Yellow), Event Player.Target_Lock, 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Stop Forcing Player Position(Event Player);
+			Detach Players(Event Player);
+			Clear Status(Event Player, Rooted);
+			Teleport(Event Player, Nearest Walkable Position(Event Player));
+			Resurrect(Event Player);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Green), Event Player, 1);
+		End;
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+	}
+}
+
+rule("Mode_11 - Scale_Own_Size")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 11;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+		Event Player.Progress_Lock == False;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Reload)) == True);
+			Event Player.Scale_Prev = 1;
+			Event Player.Scale_Real = 1;
+			Stop Scaling Player(Event Player);
+			Event Player.Player_Modification[3] = Event Player.Scale_Real * 100;
+			Set Max Health(Event Player, Event Player.Player_Modification[3]);
+			Wait(0.100, Ignore Condition);
+			Heal(Event Player, Null, 12000);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
+				Event Player.Scale_Prev += 0.100;
+				Wait(0.100, Ignore Condition);
+			End;
+			Modify Player Variable(Event Player, Scale_Prev, Min, 20);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+				Event Player.Scale_Prev -= 0.100;
+				Wait(0.100, Ignore Condition);
+			End;
+			Modify Player Variable(Event Player, Scale_Prev, Max, 0.100);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Call Subroutine(Scale_Progress);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Call Subroutine(Scale_Progress_Slow);
+		End;
+	}
+}
+
+rule("Mode_11 - Scale (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Scale_Progress;
+	}
+
+	actions
+	{
+		Event Player.Progress_Lock = True;
+		Start Scaling Player(Event Player, Event Player.Scale_Real, True);
+		Chase Player Variable Over Time(Event Player, Scale_Real, Event Player.Scale_Prev, 2, None);
+		Wait Until(Event Player.Scale_Real == Event Player.Scale_Prev || Event Player.Progress_Stop == True, 99999);
+		Stop Chasing Player Variable(Event Player, Scale_Real);
+		Event Player.Player_Modification[3] = Event Player.Scale_Real * 100;
+		Set Max Health(Event Player, Event Player.Player_Modification[3]);
+		Wait(0.100, Ignore Condition);
+		Heal(Event Player, Null, 12000);
+		Event Player.Progress_Lock = False;
+	}
+}
+
+rule("Mode_11 - Scale_Slow (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Scale_Progress_Slow;
+	}
+
+	actions
+	{
+		Event Player.Progress_Lock = True;
+		Start Scaling Player(Event Player, Event Player.Scale_Real, True);
+		Chase Player Variable At Rate(Event Player, Scale_Real, Event Player.Scale_Prev, 0.020, None);
+		Wait Until(Event Player.Scale_Real == Event Player.Scale_Prev || Event Player.Progress_Stop == True, 99999);
+		Stop Chasing Player Variable(Event Player, Scale_Real);
+		Event Player.Player_Modification[3] = Event Player.Scale_Real * 100;
+		Set Max Health(Event Player, Event Player.Player_Modification[3]);
+		Wait(0.100, Ignore Condition);
+		Heal(Event Player, Null, 12000);
+		Event Player.Progress_Lock = False;
+	}
+}
+
+rule("Mode_11 - Abort_Scaling")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 11;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+		Event Player.Progress_Lock == True;
+	}
+
+	actions
+	{
+		Event Player.Progress_Stop = True;
+		Wait(0.100, Ignore Condition);
+		Event Player.Progress_Stop = False;
+	}
+}
+
+rule("Mode_12 - Scale_Target_Size")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 12;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+		Player Closest To Reticle(Event Player, All Teams).Progress_Lock == False;
+	}
+
+	actions
+	{
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		If(Is Button Held(Event Player, Button(Reload)) == True);
+			Event Player.Target_Lock.Scale_Prev = 1;
+			Event Player.Target_Lock.Scale_Real = 1;
+			Stop Scaling Player(Event Player.Target_Lock);
+			Event Player.Target_Lock.Player_Modification[3] = Event Player.Target_Lock.Scale_Real * 100;
+			Set Max Health(Event Player.Target_Lock, Event Player.Target_Lock.Player_Modification[3]);
+			Wait(0.100, Ignore Condition);
+			Heal(Event Player.Target_Lock, Null, 12000);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
+				Event Player.Target_Lock.Scale_Prev += 0.100;
+				Wait(0.100, Ignore Condition);
+			End;
+			Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Min, 20);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+				Event Player.Target_Lock.Scale_Prev -= 0.100;
+				Wait(0.100, Ignore Condition);
+			End;
+			Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Max, 0.100);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Event Player.Target_Lock.Remote_Scale = 1;
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Event Player.Target_Lock.Remote_Scale = 2;
+		End;
+	}
+}
+
+rule("Mode_12 - Start_Subroutine")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.Remote_Scale == 1 || Event Player.Remote_Scale == 2) == True;
+		Event Player.Progress_Lock == False;
+	}
+
+	actions
+	{
+		If(Event Player.Remote_Scale == 1);
+			Call Subroutine(Scale_Progress);
+			Event Player.Remote_Scale = False;
+		Else If(Event Player.Remote_Scale == 2);
+			Call Subroutine(Scale_Progress_Slow);
+			Event Player.Remote_Scale = False;
+		End;
+	}
+}
+
+rule("Mode_12 - Abort_Scaling")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 12;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+		Player Closest To Reticle(Event Player, All Teams).Progress_Lock == True;
+	}
+
+	actions
+	{
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		Event Player.Target_Lock.Progress_Stop = True;
+		Wait(0.100, Ignore Condition);
+		Event Player.Target_Lock.Progress_Stop = False;
+	}
+}
+
+rule("Mode_13 - Attach_System")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 13;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Attach Players(Event Player, Player Closest To Reticle(Event Player, All Teams), Vector(0, 2, 0));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Attach Players(Player Closest To Reticle(Event Player, All Teams), Event Player, Vector(0, 2, 0));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Detach Players(Event Player);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Detach Players(Player Closest To Reticle(Event Player, All Teams));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_14 - Grapple_Line")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 14;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))
+			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Event Player.Grap_Line[2] == True);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			Event Player.Grap_Line[0] = Player Closest To Reticle(Event Player, All Teams);
+			Player Closest To Reticle(Event Player, All Teams).Grap_Line[0] = Event Player;
+			Wait(0.250, Ignore Condition);
+			Create Beam Effect(All Players(All Teams), Good Beam, Event Player.Grap_Line[0], Event Player, Color(Rose),
+				Visible To Position and Radius);
+			Event Player.Grap_Line[1] = Last Created Entity;
+			Event Player.Grap_Line[2] = True;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Position Of(Event Player.Grap_Line[0]), 1);
+			Destroy Effect(Player Closest To Reticle(Event Player, All Teams).Grap_Line[1]);
+			Destroy Effect(Event Player.Grap_Line[1]);
+			Stop Facing(Event Player.Grap_Line[0]);
+			Stop Facing(Event Player);
+			Event Player.Grap_Line[1] = Null;
+			Event Player.Grap_Line[2] = False;
+			Wait(0.250, Ignore Condition);
+			Event Player.Grap_Line[0] = Null;
+			Player Closest To Reticle(Event Player, All Teams).Grap_Line[0] = Null;
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Start Facing(Event Player.Grap_Line[0], Direction Towards(Eye Position(Event Player.Grap_Line[0]), Add(Vector(0,0.1,0),Eye Position(Event Player))), 
+				Angle Between Vectors(Facing Direction Of(Event Player.Grap_Line[0]), 
+				Direction Towards(Eye Position(Event Player.Grap_Line[0]), Add(Vector(0,0.2,0),Eye Position(Event Player))))*2, To World, Direction And Turn Rate);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Stop Facing(Event Player.Grap_Line[0]);
+		End;
+	}
+}
+
+rule("Mode_14 - Grapple_Line_Pullback")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Grap_Line[2] == True;
+		Distance Between(Event Player, Position Of(Event Player.Grap_Line[0])) >= 4;
+	}
+
+	actions
+	{
+		Apply Impulse(Event Player.Grap_Line[0], Direction Towards(Position Of(Event Player.Grap_Line[0]), Event Player), 20, To World,
+			Cancel Contrary Motion);
+		Wait(0.100, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
+
+
+
+rule("Mode_15 - Painting_NEW")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 15;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
+			Ability 2)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Melee))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		"Draw effects"
+		If(Is Button Held(Event Player, Button(Primary Fire)));
+			If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
+				"Sphere"
+				Create Effect(All Players(All Teams), Sphere, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.250,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+				Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
+				Wait(0.110, Ignore Condition);
+				Loop If Condition Is True;
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
+				"Sparkles"
+				Create Effect(All Players(All Teams), Sparkles, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Light Shaft"));
+				"Light Shaft"
+				Create Effect(All Players(All Teams), Light Shaft, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 7,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Orb"));
+				"Orb"
+				Create Effect(All Players(All Teams), Orb, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 3,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Ring"));
+				"Ring"
+				Create Effect(All Players(All Teams), Ring, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Cloud"));
+				"Cloud"
+				Create Effect(All Players(All Teams), Cloud, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 4,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Good Aura"));
+				"Good Aura"
+				Create Effect(All Players(All Teams), Good Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Bad Aura"));
+				"Bad Aura"
+				Create Effect(All Players(All Teams), Bad Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+					Visible To);
+			End;
+			Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
+		"Remove effects"
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Destroy Effect(Global.Drawing_Obj_Storage);
+			"Unnecessary operation to save player's drawings array, util blizzard not increase limits of objects can be in match"
+			Global.Drawing_Obj_Storage = Empty Array;
+			Small Message(All Players(All Teams), Custom String("Effects Are Cleared"));
+		"Selectors, simple from 0 to specified endpoint"
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Drawing_Obj_Size_Selector >= 12);
+				Event Player.Drawing_Obj_Size_Selector = 0;
+			Else;
+				Event Player.Drawing_Obj_Size_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String(" {0}", Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector]));
+			Call Subroutine(Drawing_Objects_Preview);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.Drawing_Obj_Effects_Selector >= 7);
+				Event Player.Drawing_Obj_Effects_Selector = 0;
+			Else;
+				Event Player.Drawing_Obj_Effects_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String(" {0}", Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector]));
+			Call Subroutine(Drawing_Objects_Preview);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Event Player.Drawing_Obj_Colors_Selector >= 14);
+				Event Player.Drawing_Obj_Colors_Selector = 0;
+			Else;
+				Event Player.Drawing_Obj_Colors_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String(" {0}", Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector]));
+			Call Subroutine(Drawing_Objects_Preview);
+		End;
+	}
+}
+
+rule("Mode_15 - Drawing Objects Preview (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Drawing_Objects_Preview;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.Drawing_Obj_Preview);
+		If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
+			Create Effect(Event Player, Sphere, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 1.250,
+				Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector], Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
+			Create Effect(Event Player, Sparkles, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Light Shaft"));
+			Create Effect(Event Player, Light Shaft, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 7, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Orb"));
+			Create Effect(Event Player, Orb, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 3, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Ring"));
+			Create Effect(Event Player, Ring, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Cloud"));
+			Create Effect(Event Player, Cloud, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 4, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Good Aura"));
+			Create Effect(Event Player, Good Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Bad Aura"));
+			Create Effect(Event Player, Bad Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector], Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
+		End;
+		Event Player.Drawing_Obj_Preview = Last Created Entity;
+	}
+}
+
+rule("Mode_15 - Remove Preview Effect if menu != 15")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Mode_Cycle != 15;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.Drawing_Obj_Preview);
+	}
+}
+
+rule("Mode_15 - Remove Preview Effect if menu == 15")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Mode_Cycle == 15;
+	}
+
+	actions
+	{
+		Call Subroutine(Drawing_Objects_Preview);
+	}
+}
+
+rule("Mode_16 - Mute")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 16;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Restricted == True);
+			Player Closest To Reticle(Event Player, All Teams).Restricted = True;
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
+			End;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			Create Effect(All Players(All Teams), Sphere, Color(Sky Blue), Position Of(Player Closest To Reticle(Event Player, All Teams)),
+				3.500, Visible To);
+			
+			Global.Jail_List[0] = Append To Array(Global.Jail_List[0], Custom String("{0}", Player Closest To Reticle(Event Player, All Teams)));
+			Global.Jail_List[1] = Append To Array(Global.Jail_List[1], Last Created Entity);
+			Global.Jail_List[2] = Append To Array(Global.Jail_List[2], Position Of(Player Closest To Reticle(Event Player, All Teams)));
+			"Disable text and voice chats"
+			Disable Text Chat(Player Closest To Reticle(Event Player, All Teams));
+			Disable Voice Chat(Player Closest To Reticle(Event Player, All Teams), True, True, True);
+			"Disable all skills and meele"
+			Set Ability 1 Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+			Set Ability 2 Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+
+			Set Melee Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+			Set Primary Fire Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+			Set Secondary Fire Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+			Set Ultimate Ability Enabled(Player Closest To Reticle(Event Player, All Teams), False);
+			Player Closest To Reticle(Event Player, All Teams).Last_Position_Facing[0] = Position Of(Player Closest To Reticle(Event Player,
+				All Teams));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Restricted == False);
+			Player Closest To Reticle(Event Player, All Teams).Restricted = False;
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Phased Out, 9999);
+			End;
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+			
+			Event Player.Index_Help = Index Of Array Value(Global.Jail_List[0], Custom String("{0}", Player Closest To Reticle(Event Player, All Teams)));
+			Destroy Effect(Global.Jail_List[1][Event Player.Index_Help]);
+			Global.Jail_List[0] = Filtered Array(Global.Jail_List[0], Current Array Index != Event Player.Index_Help);
+			Global.Jail_List[1] = Filtered Array(Global.Jail_List[1], Current Array Index != Event Player.Index_Help);
+			Global.Jail_List[2] = Filtered Array(Global.Jail_List[2], Current Array Index != Event Player.Index_Help);
+
+			"Enable text and voice chats"
+			Enable Text Chat(Player Closest To Reticle(Event Player, All Teams));
+			Enable Voice Chat(Player Closest To Reticle(Event Player, All Teams));
+			"Enable skills and meele"
+			Set Ability 1 Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Set Ability 2 Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Set Melee Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Set Primary Fire Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Set Secondary Fire Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Set Ultimate Ability Enabled(Player Closest To Reticle(Event Player, All Teams), True);
+			Player Closest To Reticle(Event Player, All Teams).Last_Position_Facing[0] = Null;
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Restricted == False);
+				Event Player.Restricted = True;
+				If(Event Player.Protection == True);
+					Clear Status(Event Player, Phased Out);
+				End;
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+				Create Effect(All Players(All Teams), Sphere, Color(Sky Blue), Position Of(Event Player), 3.500, Visible To);
+				
+				Global.Jail_List[0] = Append To Array(Global.Jail_List[0], Custom String("{0}", Event Player));
+				Global.Jail_List[1] = Append To Array(Global.Jail_List[1], Last Created Entity);
+				Global.Jail_List[2] = Append To Array(Global.Jail_List[2], Position Of(Event Player));
+				
+				Disable Text Chat(Event Player);
+				Disable Voice Chat(Event Player, True, True, True);
+				Set Ability 1 Enabled(Event Player, False);
+				Set Ability 2 Enabled(Event Player, False);
+				Set Melee Enabled(Event Player, False);
+				Set Primary Fire Enabled(Event Player, False);
+				Set Secondary Fire Enabled(Event Player, False);
+				Set Ultimate Ability Enabled(Event Player, False);
+				Event Player.Last_Position_Facing[0] = Position Of(Event Player);
+			Else If(Event Player.Restricted == True);
+				Event Player.Restricted = False;
+				If(Event Player.Protection == True);
+					Set Status(Event Player, Null, Phased Out, 9999);
+				End;
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+				
+				Event Player.Index_Help = Index Of Array Value(Global.Jail_List[0], Custom String("{0}", Event Player));
+				Destroy Effect(Global.Jail_List[1][Event Player.Index_Help]);
+				Global.Jail_List[0] = Filtered Array(Global.Jail_List[0], Current Array Index != Event Player.Index_Help);
+				Global.Jail_List[1] = Filtered Array(Global.Jail_List[1], Current Array Index != Event Player.Index_Help);
+				Global.Jail_List[2] = Filtered Array(Global.Jail_List[2], Current Array Index != Event Player.Index_Help);
+
+				Enable Text Chat(Event Player);
+				Enable Voice Chat(Event Player);
+				Set Ability 1 Enabled(Event Player, True);
+				Set Ability 2 Enabled(Event Player, True);
+				Set Melee Enabled(Event Player, True);
+				Set Primary Fire Enabled(Event Player, True);
+				Set Secondary Fire Enabled(Event Player, True);
+				Set Ultimate Ability Enabled(Event Player, True);
+				Event Player.Last_Position_Facing[0] = Null;
+			End;
+		End;
+	}
+}
+
+rule("Mode_16 - Cage")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Restricted == True;
+		Distance Between(Event Player, Event Player.Last_Position_Facing[0]) > 3;
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		While(Distance Between(Event Player, Event Player.Last_Position_Facing[0]) > 3);
+			Apply Impulse(Event Player, Direction Towards(Event Player, Event Player.Last_Position_Facing[0]), 20, To World,
+				Cancel Contrary Motion);
+			Wait(0.100, Ignore Condition);
+			If(Distance Between(Event Player, Event Player.Last_Position_Facing[0]) > 4);
+				Cancel Primary Action(Event Player);
+				Teleport(Event Player, Event Player.Last_Position_Facing[0]);
+			End;
+		End;
+		Loop If Condition Is True;
+	}
+}
+
+rule("Mode_16 - Jail_List_Update")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Wait(1, Ignore Condition);
+		For Global Variable(Jail_Helper, 0, Count Of (Global.Jail_List[0]), 1);
+			If(Array Contains(Mapped Array(All Players(All Teams),Custom String("{0}",Current Array Element)), Global.Jail_List[0][Global.Jail_Helper]) == False);
+				Destroy Effect(Global.Jail_List[1][Global.Jail_Helper]);
+			End;
+		End;
+		Loop;
+	}
+}
+
+rule ("Subroutine: Jail_Leaver")
+{
+    event 
+	{
+		Subroutine;
+		Jail_Leaver;
+    }
+	actions
+	{
+		Event Player.Index_Help = Index Of Array Value(Global.Jail_List[0], Custom String("{0}", Event Player));
+		
+		Wait(0.020, Ignore Condition);
+		Teleport(Event Player, Global.Jail_List[2][Event Player.Index_Help]);
+		Wait(0.020, Ignore Condition);
+		
+		Global.Jail_List[0] = Filtered Array(Global.Jail_List[0], Current Array Index != Event Player.Index_Help);
+		Global.Jail_List[1] = Filtered Array(Global.Jail_List[1], Current Array Index != Event Player.Index_Help);
+		Global.Jail_List[2] = Filtered Array(Global.Jail_List[2], Current Array Index != Event Player.Index_Help);
+				
+		If(Event Player.Protection == True);
+			Clear Status(Event Player, Phased Out);
+		End;
+		Create Effect(All Players(All Teams), Sphere, Color(Sky Blue), Position Of(Event Player),
+			3.500, Visible To);
+				
+		Global.Jail_List[0] = Append To Array(Global.Jail_List[0], Custom String("{0}", Event Player));
+		Global.Jail_List[1] = Append To Array(Global.Jail_List[1], Last Created Entity);
+		Global.Jail_List[2] = Append To Array(Global.Jail_List[2], Position Of(Event Player));
+
+		Set Ability 1 Enabled(Event Player, False);
+		Set Ability 2 Enabled(Event Player, False);
+
+		Set Melee Enabled(Event Player, False);
+		Set Primary Fire Enabled(Event Player, False);
+		Set Secondary Fire Enabled(Event Player, False);
+		Set Ultimate Ability Enabled(Event Player, False);
+		Event Player.Last_Position_Facing[0] = Position Of(Event Player);
+	}
+}
+
+rule("Mode_17 - Spawn_Hero_Force")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 17;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Start Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams), Hero(Mercy));
+			Small Message(All Players(All Teams), Custom String("{0} Is Now {1}", Player Closest To Reticle(Event Player, All Teams),
+				Hero Icon String(Hero(Mercy))));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Start Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams), Hero(D.Va));
+			Small Message(All Players(All Teams), Custom String("{0} Is Now {1}", Player Closest To Reticle(Event Player, All Teams),
+				Hero Icon String(Hero(D.Va))));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Start Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams), Hero(Widowmaker));
+			Small Message(All Players(All Teams), Custom String("{0} Is Now {1}", Player Closest To Reticle(Event Player, All Teams),
+				Hero Icon String(Hero(Widowmaker))));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Start Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams), Hero Of(Event Player));
+			Small Message(All Players(All Teams), Custom String("{0} Is Now {1}", Player Closest To Reticle(Event Player, All Teams),
+				Hero Icon String(Hero Of(Event Player))));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Stop Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams));
+			Stop Forcing Player To Be Hero(Event Player);
+			Small Message(All Players(All Teams), Custom String("{0} Can Now Choose Any Hero", Player Closest To Reticle(Event Player,
+				All Teams)));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_18 - Savezone")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 18;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Global.Savezone_Radius += 0.500;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Global.Savezone_Radius -= 0.500;
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Global.Savezone_Active == True);
+			Big Message(All Players(All Teams), Custom String("{0} Created A Savezone", Event Player));
+			Global.Savezone_Active = True;
+			Global.Savezone_Position = Position Of(Event Player);
+			Create Effect(All Players(All Teams), Ring, Global.Rainbow_Color, Global.Savezone_Position, Global.Savezone_Radius,
+				Position Radius and Color);
+			Global.Savezone_ID = Last Created Entity;
+			Filtered Array(All Players(All Teams), Current Array Element.High_Rank == True || Current Array Element.Mod_Rank == True)
+				.Savezone_Access = True;
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Abort If(Global.Savezone_Active == False);
+			Big Message(All Players(All Teams), Custom String("{0} Erased The Savezone", Event Player));
+			Global.Savezone_Active = False;
+			Global.Savezone_Position = Null;
+			Destroy Effect(Global.Savezone_ID);
+			Global.Savezone_ID = Null;
+			Event Player.Savezone_Access = False;
+			Clear Status(Filtered Array(All Players(All Teams), Current Array Element.Protection == False), Phased Out);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Savezone_Access == False);
+				Player Closest To Reticle(Event Player, All Teams).Savezone_Access = True;
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Green), Player Closest To Reticle(Event Player, All Teams), 1);
+			Else If(Player Closest To Reticle(Event Player, All Teams).Savezone_Access == True);
+				Player Closest To Reticle(Event Player, All Teams).Savezone_Access = False;
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			End;
+		End;
+	}
+}
+
+rule("Mode_18 - No_Access")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global.Savezone_Active == True;
+		Event Player.Savezone_Access == False;
+		Distance Between(Global.Savezone_Position, Event Player) < Global.Savezone_Radius;
+	}
+
+	actions
+	{
+		Play Effect(All Players(All Teams), Good Explosion, Color(Red), Event Player, 2);
+		Apply Impulse(Event Player, Vector(0, 1, 0), 20, To World, Cancel Contrary Motion);
+		Apply Impulse(Event Player, Direction Towards(Global.Savezone_Position, Event Player), 100, To World, Incorporate Contrary Motion);
+		Wait(0.200, Ignore Condition);
+		If(Event Player.Protection == True);
+			Clear Status(Event Player, Phased Out);
+		End;
+		Set Status(Event Player, Null, Asleep, 3);
+		If(Event Player.Protection == True);
+			Set Status(Event Player, Null, Phased Out, 9999);
+		End;
+		Loop If Condition Is True;
+	}
+}
+
+rule("Mode_18 - Access_In")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global.Savezone_Active == True;
+		Event Player.Savezone_Access == True;
+		Distance Between(Global.Savezone_Position, Event Player) < Global.Savezone_Radius;
+	}
+
+	actions
+	{
+		If(Event Player.Protection == False);
+			Set Status(Event Player, Null, Phased Out, 9999);
+		End;
+	}
+}
+
+rule("Mode_18 - Access_Out")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global.Savezone_Active == True;
+		Event Player.Savezone_Access == True;
+		Distance Between(Global.Savezone_Position, Event Player) >= Global.Savezone_Radius;
+	}
+
+	actions
+	{
+		If(Event Player.Protection == False);
+			Clear Status(Event Player, Phased Out);
+		End;
+	}
+}
+
+rule("Mode_19 - Damage_Reflection")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 19;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Damage_Reflect == False);
+				Event Player.Damage_Reflect = True;
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Event Player.Damage_Reflect == True);
+				Event Player.Damage_Reflect = False;
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Player Closest To Reticle(Event Player, All Teams).Damage_Reflect = True;
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Player Closest To Reticle(Event Player, All Teams).Damage_Reflect = False;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		End;
+	}
+}
+
+rule("Mode_19 - Attacker_Victim_Reaction (Victim has reflection)")
+{
+	event
+	{
+		Player Dealt Damage;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Victim.Damage_Reflect == True;
+		Attacker.Damage_Reflect == False;
+	}
+
+	actions
+	{
+		Damage(Attacker, Victim, Event Damage);
+		If(Is Dead(Event Player) == True);
+			Resurrect(Victim);
+		End;
+		Heal(Victim, Attacker, Event Damage);
+		Apply Impulse(Attacker, Vector(0, 1, 0), 20, To World, Cancel Contrary Motion);
+		Apply Impulse(Attacker, Direction Towards(Position Of(Victim), Position Of(Attacker)), 100, To World, Incorporate Contrary Motion);
+		Set Status(Attacker, Null, Knocked Down, 3);
+	}
+}
+
+rule("Mode_20 - Voice_Pitch_Moan_Spam")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 20;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Event Player.Voice_Pitch == 1.500);
+			Event Player.Voice_Pitch += 0.250;
+			Modify Player Variable(Event Player, Voice_Pitch, Min, 1.500);
+			Start Modifying Hero Voice Lines(Event Player, Event Player.Voice_Pitch, False);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Abort If(Event Player.Voice_Pitch == 0.500);
+			Event Player.Voice_Pitch -= 0.250;
+			Modify Player Variable(Event Player, Voice_Pitch, Max, 0.500);
+			Start Modifying Hero Voice Lines(Event Player, Event Player.Voice_Pitch, False);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Event Player.Voice_Pitch = 1;
+			Stop Modifying Hero Voice Lines(Event Player);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
+			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Stunned, 1);
+				Wait(0.020, Ignore Condition);
+			End;
+			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
+				Set Status(Player Closest To Reticle(Event Player, All Teams), Null, Phased Out, 9999);
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Clear Status(Event Player, Phased Out);
+			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+				Set Status(Event Player, Null, Stunned, 1);
+				Wait(0.020, Ignore Condition);
+			End;
+			If(Event Player.Protection == True);
+				Set Status(Event Player, Null, Phased Out, 9999);
+			End;
+		End;
+	}
+}
+
+rule("Mode_21 - Kick_&_Ban")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player == Host Player;
+		Event Player.Mode_Cycle == 21;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		"Permission Check"
+		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player.Target_Lock)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Big Message(All Players(All Teams), Custom String("{1} LMAO Nice Try {1}", Event Player, Icon String(Exclamation Mark)));
+			Modify Global Variable(Temp_Banned, Append To Array, Custom String("{0}", Event Player));
+		End;
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+		"Authorization Accepted"
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			Small Message(All Players(All Teams), Custom String("{0} Is Getting Kicked", Event Player.Target_Lock));
+			Wait(3, Ignore Condition);
+			Remove Player(Event Player.Target_Lock);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			Modify Global Variable(Temp_Banned, Append To Array, Custom String("{0}", Event Player.Target_Lock));
+		End;
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+	}
+}
+
+rule("Mode_22 - Heavenly_Strike")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 22;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+		Event Player.Target_Lock.Progress_Lock == False;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Event Player.Target_Lock = Event Player;
+		End;
+		Event Player.Target_Lock.Progress_Lock = True;
+		Set Status(Event Player.Target_Lock, Null, Rooted, 9999);
+		Big Message(All Players(All Teams), Custom String("{0} is going to Brazil.", Event Player.Target_Lock));
+		"Intro"
+		Event Player.Target_Lock.Heaven_Strike_Radius = 3;
+		Create Effect(All Players(All Teams), Light Shaft, Color(Sky Blue), Position Of(Event Player.Target_Lock),
+			Event Player.Target_Lock.Heaven_Strike_Radius, Position and Radius);
+		Event Player.Target_Lock.Heaven_Strike_ID[0] = Last Created Entity;
+		Create Effect(All Players(All Teams), Ring, Color(Red), Position Of(Event Player.Target_Lock),
+			Event Player.Target_Lock.Heaven_Strike_Radius, Position and Radius);
+		Event Player.Target_Lock.Heaven_Strike_ID[1] = Last Created Entity;
+		Chase Player Variable Over Time(Event Player.Target_Lock, Heaven_Strike_Radius, 0.075, 5, Destination and Duration);
+		Wait(5, Ignore Condition);
+		Stop Chasing Player Variable(Event Player.Target_Lock, Heaven_Strike_Radius);
+		Destroy Effect(Event Player.Target_Lock.Heaven_Strike_ID[0]);
+		Destroy Effect(Event Player.Target_Lock.Heaven_Strike_ID[1]);
+		"Explosion"
+		Play Effect(All Players(All Teams), Good Explosion, Color(Red), Position Of(Event Player.Target_Lock), 3);
+		Play Effect(All Players(All Teams), Explosion Sound, Null, Position Of(Event Player.Target_Lock), 200);
+		Wait(0.100, Ignore Condition);
+		Play Effect(All Players(All Teams), Bad Explosion, Color(Orange), Position Of(Event Player.Target_Lock), 3);
+		Play Effect(All Players(All Teams), Ring Explosion, Color(Yellow), Position Of(Event Player.Target_Lock), 3);
+		"Outro"
+		Teleport(Event Player.Target_Lock, Vector(0, 1000, 0));
+		Set Facing(Event Player.Target_Lock, Down, To World);
+		Set Gravity(Event Player.Target_Lock, 0);
+		Wait(5, Ignore Condition);
+		Kill(Event Player.Target_Lock, Event Player);
+		If(Is Alive(Event Player.Target_Lock) == True);
+			Wait(1, Ignore Condition);
+			Kill(Event Player.Target_Lock, Event Player);
+		End;
+		Set Gravity(Event Player.Target_Lock, 100);
+		Clear Status(Event Player.Target_Lock, Rooted);
+		Event Player.Target_Lock.Progress_Lock = False;
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+	}
+}
+
+rule("Mode_23 - Icon_Tag_Own")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 23;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Event Player.Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Heart, Visible To,
+				Color(Rose), True);
+			Event Player.Icon_ID = Last Created Entity;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Event Player.Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Trashcan,
+				Visible To, Color(Gray), True);
+			Event Player.Icon_ID = Last Created Entity;
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Event Player.Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Fire, Visible To,
+				Color(Orange), True);
+			Event Player.Icon_ID = Last Created Entity;
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Abort If(Event Player.Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Bolt, Visible To,
+				Color(Yellow), True);
+			Event Player.Icon_ID = Last Created Entity;
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Destroy Icon(Event Player.Icon_ID);
+			Event Player.Icon_ID = Null;
+		End;
+	}
+}
+
+rule("Mode_24 - Icon_Tag_Target")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 24;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+				Event Player, All Teams), Heart, Visible To, Color(Rose), True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
+			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
+				All Teams), Icon String(Heart)));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+				Event Player, All Teams), Trashcan, Visible To, Color(Gray), True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
+			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
+				All Teams), Icon String(Trashcan)));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+				Event Player, All Teams), Fire, Visible To, Color(Orange), True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
+			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
+				All Teams), Icon String(Fire)));
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+				Event Player, All Teams), Bolt, Visible To, Color(Yellow), True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
+			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
+				All Teams), Icon String(Bolt)));
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Null;
+			Small Message(All Players(All Teams), Custom String("{0} Removed {1}'s Icon", Event Player, Player Closest To Reticle(Event Player,
+				All Teams)));
+		End;
+	}
+}
+
+rule("Mode_25 - Give_Revoke_Mod")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 25;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Modify Global Variable(Mod_Rank, Append To Array, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams)));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) != True);
+			Modify Global Variable(Mod_Rank, Remove From Array By Value, Custom String("{0}", Player Closest To Reticle(Event Player,
+				All Teams)));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Team Of(Event Player) == Team 1);
+				Move Player to Team(Event Player, Host Player, -1);
+				Wait(0.250, Ignore Condition);
+				Move Player to Team(Event Player, Team 2, -1);
+			Else If(Team Of(Event Player) == Team 2);
+				Move Player to Team(Event Player, Host Player, -1);
+				Wait(0.250, Ignore Condition);
+				Move Player to Team(Event Player, Team 1, -1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+			If(Team Of(Event Player.Target_Lock) == Team 1);
+				Move Player to Team(Event Player.Target_Lock, Host Player, -1);
+				Wait(0.250, Ignore Condition);
+				Move Player to Team(Event Player.Target_Lock, Team 2, -1);
+			Else If(Team Of(Event Player.Target_Lock) == Team 2);
+				Move Player to Team(Event Player.Target_Lock, Host Player, -1);
+				Wait(0.250, Ignore Condition);
+				Move Player to Team(Event Player.Target_Lock, Team 1, -1);
+			End;
+			Event Player.Target_Lock = Custom String("--- No Target ---");
+		End;
+	}
+}
+
+rule("Mode_26 - Ghost_Mode")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 26;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Ghost_Mode == True);
+			Player Closest To Reticle(Event Player, All Teams).Ghost_Mode = True;
+			Disable Movement Collision With Environment(Player Closest To Reticle(Event Player, All Teams), False);
+			Disable Movement Collision With Players(Player Closest To Reticle(Event Player, All Teams));
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Ghost_Mode == False);
+			Player Closest To Reticle(Event Player, All Teams).Ghost_Mode = False;
+			Enable Movement Collision With Environment(Player Closest To Reticle(Event Player, All Teams));
+			Enable Movement Collision With Players(Player Closest To Reticle(Event Player, All Teams));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Ghost_Mode == False);
+				Event Player.Ghost_Mode = True;
+				Disable Movement Collision With Environment(Event Player, False);
+				Disable Movement Collision With Players(Event Player);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Event Player.Ghost_Mode == True);
+				Event Player.Ghost_Mode = False;
+				Enable Movement Collision With Environment(Event Player);
+				Enable Movement Collision With Players(Event Player);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Event Player, 1);
+			End;
+		End;
+	}
+}
+
+rule("Mode_27 - Slowmotion_&_Slow_Projectile")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 27;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Slow_Projectile == True);
+			Player Closest To Reticle(Event Player, All Teams).Slow_Projectile = True;
+			Set Projectile Speed(Player Closest To Reticle(Event Player, All Teams), 1);
+			Set Projectile Gravity(Player Closest To Reticle(Event Player, All Teams), 0);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).Slow_Projectile == False);
+			Player Closest To Reticle(Event Player, All Teams).Slow_Projectile = False;
+			Set Projectile Speed(Player Closest To Reticle(Event Player, All Teams), 100);
+			Set Projectile Gravity(Player Closest To Reticle(Event Player, All Teams), 100);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Slow_Projectile == False);
+				Event Player.Slow_Projectile = True;
+				Set Projectile Speed(Event Player, 1);
+				Set Projectile Gravity(Event Player, 0);
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Event Player.Slow_Projectile == True);
+				Event Player.Slow_Projectile = False;
+				Set Projectile Speed(Event Player, 100);
+				Set Projectile Gravity(Event Player, 100);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Yellow), Event Player, 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Global.Slowmotion == False);
+				Global.Slowmotion = True;
+				Set Slow Motion(10);
+				Big Message(All Players(All Teams), Custom String("Time Flows So Slowly"));
+			Else If(Global.Slowmotion == True);
+				Global.Slowmotion = False;
+				Set Slow Motion(100);
+				Big Message(All Players(All Teams), Custom String("Back In The Flow Of Time"));
+			End;
+		End;
+	}
+}
+
+rule("Mode_28 - Create_Bodyguard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 28;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Team Of(Player Closest To Reticle(Event Player, All Teams)) == Team Of(Event Player));
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			Global.AI_Target = Null;
+			Wait(0.020, Ignore Condition);
+			Global.AI_Target = Player Closest To Reticle(Event Player, All Teams);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Global.AI_Target = Null;
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Global.Bodyguards == False);
+				Global.Bodyguards = True;
+				Global.AI_Client = Event Player;
+				Create Dummy Bot(Global.Hero, Team Of(Event Player), -1, World Vector Of(Vector(2, 1, 1), Event Player, Rotation And Translation),
+					Eye Position(Global.AI_Target));
+				Create Dummy Bot(Global.Hero, Team Of(Event Player), -1, World Vector Of(Vector(-2, 1, 1), Event Player, Rotation And Translation),
+					Eye Position(Global.AI_Target));
+				Create HUD Text(All Players(All Teams), Custom String("{1} {0}", Global.AI_Target, Hero Icon String(Hero Of(Global.AI_Target))),
+					Custom String("{0}", Global.AI_Status), Custom String("Distance: {0}m", Distance Between(Position Of(Event Player),
+					Position Of(Global.AI_Target))), Top, 2, Global.AI_Range_1_Color, Global.AI_Range_1_Color, Global.AI_Range_2_Color,
+					String and Color, Visible Never);
+				Global.AI_Target_Hud_ID = Last Text ID;
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Global.Bodyguards == True);
+				Global.Bodyguards = False;
+				Global.AI_Client = Null;
+				Global.AI_Target = Null;
+				Destroy All Dummy Bots;
+				Destroy HUD Text(Global.AI_Target_Hud_ID);
+				Global.AI_Target_Hud_ID = Null;
+				Global.AI_Range_1_Color = Color(White);
+				Global.AI_Range_2_Color = Color(Sky Blue);
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			End;
+		End;
+	}
+}
+
+rule("Mode_28 - Bodyguard_AI")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Distance Between(Position Of(Global.AI_Client), Position Of(Global.AI_Target)) <= 50;
+		Is In Line of Sight(Eye Position(Event Player), Eye Position(Global.AI_Target), Enemy Barriers Block LOS) == True;
+		Global.AI_Target != Null;
+		Global.Bodyguards == True;
+	}
+
+	actions
+	{
+		Global.AI_Status = Custom String("Is In Line Of Sight");
+		Global.AI_Range_1_Color = Color(Red);
+		Global.AI_Range_2_Color = Color(Black);
+		Event Player.In_Action = True;
+		"AI Behavior"
+		Create Icon(All Players(All Teams), Event Player, Exclamation Mark, Color, Color(Red), False);
+		Event Player.Icon_ID = Last Created Entity;
+		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Global.AI_Target)), 360, To World,
+			Direction and Turn Rate);
+		If(Hero Of(Event Player) == Hero(Widowmaker));
+			Start Holding Button(Event Player, Button(Secondary Fire));
+			While(Is In Line of Sight(Eye Position(Event Player), Global.AI_Target, Enemy Barriers Block LOS) == True && Is Alive(
+				Global.AI_Target) == True);
+				Wait(1.900, Ignore Condition);
+				Press Button(Event Player, Button(Primary Fire));
+				Wait(0.100, Ignore Condition);
+			End;
+			Stop Holding Button(Event Player, Button(Secondary Fire));
+		Else;
+			Start Holding Button(Event Player, Button(Primary Fire));
+			While(Is In Line of Sight(Eye Position(Event Player), Global.AI_Target, Enemy Barriers Block LOS) == True && Is Alive(
+				Global.AI_Target) == True);
+				Wait(0.100, Ignore Condition);
+			End;
+			Stop Holding Button(Event Player, Button(Primary Fire));
+		End;
+		Stop Facing(Event Player);
+		Destroy Icon(Event Player.Icon_ID);
+		Event Player.Icon_ID = Null;
+		Event Player.In_Action = False;
+		"Target Check"
+		If(Is True For All(All Players(All Teams), Current Array Element.In_Action == False));
+			Call Subroutine(Target_Check);
+		End;
+	}
+}
+
+rule("Mode_28 - Distance_In")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Distance Between(Position Of(Global.AI_Client), Position Of(Global.AI_Target)) <= 50;
+		Global.AI_Target != Null;
+	}
+
+	actions
+	{
+		Call Subroutine(Target_Check);
+	}
+}
+
+rule("Mode_28 - Distance_Out")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Distance Between(Position Of(Global.AI_Client), Position Of(Global.AI_Target)) > 50;
+		Global.AI_Target != Null;
+	}
+
+	actions
+	{
+		Call Subroutine(Target_Check);
+	}
+}
+
+rule("Mode_28 - Distance (Subroutine)")
+{
+	event
+	{
+		Subroutine;
+		Target_Check;
+	}
+
+	actions
+	{
+		If(Distance Between(Position Of(Global.AI_Client), Position Of(Global.AI_Target)) <= 50);
+			Global.AI_Status = Custom String("Is In Dangerous Area");
+			Global.AI_Range_1_Color = Color(Gray);
+			Global.AI_Range_2_Color = Color(Orange);
+		Else If(Distance Between(Position Of(Global.AI_Client), Position Of(Global.AI_Target)) > 50);
+			Global.AI_Status = Custom String("Is Out Of Range");
+			Global.AI_Range_1_Color = Color(White);
+			Global.AI_Range_2_Color = Color(Sky Blue);
+		End;
+	}
+}
+
+rule("Mode_29 - Remote_Control")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 29;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
+			Ability 2))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Start Holding Button(Event Player.Target_Lock, Button(Primary Fire));
+			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
+				Wait(0.100, Ignore Condition);
+			End;
+			Stop Holding Button(Event Player.Target_Lock, Button(Primary Fire));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Start Holding Button(Event Player.Target_Lock, Button(Secondary Fire));
+			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+				Wait(0.100, Ignore Condition);
+			End;
+			Stop Holding Button(Event Player.Target_Lock, Button(Secondary Fire));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Set Ultimate Charge(Event Player.Target_Lock, 100);
+			Press Button(Event Player.Target_Lock, Button(Ultimate));
+		Else If(Is Button Held(Event Player, Button(Ability 1)) == True);
+			Press Button(Event Player.Target_Lock, Button(Ability 1));
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			Press Button(Event Player.Target_Lock, Button(Ability 2));
+		End;
+		Event Player.Target_Lock = Custom String("--- No Target ---");
+	}
+}
+
+rule("Mode_30 - Match_Time")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.High_Rank == True;
+		Event Player.Mode_Cycle == 30;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Set Match Time(3600);
+			Big Message(All Players(All Teams), Custom String("Remaining Time: 60 min", Event Player));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Set Match Time(1800);
+			Big Message(All Players(All Teams), Custom String("Remaining Time: 30 min", Event Player));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Set Match Time(10);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Declare Match Draw;
+			Wait(27, Ignore Condition);
+			Restart Match;
+		End;
+	}
+}
+
+
+rule("Mode_31 - Invisibility")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 31;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) ) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);		
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Green), Event Player, 1);
+			Set Invisible(Event Player, All);
+			Event Player.Invisibility = True;
+			Destroy In-World Text(Event Player.Player_Nameplates);
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Set Invisible(Event Player, None);
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
+			Event Player.Invisibility = False;
+		End;
+	}
+}
+
+disabled rule("")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+}
+
+rule("Extra_1 - Zen_Kick")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Zenyatta;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Distance Between(Position Of(Event Player), Position Of(Closest Player To(Event Player, All Teams))) <= 2;
+		Is Meleeing(Event Player) == True;
+	}
+
+	actions
+	{
+		Abort If(Closest Player To(Event Player, All Teams).Protection == True);
+		Apply Impulse(Closest Player To(Event Player, All Teams), Vector(0, 1, 0), 20, To World, Cancel Contrary Motion);
+		Apply Impulse(Closest Player To(Event Player, All Teams), Direction Towards(Position Of(Event Player), Position Of(
+			Closest Player To(Event Player, All Teams))), 200, To World, Incorporate Contrary Motion);
+		Set Status(Closest Player To(Event Player, All Teams), Event Player, Knocked Down, 4);
+	}
+}
+
+rule("Extra_2 - Self_Rez")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Jump)) == True;
+		Event Player == Is Dead(Event Player);
+	}
+
+	actions
+	{
+		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+		Resurrect(Event Player);
+		Wait(0.100, Ignore Condition);
+		Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+	}
+}
+
+rule("Extra_3 - Short_Hop")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Ability 1)) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+		Is Alive(Event Player) == True;
+		Event Player.Mode_Cycle != 29;
+	}
+
+	actions
+	{
+		Abort If(Filtered Array(All Players(All Teams), Current Array Element.Target_Lock == Event Player) == True);
+		Cancel Primary Action(Event Player);
+		Teleport(Event Player, Position Of(Event Player) + Facing Direction Of(Event Player) * 12.500);
+		Wait(0.100, Ignore Condition);
+		Apply Impulse(Event Player, Up, 2, To World, Cancel Contrary Motion);
+	}
+}
+
+rule("Extra_4 - Mercy sleep darts")
+{
+	event
+	{
+		Player Dealt Damage;
+		All;
+		Mercy;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Primary Fire)) == True;
+		Is Firing Primary(Event Player) == True;
+	}
+
+	actions
+	{
+		Set Status(Victim, Event Player, Asleep, 4);
+		Heal(Victim, Null, 50);
+	}
+}
+
+rule("Extra_5 - Ultimate reset for mods+")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Ultimate)) == True;
+		Event Player.Restricted == False;
+	}
+
+	actions
+	{
+		Set Ultimate Ability Enabled(Event Player, True);
+		Set Ultimate Charge(Event Player, 100);
+	}
+}
+
+rule("Teleported state")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Teleported == True;
+	}
+
+	actions
+	{
+		Wait(0.500, Ignore Condition);
+		Event Player.Teleported = False;
+	}
+}
+
+
+rule("Tp effects Havana, Rialto, Lijiang")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		If(Current Map == Map(Havana));
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Havana_Teleports[0], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Havana_Teleports[1], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Havana_Teleports[2], 1.300, Visible To Position and Radius);
+		End;
+		If(Current Map == Map(Rialto));
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Rialto_Teleports[0], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Rialto_Teleports[1], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Rialto_Teleports[3], 1.300, Visible To Position and Radius);
+		End;
+		If(Current Map == Map(Lijiang Tower));
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Lijiang_Teleports[0], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Lijiang_Teleports[1], 1.300, Visible To Position and Radius);
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Lijiang_Teleports[2], 1.300, Visible To Position and Radius);			
+			Create Effect(All Players(All Teams), Ring, Color(Rose), Global.Lijiang_Teleports[3], 1.300, Visible To Position and Radius);
+		End;
+	}
+}
+
+rule("Teleports Lijiang")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Current Map == Map(Lijiang Tower);
+		(Distance Between(Global.Lijiang_Teleports[0], Event Player) <= 1.300 || Distance Between(Global.Lijiang_Teleports[1], Event Player)
+			<= 1.300 || Distance Between(Global.Lijiang_Teleports[2], Event Player) <= 1.300 || Distance Between(Global.Lijiang_Teleports[3], Event Player) <= 1.300) == True;
+	}
+
+	actions
+	{
+		"Define Lijiang teleport points"
+		Global.Lijiang_Teleports = Array(Vector(2.7, 94, 187.8), Vector(-2.7, 94, 187.8), Vector(5, 0, -14),
+			Vector(5.7, 267.17, 290));
+		"Seeking for player in selected points"
+		If(Distance Between(Global.Lijiang_Teleports[0], Event Player) <= 1.300);
+			Teleport(Event Player, Add(Global.Lijiang_Teleports[2], Vector(-3.9,0,0)));
+			Set Facing(Event Player, Vector(6,0,1), To World);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Lijiang_Teleports[1], Event Player) <= 1.300);
+			Teleport(Event Player, Add(Global.Lijiang_Teleports[3], Vector(0,0.16,-5)));
+			Set Facing(Event Player, Vector(0,0,1), To World);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Lijiang_Teleports[2], Event Player) <= 1.300);
+			Teleport(Event Player, Add(Global.Lijiang_Teleports[0], Vector(0,0,-3)));
+			Set Facing(Event Player, Vector(0,0,1), To World);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Lijiang_Teleports[3], Event Player) <= 1.300);
+			Teleport(Event Player, Add(Global.Lijiang_Teleports[1], Vector(0,0,-3)));
+			Set Facing(Event Player, Vector(0,0,1), To World);
+			Wait(2, Ignore Condition);
+		End;
+	}
+}
+
+rule("Teleports Rialto")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Current Map == Map(Rialto);
+		(Distance Between(Global.Rialto_Teleports[0], Event Player) <= 1.300 || Distance Between(Global.Rialto_Teleports[1], Event Player)
+			<= 1.300 || Distance Between(Global.Rialto_Teleports[3], Event Player) <= 1.300) == True;
+	}
+
+	actions
+	{
+		"Define Rialto teleport points"
+		Global.Rialto_Teleports = Array(Vector(50.350, -1.250, 4.500), Vector(-11.920, -1.250, -21.900), Vector(5.420, -1.250, 20.590),
+			Vector(0.750, -1.250, 35.670), Vector(52.720, -1.250, -9.320));
+		"Seeking for player in selected points"
+		If(Distance Between(Global.Rialto_Teleports[0], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Rialto_Teleports[2]);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Rialto_Teleports[1], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Rialto_Teleports[2]);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Rialto_Teleports[3], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Rialto_Teleports[4]);
+			Wait(2, Ignore Condition);
+		End;
+	}
+}
+
+rule("Teleports Havana")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Current Map == Map(Havana);
+		(Distance Between(Global.Havana_Teleports[0], Event Player) <= 1.300 || Distance Between(Global.Havana_Teleports[1], Event Player)
+			<= 1.300 || Distance Between(Global.Havana_Teleports[2], Event Player) <= 1.300) == True;
+	}
+
+	actions
+	{
+		"Define Havana teleport points"
+		Global.Havana_Teleports = Array(Vector(-39.470, 6, -28.170), Vector(-17.710, 5.950, -18.280), Vector(24.920, 5.950, -33.410),
+			Vector(40.780, 8, 10.420), Vector(-34.180, 5.840, -33.220));
+		"Seeking for player in selected points"
+		If(Distance Between(Global.Havana_Teleports[0], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Havana_Teleports[3]);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Havana_Teleports[1], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Havana_Teleports[4]);
+			Wait(2, Ignore Condition);
+		End;
+		If(Distance Between(Global.Havana_Teleports[2], Event Player) <= 1.300);
+			Teleport(Event Player, Global.Havana_Teleports[4]);
+			Wait(2, Ignore Condition);
+		End;
+	}
+}
+
+disabled rule("Mercy Movement Collision True")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Mercy;
+	}
+
+	conditions
+	{
+		Is Using Ultimate(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Is Using Ultimate(Event Player) == True);
+			Set Move Speed(Event Player, 150);
+			Disable Movement Collision With Environment(Event Player, True);
+	}
+}
+
+disabled rule("Mercy Movement Collision False")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Mercy;
+	}
+
+	conditions
+	{
+		Is Using Ultimate(Event Player) == False;
+	}
+
+	actions
+	{
+		Set Move Speed(Event Player, 100);
+		Enable Movement Collision With Environment(Event Player);
+	}
+}
