@@ -1304,14 +1304,14 @@ rule("Mode_Cycle")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 30);
+			If(Event Player.Mode_Cycle >= 31);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 30;
+				Event Player.Mode_Cycle = 31;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
@@ -2276,7 +2276,9 @@ rule("Mode_08 - Flying_Gravity")
 			Global.Gravity_Toggle = False;
 			Big Message(All Players(All Teams), Custom String("Welcome Back On Earth"));
 			For Global Variable(Gravity_Helper, 0, Count Of (All Players(All Teams)), 1);
-				Set Gravity(All Players(All Teams)[Global.Gravity_Helper], All Players(All Teams)[Global.Gravity_Helper].Player_Modification[3]);
+				If(All Players(All Teams)[Global.Gravity_Helper].Is_Flying == False);
+					Set Gravity(All Players(All Teams)[Global.Gravity_Helper], All Players(All Teams)[Global.Gravity_Helper].Player_Modification[3]);
+				End;
 			End;
 		End;
 	}
