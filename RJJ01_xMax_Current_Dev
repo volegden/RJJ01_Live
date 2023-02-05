@@ -2270,7 +2270,11 @@ rule("Mode_08 - Flying_Gravity")
 					&& (Global.Gravity_Toggle == False));
 			Global.Gravity_Toggle = True;
 			Big Message(All Players(All Teams), Custom String("Fly To The Moon"));
-			Set Gravity(All Players(All Teams), Global.Gravity_Change);
+			For Global Variable(Gravity_Helper, 0, Count Of (All Players(All Teams)), 1);
+				If(All Players(All Teams)[Global.Gravity_Helper].Is_Flying == False);
+					Set Gravity(All Players(All Teams)[Global.Gravity_Helper], All Players(All Teams)[Global.Gravity_Helper].Global.Gravity_Change);
+				End;
+			End;
 		Else If((Is Button Held(Event Player, Button(Secondary Fire)) == True)
 					&& (Global.Gravity_Toggle == True));
 			Global.Gravity_Toggle = False;
