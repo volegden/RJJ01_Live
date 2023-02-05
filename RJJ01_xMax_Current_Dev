@@ -273,7 +273,7 @@ variables
 		47: Index_Help
 		48: Modification_Mode_Selector
 		49: Modification_Scalar_Selector
-		50: Invisibility
+		50: In_1v1_Mode
 }
 
 subroutines
@@ -516,10 +516,10 @@ rule("Default_Player_Settings")
 		Event Player.Slow_Projectile = False;
 		Event Player.In_Action = False;
 		Event Player.Progress_Stop = False;
-		Event Player.Invisibility = False;
+		Event Player.In_1v1_Mode = False;
 
 		Event Player.Modification_Mode_Selector = 0;
-		Event Player.Modification_Scalar_Selector = 1;
+		Event Player.Modification_Scalar_Selector = 2;
 		
 		Event Player.Drawing_Obj_Preview = Null;
 		Event Player.Drawing_Obj_Effects_Selector = 0;
@@ -804,6 +804,7 @@ rule ("Search for players in custom nameplates list and call subroutines")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
     actions 
@@ -831,28 +832,25 @@ rule ("Subroutine: Give_Custom_Nameplate")
 
     actions 
 	{	
-		If(Event Player.Invisibility == False);
-			Disable Nameplates(Event Player, All Players(All Teams));
-			If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
-				Destroy In-World Text(Event Player.Player_Nameplates);
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-					Global.Rainbow_Color, Default Visibility);
-			Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
-				Destroy In-World Text(Event Player.Player_Nameplates);
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-					Global.Blue_Color, Default Visibility);
-			Else;
-				Destroy In-World Text(Event Player.Player_Nameplates);
-				Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-					Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-					Event Player.Player_Title_And_Outline[2], Default Visibility);
-			End;
-			Event Player.Player_Nameplates = Last Text Id;
-			Wait(29, Ignore Condition);
+		Disable Nameplates(Event Player, All Players(All Teams));
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
+			Destroy In-World Text(Event Player.Player_Nameplates);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				Global.Rainbow_Color, Default Visibility);
+		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
+			Destroy In-World Text(Event Player.Player_Nameplates);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				Global.Blue_Color, Default Visibility);
+		Else;
+			Destroy In-World Text(Event Player.Player_Nameplates);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				Event Player.Player_Title_And_Outline[2], Default Visibility);
 		End;
-		Wait(1, Ignore Condition);
+		Event Player.Player_Nameplates = Last Text Id;
+		Wait(30, Ignore Condition);
 		Loop;
     }
 }
@@ -871,17 +869,15 @@ rule ("Subroutine: Give_Custom_Outline")
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Rainbow_Color, Always);
 			Wait(0.036, Ignore Condition);
-			Loop;
 		End;
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Blue_Color, Always);
 			Wait(0.036, Ignore Condition);
-			Loop;
 		Else;
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Event Player.Player_Title_And_Outline[2], Always);
 			Wait(1, Ignore Condition);
-			Loop;
-		End; 
+		End;
+		Loop;
     }
 }
 
@@ -898,6 +894,7 @@ rule("Re-evaluate nameplates (name covers title hardcode fix)")
 	{
 		Has Spawned(Event Player) == True;
 		Event Player.Is_Title_Given == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1003,6 +1000,7 @@ rule("Player_Rank_Execute")
 			Event Player))) == True;
 		Event Player.Verification_Key == False;
 		Has Spawned(Event Player) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1118,6 +1116,7 @@ rule("Hero_Switch")
 		Has Status(Event Player, Frozen) == False;
 		Has Status(Event Player, Burning) == False;
 		Has Status(Event Player, Stunned) == False;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1154,6 +1153,7 @@ rule("Protection_4_Free")
 		Is Alive(Event Player) == True;
 		Has Status(Event Player, Knocked Down) == False;
 		Has Status(Event Player, Stunned) == False;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1225,6 +1225,7 @@ rule("Mod_Ability_ON")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Verification_Key != False;
 		Is Button Held(Event Player, Button(Crouch)) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1297,19 +1298,20 @@ rule("Mode_Cycle")
 		Event Player.Is_Crouch_On == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		Event Player.Is_Flying == False;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 31);
+			If(Event Player.Mode_Cycle >= 30);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 31;
+				Event Player.Mode_Cycle = 30;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
@@ -1333,6 +1335,7 @@ rule("Mode_Headline_Desc")
 		Event Player.Is_Crouch_On == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		(Event Player.Mode_Description != Null && Event Player.Usage_Info != Null) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1571,12 +1574,11 @@ rule("Mode_Headline_Desc")
 				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
 				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
 				White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 31);
-			Event Player.Mode_Headline = Custom String("Invisible");
+		Elfe If(Event Player.Mode_Cycle == 31);
+			Event Player.Mode_Headline = Custom String("Enter 1v1-Mode");
 			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Turn Invisible\r\n{1} : Become VIsible\r\n", Input Binding String(Button(
-				Primary Fire)), Input Binding String(Button(Secondary Fire))), Left, 1, Color(White),
-				Color(White), Color(White), Visible To and String, Visible Never);
+				"{0} : Enter 1v1-Mode: Enter 1v1-Mode", Input Binding String(Reload)), Left, 1, Color(White), Color(White), Color(
+				White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -1681,6 +1683,7 @@ rule("Camera_Switch")
 		Has Spawned(Event Player) == True;
 		Event Player.Is_Crouch_On == False;
 		Is Alive(Event Player) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -2256,7 +2259,11 @@ rule("Mode_08 - Flying_Gravity")
 				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
 			Else;
 				Event Player.Is_Flying = False;
-				Set Gravity(Event Player, Event Player.Player_Modification[3]);
+				If(Global.Gravity_Toggle == True);
+					Set Gravity(Event Player, Global.Gravity_Change);
+				Else;
+					Set Gravity(Event Player, Event Player.Player_Modification[3]);
+				End;
 				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
 			End;
 		Else If((Is Button Held(Event Player, Button(Primary Fire)) == True) 
@@ -4148,8 +4155,7 @@ rule("Mode_30 - Match_Time")
 	}
 }
 
-
-rule("Mode_31 - Invisibility")
+rule("Mode_31 - 1v1-Mode_OFF")
 {
 	event
 	{
@@ -4160,26 +4166,50 @@ rule("Mode_31 - Invisibility")
 
 	conditions
 	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.High_Rank == True;
 		Event Player.Mode_Cycle == 31;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) ) == True;
+		(Is Button Held(Event Player, Button(Reload))) == True;
 		Event Player.Is_Crouch_On == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
 	{
-		If(Is Button Held(Event Player, Button(Primary Fire)) == True);		
-			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Green), Event Player, 1);
-			Set Invisible(Event Player, All);
-			Event Player.Invisibility = True;
-			Destroy In-World Text(Event Player.Player_Nameplates);
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			Set Invisible(Event Player, None);
-			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
-			Event Player.Invisibility = False;
-		End;
+		Event Player.Mode_Headline = Custom String("You are currently in 1v1-Mode!");
+		Create HUD Text(Event Player, Null, Null, Custom String(
+			"Hold {0} and {1} for\r\n3 seconds to leave 1v1-Mode", Input Binding String(Crouch), Input Binding String(Reload)), 
+			Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Big Message(All Players(All Teams), Custom String("{0} is searching for an opponent in the 1v1-Mode!", Event Player));
+		Event Player.Camera = 5;
+		Event Player.In_1v1_Mode = True;
 	}
 }
+
+rule("Mode_31 - 1v1-Mode_ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.High_Rank == True;
+		Event Player.Mode_Cycle == 31;
+		(Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Crouch))) == True;
+		Event Player.In_1v1_Mode == True;
+	}
+
+	actions
+	{
+		Wait(3, Abort When False);
+		Big Message(All Players(All Teams), Custom String("{0} has left 1v1-Mode.", Event Player));
+		Event Player.In_1v1_Mode = False;
+	}
+}
+
 
 disabled rule("")
 {
