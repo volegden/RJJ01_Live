@@ -1451,8 +1451,6 @@ rule("Mode_Headline_Desc")
 				Custom String("{0} : Carry Target\r\n{1} : Knockback Push\r\n{2} : Fix and Unstuck", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-			Event Player.Scale_Hud_ID = Null;
-			Event Player.Target_Lock = Custom String("--- No Target ---");
 		Else If(Event Player.Mode_Cycle == 11);
 			Create Progress Bar HUD Text(Event Player, Event Player.Scale_Real * 5, Custom String("Destination: {0}% | Current: {1}%",
 				Event Player.Scale_Prev * 100, Event Player.Scale_Real * 100), Top, 1, Color(Blue), Color(Gray), Visible To and Values,
@@ -1491,8 +1489,6 @@ rule("Mode_Headline_Desc")
 				Custom String("{0} : Detach Yourself\r\n{1} : Detach Target",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-			Event Player.Scale_Hud_ID = Null;
-			Event Player.Target_Lock = Custom String("--- No Target ---");
 		Else If(Event Player.Mode_Cycle == 14);
 			Event Player.Mode_Headline = Custom String("Target Leash");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -4322,7 +4318,6 @@ rule("Mode_31 - 1v1-Mode_ON")
 		Destroy HUD Text(Event Player.Mode_Description);
 		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
 		Destroy HUD Text(Event Player.Mode_Hud_ID);
-		Destroy HUD Text(Event Player.Mode_Description);
 		Enable Nameplates(Event Player, All Players(All Teams));
 		Destroy In-World Text(Event Player.Player_Nameplates);
 		Stop Forcing Player Outlines(Event Player, All Players(All Teams));
