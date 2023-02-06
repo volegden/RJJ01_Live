@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "<FGE983D8BFF>♥A Friendly Server♥<FGFFFFFFFF>\n last updated (24 Jan 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added delay to FOV changes \n* Implemented map teleport \n* Added new party painting mode \n* Bugfixes \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa and xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
+		Description: "<FGE983D8BFF>♥A Friendly Server♥<FGFFFFFFFF>\n last updated (?? Feb 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added A LOT of stuff \n* Removed A LOT of stuff \n* Squished A LOT of bugs \n* Added A LOT of bugs... wait no \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa \n   and some guy named xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
 		Mode Name: "<FGFF8AC4FF> Friendly ♥ No Kill <FGFFFFFFFF>"
 	}
 
@@ -45,7 +45,7 @@ settings
 		General
 		{
 			Game Mode Start: Immediately
-			Health Pack Respawn Time Scalar: 10%
+			Health Pack Respawn Time Scalar: 50%
 			Hero Limit: Off
 			Kill Cam: Off
 			Limit Valid Control Points: Second
@@ -221,6 +221,8 @@ variables
 		37: Drawing_Obj_Colors
 		38: Drawing_Obj_Effects
 		39: Modification_Mode_String
+		40: Player_1v1_1
+		41: Player_1v1_2
 
 	player:
 		0: High_Rank
@@ -229,50 +231,50 @@ variables
 		3: Verification_Key
 		4: Mod_Name_ID
 		5: Protection_ID
-		6: Allow_Teleport
-		7: Scale_Prev
-		8: Scale_Real
-		9: Is_Crouch_On
-		10: Is_Flying
-		11: Target_Effect
-		12: Mode_Cycle
-		13: Mode_Headline
-		14: Mode_Hud_ID
-		15: DMG_Time
-		16: Target_Tag_ID
-		17: Target_Arrow_ID
-		18: Protection
-		19: Target_Lock
-		20: Camera
-		21: Scale_Hud_ID
-		22: Progress_Lock
-		23: Remote_Scale
-		24: Grap_Line
-		25: Mode_Description
-		26: Last_Position_Facing
-		27: Restricted
-		28: Savezone_Access
-		29: Damage_Reflect
-		30: Voice_Pitch
-		31: Heaven_Strike_Radius
-		32: Heaven_Strike_ID
-		33: Icon_ID
-		34: Ghost_Mode
-		35: Slow_Projectile
-		36: In_Action
-		37: Progress_Stop
-		38: Teleported
-		39: Drawing_Obj_Colors_Selector
-		40: Drawing_Obj_Size_Selector
-		41: Drawing_Obj_Effects_Selector
-		42: Drawing_Obj_Preview
-		43: Player_Title_And_Outline
-		44: Player_Nameplates
-		45: Is_Title_Given
-		46: Usage_Info
-		47: Index_Help
-		48: Modification_Mode_Selector
-		49: Modification_Scalar_Selector
+		6: Scale_Prev
+		7: Scale_Real
+		8: Is_Crouch_On
+		9: Is_Flying
+		10: Target_Effect
+		11: Mode_Cycle
+		12: Mode_Headline
+		13: Mode_Hud_ID
+		14: DMG_Time
+		15: Target_Tag_ID
+		16: Target_Arrow_ID
+		17: Protection
+		18: Target_Lock
+		19: Camera
+		20: Scale_Hud_ID
+		21: Progress_Lock
+		22: Remote_Scale
+		23: Grap_Line
+		24: Mode_Description
+		25: Last_Position_Facing
+		26: Restricted
+		27: Savezone_Access
+		28: Damage_Reflect
+		29: Voice_Pitch
+		30: Heaven_Strike_Radius
+		31: Heaven_Strike_ID
+		32: Icon_ID
+		33: Ghost_Mode
+		34: Slow_Projectile
+		35: In_Action
+		36: Progress_Stop
+		37: Teleported
+		38: Drawing_Obj_Colors_Selector
+		39: Drawing_Obj_Size_Selector
+		40: Drawing_Obj_Effects_Selector
+		41: Drawing_Obj_Preview
+		42: Player_Title_And_Outline
+		43: Player_Nameplates
+		44: Is_Title_Given
+		45: Usage_Info
+		46: Index_Help
+		47: Modification_Mode_Selector
+		48: Modification_Scalar_Selector
+		49: Auto_Respawn
 		50: In_1v1_Mode
 }
 
@@ -416,6 +418,8 @@ rule("Global_Settings")
 		Global.Drawing_Obj_Storage = Empty Array;
 		Global.Jail_List = Array(Empty Array, Empty Array, Empty Array);
 		Global.Jail_Helper = Null;
+		Global.Player_1v1_1 = Null;
+		Global.Player_1v1_2 = Null;
 	}
 }
 
@@ -450,9 +454,10 @@ rule("Global_Text")
 	actions
 	{
 		Create HUD Text(All Players(All Teams), Custom String("{0}", Hero Icon String(Hero Of(Host Player))), Custom String("Guardian"),
-			Host Player, Right, -1, Global.Rainbow_Color, Global.Rainbow_Color, Global.Rainbow_Color, Visible To String and Color,
+			Custom String("{0} {1}", Host Player, Ability Icon String(Hero Of (Host Player), Button(Ultimate))), 
+			Right, -1, Global.Rainbow_Color, Global.Rainbow_Color, Global.Rainbow_Color, Visible To String and Color,
 			Default Visibility);
-		Create HUD Text(All Players(All Teams), Null, Custom String("┌───★ Angels ★───┐"), Null, Right, 1, Null, Global.Rainbow_Color,
+		Create HUD Text(All Players(All Teams), Null, Custom String("────★ Angels ★────"), Null, Right, 1, Null, Global.Rainbow_Color,
 			Null, Visible To String and Color, Default Visibility);
 	}
 }
@@ -485,7 +490,6 @@ rule("Default_Player_Settings")
 		Event Player.Verification_Key = False;
 		Event Player.Mod_Name_ID = Null;
 		Event Player.Protection_ID = Null;
-		Event Player.Allow_Teleport = False;
 		Event Player.Scale_Prev = 1;
 		Event Player.Scale_Real = 1;
 		Event Player.Is_Crouch_On = False;
@@ -516,6 +520,7 @@ rule("Default_Player_Settings")
 		Event Player.Slow_Projectile = False;
 		Event Player.In_Action = False;
 		Event Player.Progress_Stop = False;
+		Event Player.Auto_Respawn = False;
 		Event Player.In_1v1_Mode = False;
 
 		Event Player.Modification_Mode_Selector = 0;
@@ -787,7 +792,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Vanessav"), Array(Custom String("♥ Assassin ♥"),Custom String("♥ Wrathful One ♥")), Color(Purple)),
 			Array(Custom String("Slafii"), Array(Custom String("TOUCH AND DIE"),
 				Custom String("{0}  I only annoy angels  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate))),
-				Custom String("Tracy my beloved")), Custom String("Rainbow"))
+				Custom String("Tracy my beloved")), Custom String("Rainbow")),
+			Array(Custom String("Jelish"), Array(Custom String("Jelicita")), Color(Red))
 		);
 	}
 }
@@ -832,6 +838,7 @@ rule ("Subroutine: Give_Custom_Nameplate")
 
     actions 
 	{	
+		Abort If (Event Player.In_1v1_Mode == True);
 		Disable Nameplates(Event Player, All Players(All Teams));
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
 			Destroy In-World Text(Event Player.Player_Nameplates);
@@ -850,7 +857,7 @@ rule ("Subroutine: Give_Custom_Nameplate")
 				Event Player.Player_Title_And_Outline[2], Default Visibility);
 		End;
 		Event Player.Player_Nameplates = Last Text Id;
-		Wait(30, Ignore Condition);
+		Wait(30, Abort When False);
 		Loop;
     }
 }
@@ -865,19 +872,22 @@ rule ("Subroutine: Give_Custom_Outline")
 
     actions 
 	{
+		Abort If (Event Player.In_1v1_Mode == True);
 		Event Player.Is_Title_Given = True;
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Rainbow_Color, Always);
 			Wait(0.036, Ignore Condition);
+			Loop;
 		End;
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Blue_Color, Always);
 			Wait(0.036, Ignore Condition);
+			Loop;
 		Else;
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Event Player.Player_Title_And_Outline[2], Always);
 			Wait(1, Ignore Condition);
+			Loop;
 		End;
-		Loop;
     }
 }
 
@@ -942,7 +952,7 @@ rule("Listed_Player")
 			Custom String("Ghost"), Custom String("solevaya"), Custom String("Moistra"), Custom String("fa89"),
 			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), Custom String(
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("Kysp"), Custom String("BlueSky"), 
-			Custom String("xMaxuss"),Custom String("Vanessav"));
+			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("Nishiki"),
@@ -1000,7 +1010,6 @@ rule("Player_Rank_Execute")
 			Event Player))) == True;
 		Event Player.Verification_Key == False;
 		Has Spawned(Event Player) == True;
-		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -1029,10 +1038,13 @@ rule("Player_Rank_Execute")
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 0, Color(White), Color(White),
 				Color(White), Visible To and String, Visible Never);
 		Event Player.Usage_Info = Last Text ID;
-		Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2} : Kill | Rez Yourself", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+		Create HUD Text(Event Player, Null, Null, 
+				Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Kill | Rez Yourself\r\n{1}", Input Binding String(Button(Ultimate)), 
+				Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Set Auto-Respawn, Non-mod target\r\n{1}", Input Binding String(Button(Reload)), 
+				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
+			))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Event Player.Mode_Description = Last Text ID;
 		
 	}
@@ -1082,8 +1094,8 @@ rule("Hud_Elements (Subroutine)")
 	actions
 	{
 		If(Entity Exists(Event Player) == True);
-			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{1} {0} ┤", Event Player, Hero Icon String(Hero Of(
-				Event Player))), Right, 2, Null, Null, Color(White), Visible To and String, Default Visibility);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{1} {0} {2}", Event Player, Hero Icon String(Hero Of(
+				Event Player)), Ability Icon String(Hero Of (Event Player), Button(Ultimate))), Right, 2, Null, Null, Color(White), Visible To and String, Default Visibility);
 			Event Player.Mod_Name_ID = Last Text ID;
 		Else;
 			Destroy In-World Text(Event Player.Target_Tag_ID);
@@ -1346,10 +1358,13 @@ rule("Mode_Headline_Desc")
 		
 		If(Event Player.Mode_Cycle == 0);
 			Event Player.Mode_Headline = Custom String("Kill | Resurrection");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2} : Kill | Rez Yourself", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Null, 
+				Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Kill | Rez Yourself\r\n{1}", Input Binding String(Button(Ultimate)), 
+				Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Set Auto-Respawn, Non-mod target\r\n{1}", Input Binding String(Button(Reload)), 
+				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
+			))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 1);
 			Event Player.Mode_Headline = Custom String("Teleport");
 			Create HUD Text(Event Player, Null, Null, Custom String(
@@ -1574,11 +1589,11 @@ rule("Mode_Headline_Desc")
 				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
 				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
 				White), Visible To and String, Visible Never);
-		Elfe If(Event Player.Mode_Cycle == 31);
-			Event Player.Mode_Headline = Custom String("Enter 1v1-Mode");
+		Else If(Event Player.Mode_Cycle == 31);
+			Event Player.Mode_Headline = Custom String("1v1-Mode");
 			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Enter 1v1-Mode: Enter 1v1-Mode", Input Binding String(Reload)), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+				"{0} : Enter 1v1-Mode", Input Binding String(Button(Ultimate))), Left, 1, Color(White),
+				Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -1846,7 +1861,7 @@ rule("Mode_00 - Kill_Rez")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 0;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
@@ -1870,9 +1885,48 @@ rule("Mode_00 - Kill_Rez")
 			Abort If(Is Dead(Player Closest To Reticle(Event Player, All Teams)) == True);
 			Kill(Player Closest To Reticle(Event Player, All Teams), Event Player);
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Event Player.Auto_Respawn == True);
+				Event Player.Auto_Respawn = False;
+			Else;
+				Event Player.Auto_Respawn = True;
+			End;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Blue), Event Player, 1);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Auto_Respawn == True);
+				Player Closest To Reticle(Event Player, All Teams).Auto_Respawn = False;
+			Else;
+				Player Closest To Reticle(Event Player, All Teams).Auto_Respawn = True;
+			End;
+			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
 		End;
 	}
 }
+
+rule("Mode_00 - Auto_Respawn")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Auto_Respawn == True;
+		Event Player.In_1v1_Mode == False;
+	}
+
+	actions
+	{
+		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+		Resurrect(Event Player);
+		Wait(0.100, Ignore Condition);
+	}
+}
+
 
 rule("Mode_01 - Teleport")
 {
@@ -2063,7 +2117,6 @@ rule("Mode_04 - Protection (Subroutine)")
 			Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == True, 2);
 			Event Player.Player_Modification[0] = 0;
 			Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
-			Event Player.Allow_Teleport = True;
 			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Baptiste), Button(Ability 2))),
 				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
 			Event Player.Protection_ID = Last Text ID;
@@ -2073,7 +2126,6 @@ rule("Mode_04 - Protection (Subroutine)")
 			Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == True, 2);
 			Event Player.Player_Modification[0] = 100;
 			Set Damage Dealt(Event Player, Event Player.Player_Modification[0]);
-			Event Player.Allow_Teleport = False;
 			Destroy In-World Text(Event Player.Protection_ID);
 			Event Player.Protection_ID = Null;
 		End;
@@ -2272,7 +2324,7 @@ rule("Mode_08 - Flying_Gravity")
 			Big Message(All Players(All Teams), Custom String("Fly To The Moon"));
 			For Global Variable(Gravity_Helper, 0, Count Of (All Players(All Teams)), 1);
 				If(All Players(All Teams)[Global.Gravity_Helper].Is_Flying == False);
-					Set Gravity(All Players(All Teams)[Global.Gravity_Helper], All Players(All Teams)[Global.Gravity_Helper].Global.Gravity_Change);
+					Set Gravity(All Players(All Teams)[Global.Gravity_Helper], Global.Gravity_Change);
 				End;
 			End;
 		Else If((Is Button Held(Event Player, Button(Secondary Fire)) == True)
@@ -2300,7 +2352,6 @@ rule("Mode_08 - Flying_Controls")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 8;
 		(Is Button Held(Event Player, Button(Crouch)) || Is Button Held(Event Player, Button(Jump))) == True;
 		Event Player.Is_Flying == True;
 	}
@@ -3753,14 +3804,17 @@ rule("Mode_25 - Give_Revoke_Mod")
 	{
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).In_1v1_Mode == True);
 			Modify Global Variable(Mod_Rank, Append To Array, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams)));
 			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Player Closest To Reticle(Event Player, All Teams), 1);
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) != True);
+			Abort If(Event Player.In_1v1_Mode == True);
 			Modify Global Variable(Mod_Rank, Remove From Array By Value, Custom String("{0}", Player Closest To Reticle(Event Player,
 				All Teams)));
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).In_1v1_Mode == True);
 			If(Team Of(Event Player) == Team 1);
 				Move Player to Team(Event Player, Host Player, -1);
 				Wait(0.250, Ignore Condition);
@@ -3772,6 +3826,7 @@ rule("Mode_25 - Give_Revoke_Mod")
 			End;
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).In_1v1_Mode == True);
 			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 			If(Team Of(Event Player.Target_Lock) == Team 1);
 				Move Player to Team(Event Player.Target_Lock, Host Player, -1);
@@ -4161,36 +4216,6 @@ rule("Mode_30 - Match_Time")
 	}
 }
 
-rule("Mode_31 - 1v1-Mode_OFF")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.High_Rank == True;
-		Event Player.Mode_Cycle == 31;
-		(Is Button Held(Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
-		Event Player.In_1v1_Mode == False;
-	}
-
-	actions
-	{
-		Event Player.Mode_Headline = Custom String("You are currently in 1v1-Mode!");
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"Hold {0} and {1} for\r\n3 seconds to leave 1v1-Mode", Input Binding String(Crouch), Input Binding String(Reload)), 
-			Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Big Message(All Players(All Teams), Custom String("{0} is searching for an opponent in the 1v1-Mode!", Event Player));
-		Event Player.Camera = 5;
-		Event Player.In_1v1_Mode = True;
-	}
-}
-
 rule("Mode_31 - 1v1-Mode_ON")
 {
 	event
@@ -4204,15 +4229,229 @@ rule("Mode_31 - 1v1-Mode_ON")
 	{
 		Event Player.High_Rank == True;
 		Event Player.Mode_Cycle == 31;
-		(Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Crouch))) == True;
+		(Is Button Held(Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Crouch_On == True;
+		Event Player.In_1v1_Mode == False;
+	}
+
+	actions
+	{	
+		If (Global.Player_1v1_1 == Null);
+			Global.Player_1v1_1 = Event Player;
+			Big Message(All Players(All Teams), Custom String("{0} is searching for an opponent in the 1v1-Mode!", Event Player));
+		Else If(Global.Player_1v1_2 == Null);
+			If(Team Of(Global.Player_1v1_1) == Team Of(Global.Player_1v1_2));
+				If(Team Of(Global.Player_1v1_1) == Team 1);
+					Move Player to Team(Event Player, Host Player, -1);
+					Wait(0.250, Ignore Condition);
+					Move Player to Team(Event Player, Team 2, -1);
+				Else;
+					Move Player to Team(Event Player, Host Player, -1);
+					Wait(0.250, Ignore Condition);
+					Move Player to Team(Event Player, Team 1, -1);
+				End;
+			Global.Player_1v1_2 = Event Player;
+			Big Message(All Players(All Teams), Custom String("{0} has accepted to be the opponent of {1}!", Event Player, Global.Player_1v1_1));
+			End;
+			Start Damage Modification(Global.Player_1v1_1, Filtered Array(All Players(All Teams), 
+				Current Array Element != Global.Player_1v1_1 && Current Array Element != Global.Player_1v1_2), 0, Receivers and Damagers);
+			Start Healing Modification(Global.Player_1v1_1, Filtered Array(All Players(All Teams), 
+				Current Array Element != Global.Player_1v1_1 && Current Array Element != Global.Player_1v1_2), 0, Receivers and Healers);
+			
+			Start Damage Modification(Global.Player_1v1_2, Filtered Array(All Players(All Teams), 
+				Current Array Element != Global.Player_1v1_1 && Current Array Element != Global.Player_1v1_2), 0, Receivers and Damagers);
+			Start Healing Modification(Global.Player_1v1_2, Filtered Array(All Players(All Teams), 
+				Current Array Element != Global.Player_1v1_1 && Current Array Element != Global.Player_1v1_2), 0, Receivers and Healers);
+
+			Start Damage Modification(Filtered Array(All Players(All Teams), Current Array Element != Global.Player_1v1_1 && Current Array Element != Global.Player_1v1_2), 
+				Array(Global.Player_1v1_1,Global.Player_1v1_2), 0, Receivers and Damagers);
+			
+		Else;
+			Big Message(Event Player, Custom String("There are already 2 people in the 1v1-Mode!"));
+			Abort;
+		End;	
+
+		Destroy HUD Text(Event Player.Mode_Description);
+		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+		Destroy HUD Text(Event Player.Mode_Hud_ID);
+		Destroy HUD Text(Event Player.Mode_Description);
+		Destroy HUD Text(Event Player.Usage_Info);
+		Event Player.Protection = False;
+		Enable Nameplates(Event Player, All Players(All Teams));
+		Destroy In-World Text(Event Player.Player_Nameplates);
+		Stop Forcing Player Outlines(Event Player, All Players(All Teams));
+		
+		Event Player.Mode_Headline = Custom String("You are currently in 1v1-Mode!");
+		Create HUD Text(Event Player, Null, Null, Custom String(
+			"Hold {0} and {1} for\r\n 3 seconds to leave 1v1-Mode", Input Binding String(Button(Crouch)), Input Binding String(Button(Reload))), 
+			Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Event Player.Mode_Description = Last Text ID;
+		Event Player.Camera = 5;
+		Event Player.In_1v1_Mode = True;
+	}
+}
+
+rule("Mode_31 - 1v1-Mode_OFF")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.High_Rank == True;
+		Event Player.Mode_Cycle == 31;
+		(Is Button Held(Event Player, Button(Reload)) && Is Button Held(Event Player, Button(Crouch))) == True;
 		Event Player.In_1v1_Mode == True;
 	}
 
 	actions
 	{
 		Wait(3, Abort When False);
+		
+		If(Global.Player_1v1_1 == Event Player);
+			Global.Player_1v1_1 = Global.Player_1v1_2;
+			Global.Player_1v1_2 = Null;
+		Else;
+			Global.Player_1v1_2 = Null;
+		End;
+		Stop All Damage Modifications;
+		Stop All Healing Modifications;
+		Destroy HUD Text(Event Player.Mode_Description);
 		Big Message(All Players(All Teams), Custom String("{0} has left 1v1-Mode.", Event Player));
 		Event Player.In_1v1_Mode = False;
+
+		Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+		Event Player.Mode_Hud_ID = Last Text ID;
+		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 0, Color(White), Color(White),
+				Color(White), Visible To and String, Visible Never);
+		Event Player.Usage_Info = Last Text ID;
+
+		Event Player.Mode_Headline = Custom String("1v1-Mode");
+		Create HUD Text(Event Player, Null, Null, Custom String(
+			"{0} : Enter 1v1-Mode", Input Binding String(Button(Ultimate))), Left, 1, Color(White),
+			Color(White), Color(White), Visible To and String, Visible Never);
+		Event Player.Mode_Description = Last Text ID;
+
+		Event Player.Protection = True;
+		Start Rule(Give_Custom_Nameplate, Restart Rule);
+
+	}
+}
+
+rule("Mode_31 - Respawn_Logic")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.In_1v1_Mode == True;
+	}
+
+	actions
+	{
+		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+		Resurrect(Event Player);
+		Set Invisible(Event Player, All);
+		Set Status(Event Player, Null, Hacked, 0.2);
+		Set Status(Event Player, Null, Invincible, 1.5);
+		Set Status(Event Player, Null, Phased Out, 1.5);
+		Set Ability 1 Enabled(Event Player, False);
+		Set Ability 2 Enabled(Event Player, False);
+		Set Melee Enabled(Event Player, False);
+		Set Primary Fire Enabled(Event Player, False);
+		Set Secondary Fire Enabled(Event Player, False);
+		Set Ultimate Ability Enabled(Event Player, False);
+
+		Wait(1.5, Ignore Condition);
+
+		Set Invisible(Event Player, None);
+		Set Ability 1 Enabled(Event Player, True);
+		Set Ability 2 Enabled(Event Player, True);
+		Set Melee Enabled(Event Player, True);
+		Set Primary Fire Enabled(Event Player, True);
+		Set Secondary Fire Enabled(Event Player, True);
+		Set Ultimate Ability Enabled(Event Player, True);
+	}
+}
+
+rule("Extra_6 - Freeze_Widow_Bot")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Widowmaker;
+	}
+
+	conditions
+	{
+		(Custom String("{0}", Event Player) == Custom String("Widowmaker"));
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Set Status(Event Player, Null, Frozen, 9999);
+	}
+}
+
+rule("Extra_7 - Autokill_Xeno")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Junkrat;
+	}
+
+	conditions
+	{
+		(Custom String("{0}", Event Player) == Custom String("Xenolysith"));
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Wait(0.1, Ignore Condition);
+		Kill(Event Player, Null);
+	}
+}
+
+
+rule("Extra_8 - Autoult_Kysp")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Reaper;
+	}
+
+	conditions
+	{
+		(Custom String("{0}", Event Player) == Custom String("Kysp"));
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Set Ultimate Charge(Event Player, 100);
+		Start Holding Button(Event Player, Button(Ultimate));
+		Wait(0.5, Ignore Condition);
+		Stop Holding Button(Event Player, Button(Ultimate));
+		Loop If Condition Is True;
 	}
 }
 
@@ -4239,6 +4478,7 @@ rule("Extra_1 - Zen_Kick")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Distance Between(Position Of(Event Player), Position Of(Closest Player To(Event Player, All Teams))) <= 2;
 		Is Meleeing(Event Player) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -4265,6 +4505,7 @@ rule("Extra_2 - Self_Rez")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Is Button Held(Event Player, Button(Jump)) == True;
 		Event Player == Is Dead(Event Player);
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -4292,6 +4533,7 @@ rule("Extra_3 - Short_Hop")
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Alive(Event Player) == True;
 		Event Player.Mode_Cycle != 29;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -4318,6 +4560,7 @@ rule("Extra_4 - Mercy sleep darts")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Is Button Held(Event Player, Button(Primary Fire)) == True;
 		Is Firing Primary(Event Player) == True;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
@@ -4341,6 +4584,7 @@ rule("Extra_5 - Ultimate reset for mods+")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Is Button Held(Event Player, Button(Ultimate)) == True;
 		Event Player.Restricted == False;
+		Event Player.In_1v1_Mode == False;
 	}
 
 	actions
