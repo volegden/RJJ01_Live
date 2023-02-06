@@ -3,7 +3,7 @@ settings
 	main
 	{
 		Description: "<FGE983D8BFF>♥A Friendly Server (!!! DEV VERSION !!!) ♥<FGFFFFFFFF>\n last updated (?? Feb 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added A LOT of stuff \n* Removed A LOT of stuff \n* Squished A LOT of bugs \n* Added A LOT of bugs... wait no \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa \n   and some guy named xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
-		Mode Name: "<FGFF8AC4FF>Friendly ♥ (WARNING: Dev-Version of xMaxuss)<FGFFFFFFFF>"
+		Mode Name: "<FGFF8AC4FF>Friendly ♥ (WARNING: Dev-Version!)<FGFFFFFFFF>"
 	}
 
 	lobby
@@ -736,7 +736,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Cat"), Array(Custom String("Hyua")), Custom Color(105, 32, 18, 255)), 
 			Array(Custom String("Fuji"), Array(Custom String("J★ESTAR")), Custom String("Rainbow")), 
 			Array(Custom String("Daisy"), Array(Custom String("J★ESTAR")), Custom String("Rainbow")), 
-			Array(Custom String("Xenolysith"), Array(Custom String("Stargazer")), Custom Color(241, 196, 15, 255)), 
+			Array(Custom String("Xenolysith"), Array(Custom String("Stargazer"),
+				 Custom String("{0}  Rattenkönig  {1}", Icon String(Poison), Icon String(Radioactive))), Custom Color(241, 196, 15, 255)), 
 			Array(Custom String("Sexypudding"), Array(Custom String("Edgerunner")), Custom Color(248, 139, 231, 255)),
 			Array(Custom String("kwally"), Array(Custom String("tsuki"), Custom String("月"), Custom String("Луна"), Custom String("Luna")), Custom String("Blue")),
 			Array(Custom String("Dead"), Array(Custom String("Supernova")), Color(Black)), 
@@ -779,7 +780,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("Ghost"), Array(Custom String("sad ghost")), Color(Black)),
 			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
 			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
-				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate)))), Color(Gray)),
+				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Color(Gray)),
 			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
 			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
@@ -1772,7 +1773,7 @@ rule("1st_Camera_0")
 	actions
 	{
 		Stop Camera(Event Player);
-		Small Message(Event Player, Custom String("Default Camera"));
+		Small Message(Event Player, Custom String(" Default Camera"));
 	}
 }
 
@@ -1794,7 +1795,7 @@ rule("3rd_Camera_1")
 	{
 		Start Camera(Event Player, Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player),
 			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 28);
-		Small Message(Event Player, Custom String("3rd Person, Far"));
+		Small Message(Event Player, Custom String(" 3rd Person, Far"));
 	}
 }
 
@@ -1816,7 +1817,7 @@ rule("3rd_Camera_2_Zoom")
 	{
 		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
 			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 28);
-		Small Message(Event Player, Custom String("3rd Person, Close"));
+		Small Message(Event Player, Custom String(" 3rd Person, Close"));
 	}
 }
 
@@ -1838,7 +1839,7 @@ rule("3rd_Camera_3")
 	{
 		Start Camera(Event Player, Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player),
 			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), 28);
-		Small Message(Event Player, Custom String("Front View, Far"));
+		Small Message(Event Player, Custom String(" Front View, Far"));
 	}
 }
 
@@ -1860,7 +1861,7 @@ rule("3rd_Camera_4_Zoom")
 	{
 		Start Camera(Event Player, Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
 			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), 28);
-		Small Message(Event Player, Custom String("Front View, Close"));
+		Small Message(Event Player, Custom String(" Front View, Close"));
 	}
 }
 
@@ -1885,7 +1886,7 @@ rule("Cinematic_Camera")
 		Wait(0.5, Ignore Condition);
 		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
 			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 0.5);
-		Small Message(Event Player, Custom String("Cinematic Camera"));
+		Small Message(Event Player, Custom String(" Cinematic Camera"));
 	}
 }
 
@@ -4378,9 +4379,9 @@ rule("Mode_31 - 1v1-Mode_OFF")
 		Event Player.Mode_Description = Last Text ID;
 
 		Event Player.Protection = True;
+		Event Player.In_1v1_Mode = False;
 		Start Rule(Give_Custom_Nameplate, Restart Rule);
 
-		Event Player.In_1v1_Mode = False;
 	}
 }
 
@@ -4424,6 +4425,7 @@ rule("Mode_31 - Respawn_Logic")
 		Set Ultimate Ability Enabled(Event Player, True);
 	}
 }
+
 
 rule("Extra_6 - Freeze_Widow_Bot")
 {
@@ -4482,6 +4484,7 @@ rule("Extra_8 - Autoult_Kysp")
 	{
 		(Custom String("{0}", Event Player) == Custom String("Kysp"));
 		Is Alive(Event Player) == True;
+		Hero Of (Event Player) == Hero (Reaper);
 	}
 
 	actions
