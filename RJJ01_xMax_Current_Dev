@@ -685,7 +685,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("JJelly"), Array(Custom String("Putin")), Custom String("Rainbow")), 
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
-			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Rock'N'Sugar")), Custom String("Rainbow")),
+			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Rock'N'Sugar")), Custom String("Blue")),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -760,7 +760,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("RUBY"), Array(Custom String("☆ RUBYX CUBE ☆")), Color(Lime Green)),
 			Array(Custom String("ori6072"), Array(Custom String("♣ DEMON KING DIO ♣")), Color(Black)), 
 			Array(Custom String("FlowRow"), Array(Custom String("最大的鳥")), Custom Color(5, 228, 1, 255)), 
-			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥")), Color(Red)), 
+			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("Queen Of Moth")), Color(Red)), 
 			Array(Custom String("valkaP"), Array(Custom String("♥ Cutty Ramji ♥")), Custom Color(0, 240, 252, 255)), 
 			Array(Custom String("Katsuki"), Array(Custom String("☆ ♪ Streetrunner ♪ ★")), Custom Color(99, 5, 156, 255)), 
 			Array(Custom String("OperativeLyn"), Array(Custom String("♥ WISHY WASHY's ♥")), Color(Rose)), 
@@ -771,7 +771,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("Neo"), Array(Custom String("★ PET MASTER ★")), Color(Blue)), 
 			Array(Custom String("Hecatia"), Array(Custom String("★ Friendly DJ Reindeer ★")), Custom String("Rainbow")), 
 			Array(Custom String("Mikasa"), Array(Custom String("♥ Mikasa ♥")), Custom Color(86, 0, 99, 255)), 
-			Array(Custom String("BananaMercy"), Array(Custom String("Banana Karlik")), Custom Color(255, 255, 0, 255)), 
+			Array(Custom String("BananaMercy"), Array(Custom String("Banana Karlik"), Custom String("the man behind the slaughter")), Custom Color(255, 255, 0, 255)), 
 			Array(Custom String("Leestick"), Array(Custom String("LeafLover")), Color(Green)), 
 			Array(Custom String("Nutzee"), Array(Custom String("☆ DEEZ NUTZ ☆")), Color(Blue)), 
 			Array(Custom String("ThatAspect"), Array(Custom String("† ASPECT †")), Color(Purple)), 
@@ -793,7 +793,9 @@ rule ("Custom nameplates list")
 			Array(Custom String("Slafii"), Array(Custom String("TOUCH AND DIE"),
 				Custom String("{0}  I only annoy angels  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate))),
 				Custom String("Tracy my beloved")), Custom String("Rainbow")),
-			Array(Custom String("Jelish"), Array(Custom String("Jelicita")), Color(Red))
+			Array(Custom String("Jelish"), Array(Custom String("Jelicita")), Color(Red)),
+			Array(Custom String("BluTyde"), Array(Custom String("Radiance")), Color(Turquoise)),
+			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(3, 37, 126, 255))
 		);
 	}
 }
@@ -952,7 +954,7 @@ rule("Listed_Player")
 			Custom String("Ghost"), Custom String("solevaya"), Custom String("Moistra"), Custom String("fa89"),
 			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), Custom String(
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("Kysp"), Custom String("BlueSky"), 
-			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"));
+			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("Nishiki"),
@@ -1034,7 +1036,7 @@ rule("Player_Rank_Execute")
 			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
 			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
 		Event Player.Mode_Hud_ID = Last Text ID;
-		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+		Create HUD Text(Event Player, Null, Custom String("┌┘└─────────────────────┐", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 0, Color(White), Color(White),
 				Color(White), Visible To and String, Visible Never);
 		Event Player.Usage_Info = Last Text ID;
