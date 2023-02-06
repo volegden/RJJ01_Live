@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "<FGE983D8BFF>♥A Friendly Server♥<FGFFFFFFFF>\n last updated (?? Feb 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added A LOT of stuff \n* Removed A LOT of stuff \n* Squished A LOT of bugs \n* Added A LOT of bugs... wait no \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa \n   and some guy named xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
-		Mode Name: "<FGFF8AC4FF> Friendly ♥ No Kill <FGFFFFFFFF>"
+		Description: "<FGE983D8BFF>♥A Friendly Server (!!! DEV VERSION !!!) ♥<FGFFFFFFFF>\n last updated (?? Feb 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added A LOT of stuff \n* Removed A LOT of stuff \n* Squished A LOT of bugs \n* Added A LOT of bugs... wait no \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa \n   and some guy named xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
+		Mode Name: "<FGFF8AC4FF>Friendly ♥ (WARNING: Dev-Version of xMaxuss)<FGFFFFFFFF>"
 	}
 
 	lobby
@@ -270,12 +270,11 @@ variables
 		42: Player_Title_And_Outline
 		43: Player_Nameplates
 		44: Is_Title_Given
-		45: Usage_Info
-		46: Index_Help
-		47: Modification_Mode_Selector
-		48: Modification_Scalar_Selector
-		49: Auto_Respawn
-		50: In_1v1_Mode
+		45: Index_Help
+		46: Modification_Mode_Selector
+		47: Modification_Scalar_Selector
+		48: Auto_Respawn
+		49: In_1v1_Mode
 }
 
 subroutines
@@ -1036,11 +1035,9 @@ rule("Player_Rank_Execute")
 			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
 			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
 		Event Player.Mode_Hud_ID = Last Text ID;
-		Create HUD Text(Event Player, Null, Custom String("┌┘└─────────────────────┐", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 0, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
-		Event Player.Usage_Info = Last Text ID;
-		Create HUD Text(Event Player, Null, Null, 
+
+		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
 				Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
 				Custom String("{0} : Kill | Rez Yourself\r\n{1}", Input Binding String(Button(Ultimate)), 
 				Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", Input Binding String(Button(Ability 2)), 
@@ -1080,8 +1077,6 @@ rule("Player_Rank_Revoke")
 		Event Player.Mode_Hud_ID = Null;
 		Destroy HUD Text(Event Player.Mode_Description);
 		Event Player.Mode_Description = Null;
-		Destroy HUD Text(Event Player.Usage_Info);
-		Event Player.Usage_Info = Null;
 	}
 }
 
@@ -1104,7 +1099,6 @@ rule("Hud_Elements (Subroutine)")
 			Destroy HUD Text(Event Player.Mod_Name_ID);
 			Destroy HUD Text(Event Player.Mode_Hud_ID);
 			Destroy HUD Text(Event Player.Mode_Description);
-			Destroy HUD Text(Event Player.Usage_Info);
 		End;
 	}
 }
@@ -1348,7 +1342,7 @@ rule("Mode_Headline_Desc")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Crouch_On == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
-		(Event Player.Mode_Description != Null && Event Player.Usage_Info != Null) == True;
+		(Event Player.Mode_Description != Null) == True;
 		Event Player.In_1v1_Mode == False;
 	}
 
@@ -1360,79 +1354,103 @@ rule("Mode_Headline_Desc")
 		
 		If(Event Player.Mode_Cycle == 0);
 			Event Player.Mode_Headline = Custom String("Kill | Resurrection");
-			Create HUD Text(Event Player, Null, Null, 
-				Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Kill | Rez Yourself\r\n{1}", Input Binding String(Button(Ultimate)), 
-				Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Set Auto-Respawn, Non-mod target\r\n{1}", Input Binding String(Button(Reload)), 
-				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
-			))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Kill | Rez Yourself\r\n{1}", 
+					Input Binding String(Button(Ultimate)), 
+				Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", 
+					Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Set Auto-Respawn, Non-mod target\r\n{1}", 
+					Input Binding String(Button(Reload)), 
+				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", 
+					Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
+				))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 1);
 			Event Player.Mode_Headline = Custom String("Teleport");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Teleport You to Target\r\n{1} : Teleport Target To You\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Teleport All To You\r\n{1} : Teleport Target Back To Spawn",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Teleport You to Target\r\n{1} : Teleport Target To You\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Teleport All To You\r\n{1} : Teleport Target Back To Spawn", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 2);
 			Event Player.Mode_Headline = Custom String("Hacked");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Hack The Target\r\n{1} : Remove Hack from Target\r\n{2} : Hack Yourself", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Hack The Target\r\n{1} : Remove Hack from Target\r\n{2} : Hack Yourself", 
+					Input Binding String(Button(Primary Fire)),Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 3);
 			Event Player.Mode_Headline = Custom String("Frozen");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Freeze The Target\r\n{1} : Remove Freeze from Target\r\n{2} : Freeze Yourself", Input Binding String(Button(
-				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
-				Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Freeze The Target\r\n{1} : Remove Freeze from Target\r\n{2} : Freeze Yourself", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 4);
 			Event Player.Mode_Headline = Custom String("Protection");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Give Target Immunity\r\n{1} : Revoke Target Immunity", Input Binding String(Button(Primary Fire)), Input Binding String(
-				Button(Secondary Fire))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Give Target Immunity\r\n{1} : Revoke Target Immunity", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 5);
 			Event Player.Mode_Headline = Custom String("Knocked Down");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Knockdown The Target\r\n{1} : Remove Knockdown from Target\r\n{2} : Knockdown Yourself", Input Binding String(Button(
-				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
-				Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Knockdown The Target\r\n{1} : Remove Knockdown from Target\r\n{2} : Knockdown Yourself", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 6);
 			Event Player.Mode_Headline = Custom String("Burning");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Flame The Target\r\n{1} : Remove Flame from Target\r\n{2} : Flame Yourself", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Flame The Target\r\n{1} : Remove Flame from Target\r\n{2} : Flame Yourself", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 7);
 			Event Player.Mode_Headline = Custom String("Stunned");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Stun The Target\r\n{1} : Remove Stun from Target\r\n{2} : Stun Yourself", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Stun The Target\r\n{1} : Remove Stun from Target\r\n{2} : Stun Yourself", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 8);
 			Event Player.Mode_Headline = Custom String("Flying | Global Gravity");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Set Gravity To Space\r\n{1} : Set Gravity Back To Normal\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Give | Remove Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch)))), Left, 1,
-				Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+			Custom String("{0} : Set Gravity To Space\r\n{1} : Set Gravity Back To Normal\r\n{2}", 
+				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+			Custom String("{0} : Give | Remove Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 9);
 			Event Player.Mode_Headline = Custom String("DMG | Speed | Knockback | Gravity");
-			Create HUD Text(Event Player, Null, Null, 
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
 				Custom String("{0} is currently set to: {1}%!\r\n{2}", 
 					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Player_Modification[Event Player.Modification_Mode_Selector],
-				Custom String("{0} : Increase by {1}%\r\n{2}", Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
-				Custom String("{0} : Decrease by {1}%\r\n{2}", Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
-				Custom String("{0} : Cycle Mode [DMG, Speed, KB, Gravity]\r\n{1}", Input Binding String(Button(Ultimate)),
-				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Reset {1}", Input Binding String(Button (Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]
-			)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Increase by {1}%\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
+				Custom String("{0} : Decrease by {1}%\r\n{2}", 
+					Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
+				Custom String("{0} : Cycle Mode [DMG, Speed, KB, Gravity]\r\n{1}", 
+					Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", 
+					Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Reset {1}", 
+					Input Binding String(Button (Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]
+				)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 10);
 			Event Player.Mode_Headline = Custom String("Carry | Bonk | Unstuck");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Carry Target\r\n{1} : Knockback Push\r\n{2} : Fix and Unstuck", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Carry Target\r\n{1} : Knockback Push\r\n{2} : Fix and Unstuck", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 			Event Player.Scale_Hud_ID = Null;
 			Event Player.Target_Lock = Custom String("--- No Target ---");
 		Else If(Event Player.Mode_Cycle == 11);
@@ -1442,12 +1460,13 @@ rule("Mode_Headline_Desc")
 			Event Player.Scale_Hud_ID = Last Text ID;
 
 			Event Player.Mode_Headline = Custom String("Growth | Shrink (Yourself)");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 12);
 			Create Progress Bar HUD Text(Event Player, Event Player.Target_Lock.Scale_Real * 5, Custom String(
 				"Destination: {0}% | Current: {1}% | {2}", Event Player.Target_Lock.Scale_Prev * 100,
@@ -1456,146 +1475,172 @@ rule("Mode_Headline_Desc")
 			Event Player.Scale_Hud_ID = Last Text ID;
 
 			Event Player.Mode_Headline = Custom String("Growth | Shrink (Target)");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 13);
 			Event Player.Mode_Headline = Custom String("Attach System");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Attach Yourself To Target\r\n{1} : Target Rides You\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Detach Yourself\r\n{1} : Detach Target",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Attach Yourself To Target\r\n{1} : Target Rides You\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Detach Yourself\r\n{1} : Detach Target",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 			Event Player.Scale_Hud_ID = Null;
 			Event Player.Target_Lock = Custom String("--- No Target ---");
 		Else If(Event Player.Mode_Cycle == 14);
 			Event Player.Mode_Headline = Custom String("Target Leash");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Create Grapplink\r\n{1} : Remove Grapplink\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Target Faces You\r\n{1} : Stop Forcing Facing", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Create Grapplink\r\n{1} : Remove Grapplink\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Target Faces You\r\n{1} : Stop Forcing Facing", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 15);
 			Event Player.Mode_Headline = Custom String("Party Painting");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Draw\r\n{1} : Choose Effect\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(
-				Secondary Fire)), Custom String("{0} : Select Size\r\n{1} : Choose Color\r\n{2} : Clear Effects", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Draw\r\n{1} : Choose Effect\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Select Size\r\n{1} : Choose Color\r\n{2} : Clear Effects", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 16);
 			Event Player.Mode_Headline = Custom String("Lock Up In Jail");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Lock target - Chat & Skills Disabled\r\n{1} : Unlock target - Chat & Skills Enabled\r\n{2} : Lock / Unlock Yourself",
-				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
-				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Lock target - Chat & Skills Disabled\r\n{1} : Unlock target - Chat & Skills Enabled\r\n{2} : Lock / Unlock Yourself",
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 17);
 			Event Player.Mode_Headline = Custom String("Spawn Hero Forcing");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Make Target To Mercy\r\n{1} : Make Target To D.Va\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Make Target To Widow\r\n{1} : Make Target Same Hero As You\r\n{2} : Stop Forcing To Be Hero (Target and You)",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
-				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Make Target To Mercy\r\n{1} : Make Target To D.Va\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Make Target To Widow\r\n{1} : Make Target Same Hero As You\r\n{2} : Stop Forcing To Be Hero (Target and You)",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 18);
 			Event Player.Mode_Headline = Custom String("Area Of Protection");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Make Savezone Bigger\r\n{1} : Make Savezone Smaller\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Create Savezone\r\n{1} : Remove Savezone\r\n{2} : Give | Revoke Access", Input Binding String(Button(Ultimate)),
-				Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Make Savezone Bigger\r\n{1} : Make Savezone Smaller\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Create Savezone\r\n{1} : Remove Savezone\r\n{2} : Give | Revoke Access", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 19);
 			Event Player.Mode_Headline = Custom String("Don't Touch Me");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Activate Target DMG Reflect\r\n{1} : Deactivate Target DMG Reflect\r\n{2} : Set Damage Reflect Yourself",
-				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
-				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Activate Target DMG Reflect\r\n{1} : Deactivate Target DMG Reflect\r\n{2} : Set Damage Reflect Yourself",
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate)
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 20);
 			Event Player.Mode_Headline = Custom String("Voice Options");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Moan Spam Target (Not Host And Mods)\r\n{1} : Moan Spam Yourself\r\n{2}", Input Binding String(Button(
-				Primary Fire)), Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Voice Pitch Up\r\n{1} : Voice Pitch Down\r\n{2} : Back To Normal Voice", Input Binding String(Button(Ultimate)),
-				Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Moan Spam Target [Only Non-Mods]\r\n{1} : Moan Spam Yourself\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Voice Pitch Up\r\n{1} : Voice Pitch Down\r\n{2} : Back To Normal Voice", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 21);
 			Event Player.Mode_Headline = Custom String("Remove Player");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Kick Target (Owner Only) \r\n{1} : Ban Target Temporarily (Owner Only)", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire))), Left, 1, Color(White), Color(White), Color(White), Visible To and String,
-				Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Kick Target (Owner Only) \r\n{1} : Ban Target Temporarily (Owner Only)", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 22);
 			Event Player.Mode_Headline = Custom String("Goodbye Cruel World");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : You are going to Brazil\r\n{1} : I need to go, my planet needs me", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String,
-				Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : You are going to Brazil\r\n{1} : I need to go, my planet needs me", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String,Visible Never);
 		Else If(Event Player.Mode_Cycle == 23);
 			Event Player.Mode_Headline = Custom String("#icon #yourself");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Give Yourself - Heart\r\n{1} : Give Yourself - TrashCan\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Give Yourself  - Fire\r\n{1} : Give Yourself  - Bolt\r\n{2} : Remove Icon From Yourself", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Give Yourself - Heart\r\n{1} : Give Yourself - TrashCan\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Give Yourself  - Fire\r\n{1} : Give Yourself  - Bolt\r\n{2} : Remove Icon From Yourself", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 24);
 			Event Player.Mode_Headline = Custom String("#icon #target");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Give Target - Heart\r\n{1} : Give Target - TrashCan\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Give Target - Fire\r\n{1} : Give Target - Bolt\r\n{2} : Remove Icon From Target", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Give Target - Heart\r\n{1} : Give Target - TrashCan\r\n{2}", 
+					Input Binding String(Button(Primary Fire)),Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Give Target - Fire\r\n{1} : Give Target - Bolt\r\n{2} : Remove Icon From Target", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 25);
 			Event Player.Mode_Headline = Custom String("Assign Co-Owner & Team Swap");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Give Target Rights \r\n{1} : Revoke Target Rights \r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Switch Team - Yourself\r\n{1} : Switch Team - Target",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2)))),
-				Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Give Target Rights \r\n{1} : Revoke Target Rights \r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Switch Team - Yourself\r\n{1} : Switch Team - Target",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 26);
 			Event Player.Mode_Headline = Custom String("Ghost Mode");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Disable Anti-Collision Target\r\n{1} : Enable Anti-Collision Target\r\n{2} : Set Anti-Collision For Yourself",
-				Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
-				Ultimate))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Disable Anti-Collision Target\r\n{1} : Enable Anti-Collision Target\r\n{2} : Set Anti-Collision For Yourself",
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 27);
 			Event Player.Mode_Headline = Custom String("Slow Projectile & Motion ");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Give Target Slow Projectile\r\n{1} : Revoke Target Slow Projectile\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Yourself Slow Projectile\r\n{1} : Set Slowmotion",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2)))),
-				Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Give Target Slow Projectile\r\n{1} : Revoke Target Slow Projectile\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Set Yourself Slow Projectile\r\n{1} : Set Slowmotion",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 28);
 			Event Player.Mode_Headline = Custom String("Bodyguards");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Set Attackable Target\r\n{1} : Set Bots Idle\r\n{2} : Create | Destroy Bots", Input Binding String(Button(
-				Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))), Left, 1, Color(White),
-				Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Set Attackable Target\r\n{1} : Set Bots Idle\r\n{2} : Create | Destroy Bots", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 29);
 			Event Player.Mode_Headline = Custom String("Remote Control");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Use Targets Primary Fire\r\n{1} : Use Targets Secondary Fire\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String(
-				"{0} : Use Targets Ultimate\r\n{1} : Use Targets Ability 1\r\n{2} : Use Targets Ability 2", Input Binding String(Button(
-				Ultimate)), Input Binding String(Button(Ability 1)), Input Binding String(Button(Ability 2)))), Left, 1, Color(White), Color(
-				White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Use Targets Primary Fire\r\n{1} : Use Targets Secondary Fire\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Use Targets Ultimate\r\n{1} : Use Targets Ability 1\r\n{2} : Use Targets Ability 2", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 1)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 30);
 			Event Player.Mode_Headline = Custom String("Remaining Time (Only Owner)");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Set Match Time To 60 Min\r\n{1} : Set Match Time To 30 Min\r\n{2}", Input Binding String(Button(Primary Fire)),
-				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)))), Left, 1, Color(White), Color(White), Color(
-				White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Set Match Time To 60 Min\r\n{1} : Set Match Time To 30 Min\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 31);
 			Event Player.Mode_Headline = Custom String("1v1-Mode");
-			Create HUD Text(Event Player, Null, Null, Custom String(
-				"{0} : Enter 1v1-Mode", Input Binding String(Button(Ultimate))), Left, 1, Color(White),
-				Color(White), Color(White), Visible To and String, Visible Never);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Enter 1v1-Mode", 
+					Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White),Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -2124,6 +2169,7 @@ rule("Mode_04 - Protection (Subroutine)")
 			Event Player.Protection_ID = Last Text ID;
 		Else If(Event Player.Protection == False);
 			Clear Status(Event Player, Phased Out);
+			Skip If(Event Player.In_1v1_Mode == True, 1);
 			Big Message(Event Player, Custom String("Protection: OFF"));
 			Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == True, 2);
 			Event Player.Player_Modification[0] = 100;
@@ -4277,8 +4323,6 @@ rule("Mode_31 - 1v1-Mode_ON")
 		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
 		Destroy HUD Text(Event Player.Mode_Hud_ID);
 		Destroy HUD Text(Event Player.Mode_Description);
-		Destroy HUD Text(Event Player.Usage_Info);
-		Event Player.Protection = False;
 		Enable Nameplates(Event Player, All Players(All Teams));
 		Destroy In-World Text(Event Player.Player_Nameplates);
 		Stop Forcing Player Outlines(Event Player, All Players(All Teams));
@@ -4290,6 +4334,7 @@ rule("Mode_31 - 1v1-Mode_ON")
 		Event Player.Mode_Description = Last Text ID;
 		Event Player.Camera = 5;
 		Event Player.In_1v1_Mode = True;
+		Event Player.Protection = False;
 	}
 }
 
@@ -4324,26 +4369,23 @@ rule("Mode_31 - 1v1-Mode_OFF")
 		Stop All Healing Modifications;
 		Destroy HUD Text(Event Player.Mode_Description);
 		Big Message(All Players(All Teams), Custom String("{0} has left 1v1-Mode.", Event Player));
-		Event Player.In_1v1_Mode = False;
 
 		Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
 			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
 			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
 		Event Player.Mode_Hud_ID = Last Text ID;
-		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Null, Left, 0, Color(White), Color(White),
-				Color(White), Visible To and String, Visible Never);
-		Event Player.Usage_Info = Last Text ID;
 
 		Event Player.Mode_Headline = Custom String("1v1-Mode");
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"{0} : Enter 1v1-Mode", Input Binding String(Button(Ultimate))), Left, 1, Color(White),
-			Color(White), Color(White), Visible To and String, Visible Never);
+		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+			Custom String("{0} : Enter 1v1-Mode", Input Binding String(Button(Ultimate))),
+			Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Event Player.Mode_Description = Last Text ID;
 
 		Event Player.Protection = True;
 		Start Rule(Give_Custom_Nameplate, Restart Rule);
 
+		Event Player.In_1v1_Mode = False;
 	}
 }
 
