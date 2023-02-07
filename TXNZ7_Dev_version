@@ -298,6 +298,7 @@ variables
 		52: Regular_Player_Has_Title
 		53: M32_Players_Nameplate
 		54: NamesAndOutlines_Colors_Selector
+		55: Is_Menu_Active
 }
 
 subroutines
@@ -545,6 +546,9 @@ rule("Default_Player_Settings")
 		Event Player.Icon_ID = Empty Array;
 		Event Player.Icons_Selector = 0;
 		Event Player.Icons_Colors_Selector = 0;
+
+		"Is menu Active"
+		Event Player.Is_Menu_Active = True;
 		
 		Wait(0.1, Ignore Condition);
 		If(Array Contains(Global.Jail_List[0],Custom String("{0}",Event Player)) == True);	
@@ -1107,6 +1111,58 @@ rule("Player_Rank_Revoke")
 	}
 }
 
+rule("Show_And_Hide_Menu")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+		Is Button Held(Event Player, Button(Melee)) == True;
+	}
+
+	actions
+	{
+		Wait(0.600, Abort When False);
+		"Menu toggle"
+		If(Is Button Held(Event Player, Button(Crouch)) && Is Button Held(Event Player, Button(Melee)));
+			If(Event Player.Is_Menu_Active == True);
+				Event Player.Is_Menu_Active = False;
+				"Hardcode, todo: make it restore last menu id (with arrays, to rework all menu ids)"
+				Event Player.Mode_Cycle = 0;
+				"Hide moderator's HUD"
+				Destroy HUD Text(Event Player.Mode_Description);
+				Destroy HUD Text(Event Player.Mode_Hud_ID);
+				Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+				Small Message(Event Player, Custom String(" Menu OFF {0}", Icon String(X)));
+			Else If(Event Player.Is_Menu_Active == False);
+				"Restore menu at page 0"
+				Event Player.Is_Menu_Active = True;
+				Small Message(Event Player, Custom String(" Menu ON {0}", Icon String(Plus)));
+				Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+					Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+					Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+				Event Player.Mode_Hud_ID = Last Text ID;
+				Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+					Custom String("{0} : Resurrect Target\r\n{1} : Kill Target\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+					Custom String("{0} : Kill | Rez Yourself\r\n{1}", Input Binding String(Button(Ultimate)), 
+					Custom String("{0} : Set Auto-Respawn, yourself\r\n{1}", Input Binding String(Button(Ability 2)), 
+					Custom String("{0} : Set Auto-Respawn, Non-mod target\r\n{1}", Input Binding String(Button(Reload)), 
+					Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
+				))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Event Player.Mode_Description = Last Text ID;
+			End;
+		End;
+	}
+}
+
 rule("Hud_Elements (Subroutine)")
 {
 	event
@@ -1331,6 +1387,7 @@ rule("Mode_Cycle")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Crouch_On == True;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		Event Player.Is_Flying == False;
 		Event Player.In_1v1_Mode == False;
@@ -1370,6 +1427,7 @@ rule("Mode_Headline_Desc")
 		Event Player.Is_Crouch_On == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		(Event Player.Mode_Description != Null) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.In_1v1_Mode == False;
 	}
 
@@ -1520,11 +1578,8 @@ rule("Mode_Headline_Desc")
 			Event Player.Mode_Headline = Custom String("Target Leash");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Create Grapplink\r\n{1} : Remove Grapplink\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Target Faces You\r\n{1} : Stop Forcing Facing", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Create Grapplink\r\n{1} : Remove Grapplink", Input Binding String(Button(Primary Fire)), Input Binding String(Button(
+				Secondary Fire))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 15);
 			Event Player.Mode_Headline = Custom String("Party Painting");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -1995,6 +2050,7 @@ rule("Mode_00 - Kill_Rez")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 0;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -2078,6 +2134,7 @@ rule("Mode_01 - Teleport")
 		Event Player.Mode_Cycle == 1;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
@@ -2123,6 +2180,7 @@ rule("Mode_02 - Hacked")
 		Event Player.Mode_Cycle == 2;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
@@ -2165,6 +2223,7 @@ rule("Mode_03 - Frozen")
 		Event Player.Mode_Cycle == 3;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
@@ -2216,6 +2275,7 @@ rule("Mode_04 - Protection")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 4;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -2281,6 +2341,7 @@ rule("Mode_05 - Knocked_Down")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 5;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -2332,6 +2393,7 @@ rule("Mode_06 - Burning")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 6;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -2378,6 +2440,7 @@ rule("Mode_07 - Stunned")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 7;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -2432,6 +2495,7 @@ rule("Mode_08 - Flying_Gravity")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 8;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -2488,6 +2552,7 @@ rule("Mode_08 - Flying_Controls")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Crouch)) || Is Button Held(Event Player, Button(Jump))) == True;
 		Event Player.Is_Flying == True;
 	}
@@ -2519,6 +2584,7 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 9;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
@@ -2589,6 +2655,7 @@ rule("Mode_10 - Target_Carry_Control")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 10;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -2638,6 +2705,7 @@ rule("Mode_11 - Scale_Own_Size")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 11;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
@@ -2735,6 +2803,7 @@ rule("Mode_11 - Abort_Scaling")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 11;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Reload))) == True;
@@ -2762,6 +2831,7 @@ rule("Mode_12 - Scale_Target_Size")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 12;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
@@ -2842,6 +2912,7 @@ rule("Mode_12 - Abort_Scaling")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 12;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Reload))) == True;
@@ -2871,6 +2942,7 @@ rule("Mode_13 - Attach_System")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 13;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
@@ -2907,6 +2979,7 @@ rule("Mode_14 - Grapple_Line")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 14;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))
 			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
@@ -2936,11 +3009,11 @@ rule("Mode_14 - Grapple_Line")
 			Wait(0.250, Ignore Condition);
 			Event Player.Grap_Line[0] = Null;
 			Player Closest To Reticle(Event Player, All Teams).Grap_Line[0] = Null;
-		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+		disabled Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			Start Facing(Event Player.Grap_Line[0], Direction Towards(Eye Position(Event Player.Grap_Line[0]), Add(Vector(0,0.1,0),Eye Position(Event Player))), 
 				Angle Between Vectors(Facing Direction Of(Event Player.Grap_Line[0]), 
 				Direction Towards(Eye Position(Event Player.Grap_Line[0]), Add(Vector(0,0.2,0),Eye Position(Event Player))))*2, To World, Direction And Turn Rate);
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+		disabled Else If(Is Button Held(Event Player, Button(Reload)) == True);
 			Stop Facing(Event Player.Grap_Line[0]);
 		End;
 	}
@@ -2985,6 +3058,7 @@ rule("Mode_15 - Painting_NEW")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 15;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
@@ -3184,6 +3258,7 @@ rule("Mode_16 - Mute")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 16;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -3396,6 +3471,7 @@ rule("Mode_17 - Spawn_Hero_Force")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 17;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
@@ -3447,6 +3523,7 @@ rule("Mode_18 - Savezone")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 18;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
@@ -3595,6 +3672,7 @@ rule("Mode_19 - Damage_Reflection")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 19;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -3663,6 +3741,7 @@ rule("Mode_20 - Voice_Pitch_Moan_Spam")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 20;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
@@ -3723,6 +3802,7 @@ rule("Mode_21 - Kick_&_Ban")
 	conditions
 	{
 		Event Player == Host Player;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 21;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -3767,6 +3847,7 @@ rule("Mode_22 - Heavenly_Strike")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 22;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -3832,6 +3913,7 @@ rule("Mode_23 - Icon_Tag_Self")
 	conditions
 	{
 		Event Player.Mode_Cycle == 23;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
 			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
@@ -3977,6 +4059,7 @@ rule("Mode_24 - Icon_Tag_Target")
 	conditions
 	{
 		Event Player.Mode_Cycle == 24;
+		Event Player.Is_Menu_Active == True;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
 			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
@@ -4151,6 +4234,7 @@ rule("Mode_23_24 - Show message with selected Icon")
 
 	conditions
 	{
+		Event Player.Is_Menu_Active == True;
 		(Event Player.Mode_Cycle == 23 || Event Player.Mode_Cycle == 24) == True;
 	}
 
@@ -4174,6 +4258,7 @@ rule("Mode_25 - Give_Revoke_Mod")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 25;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
@@ -4234,6 +4319,7 @@ rule("Mode_26 - Ghost_Mode")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 26;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -4284,6 +4370,7 @@ rule("Mode_27 - Slowmotion_&_Slow_Projectile")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 27;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
@@ -4344,6 +4431,7 @@ rule("Mode_28 - Create_Bodyguard")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 28;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate))) == True;
@@ -4525,6 +4613,7 @@ rule("Mode_29 - Remote_Control")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 29;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
@@ -4572,6 +4661,7 @@ rule("Mode_30 - Match_Time")
 	conditions
 	{
 		Event Player.High_Rank == True;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 30;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
