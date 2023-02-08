@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "<FGE983D8BFF>♥A Friendly Server (!!! DEV VERSION !!!) ♥<FGFFFFFFFF>\n last updated (?? Feb 2023)\r: <FGFFE4E1FF>RJJ01<FGFFFFFFFF>\n\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera \n* Added A LOT of stuff \n* Removed A LOT of stuff \n* Squished A LOT of bugs \n* Added A LOT of bugs... wait no \n \n <FGF9B4F6FF>Coded by: TbyCoLive, Warloy, LƐafa \n   and some guy named xMaxuss, I guess.\n A rework tribute to:\r ǴARŊE, ElCasT & CoolDot<FGFFFFFFFF>"
-		Mode Name: "<FGFF8AC4FF>Friendly ♥ (WARNING: Dev-Version!)<FGFFFFFFFF>"
+		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\nDevelopers version.\nLastest code (07 Feb 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n* Hold Crouch + Interact to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n* Hold 'CTRL' (crouch) + R|E|Q to change voice\n* New heroes and maps added\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
+		Mode Name: "<FGe96df3FF>Fri<FGe656f1FF>en<FGe23eefFF>dly <FGff003fFF>♥"
 	}
 
 	lobby
@@ -42,6 +42,21 @@ settings
 			}
 		}
 
+		Team Deathmatch
+		{
+			Self Initiated Respawn: Off
+
+			enabled maps
+			{
+				Black Forest 0
+				Castillo 0
+				Kanezaka 0
+				Malevento 0
+				Necropolis 0
+				Petra 0
+			}
+		}		
+
 		General
 		{
 			Game Mode Start: Immediately
@@ -57,12 +72,11 @@ settings
 	{
 		General
 		{
-			Ability Cooldown Time: 100%
-			No Ammunition Requirement: Off
-			Ultimate Duration: 200%
-			Ultimate Generation: 300%
-			Ultimate Generation - Combat: 300%
-			Ultimate Generation - Passive: 300%
+			Ability Cooldown Time: 30%
+			No Ammunition Requirement: On
+			Ultimate Duration: 250%
+			Ultimate Generation: 350%
+			Ultimate Generation - Passive: 350%
 
 			Ana
 			{
@@ -223,6 +237,10 @@ variables
 		39: Modification_Mode_String
 		40: Player_1v1_1
 		41: Player_1v1_2
+		42: Icons_Colors_List
+		43: Icons_List
+		44: Icons_List_For_Menu
+		45: NamesAndOutlines_Colors
 
 	player:
 		0: High_Rank
@@ -275,6 +293,11 @@ variables
 		47: Modification_Scalar_Selector
 		48: Auto_Respawn
 		49: In_1v1_Mode
+		50: Icons_Selector
+		51: Icons_Colors_Selector
+		52: Regular_Player_Has_Title
+		53: M32_Players_Nameplate
+		54: NamesAndOutlines_Colors_Selector
 }
 
 subroutines
@@ -291,7 +314,7 @@ subroutines
 	9: Jail_Leaver
 }
 
-rule("Anti-Crash-ON")
+disabled rule("Anti-Crash-ON")
 {
 	event
 	{
@@ -314,7 +337,7 @@ rule("Anti-Crash-ON")
 	}
 }
 
-rule("Anti-Crash-OFF")
+disabled rule("Anti-Crash-OFF")
 {
 	event
 	{
@@ -344,11 +367,8 @@ rule("Game_Description")
 
 	actions
 	{
-		Set Objective Description(All Players(All Teams), Custom String("{0} » Be Friendly & Chill | No killing allowed « {0}",
-			Icon String(Heart)), Visible To and String);
-		Wait(12, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String(
-			"{0} » Originally Created by TbyCoLive. Edited by Warloy & Leafa « {0}", Icon String(Spade)), Visible To and String);
+			" » Coded by Warloy, xMaxuss and TbyCoLive « "), Visible To and String);
 		Wait(12, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (1 sec) | Enable Protection « {1}",
 			Input Binding String(Button(Reload)), Icon String(No)), Visible To and String);
@@ -358,12 +378,6 @@ rule("Game_Description")
 		Wait(12, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (1 sec) | Change Hero « {1}",
 			Input Binding String(Button(Melee)), Icon String(Recycle)), Visible To and String);
-		Wait(12, Ignore Condition);
-		Set Objective Description(All Players(All Teams), Custom String("{1} » See A Rose Ring On The Floor? Walk into it to TP « {1}",
-			Input Binding String(Button(Interact)), Icon String(Eye)), Visible To and String);
-		Wait(12, Ignore Condition);
-		Set Objective Description(All Players(All Teams), Custom String("{0} » Harassment of any kind is not permitted! « {0}",
-			Icon String(Spade)), Visible To and String);
 		Wait(12, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{0} » Have a great day! « {0}", Icon String(Heart)),
 			Visible To and String);
@@ -514,7 +528,6 @@ rule("Default_Player_Settings")
 		Event Player.Voice_Pitch = 1;
 		Event Player.Heaven_Strike_Radius = Null;
 		Event Player.Heaven_Strike_ID = Array(Null, Null);
-		Event Player.Icon_ID = Null;
 		Event Player.Ghost_Mode = False;
 		Event Player.Slow_Projectile = False;
 		Event Player.In_Action = False;
@@ -528,6 +541,10 @@ rule("Default_Player_Settings")
 		Event Player.Drawing_Obj_Preview = Null;
 		Event Player.Drawing_Obj_Effects_Selector = 0;
 		Event Player.Drawing_Obj_Size_Selector = 0;
+
+		Event Player.Icon_ID = Empty Array;
+		Event Player.Icons_Selector = 0;
+		Event Player.Icons_Colors_Selector = 0;
 		
 		Wait(0.1, Ignore Condition);
 		If(Array Contains(Global.Jail_List[0],Custom String("{0}",Event Player)) == True);	
@@ -656,6 +673,20 @@ rule ("Custom Strings")
 		Global.Drawing_Obj_Colors = Array(Color(White), Color(Aqua), Color(Black), Color(Blue), Color(Gray), Color(Green), Color(
 			Lime Green), Color(Orange), Color(Purple), Color(Red), Color(Rose), Color(Sky Blue), Color(Turquoise), Color(Violet), Color(
 			Yellow));
+		Global.Icons_Colors_List = Array(Color(Red), Color(Orange), Color(Black), Color(Blue), Color(Gray), Color(Green), Color(
+			Lime Green), Color(Aqua), Color(Purple), Color(White), Color(Rose), Color(Sky Blue), Color(Turquoise), Color(Violet), Color(
+			Yellow));
+		Global.Icons_List = Array(Custom String("Bolt"), Custom String("Happy"), Custom String("Moon"), Custom String("Halo"), Custom String("Trashcan"),
+			Custom String("Dizzy"), Custom String("Sad"), Custom String("Poison"), Custom String("Warning"), Custom String("Stop"),
+			Custom String("Spiral"), Custom String("Radioactive"), Custom String("Skull"), Custom String("Recycle"), Custom String("No"),
+			Custom String("Eye"), Custom String("Asterisk"));
+		Global.Icons_List_For_Menu = Array(Icon String(Bolt), Icon String(Happy), Icon String(Moon), Icon String(Halo), Icon String(Trashcan), Icon String(
+			Dizzy), Icon String(Sad), Icon String(Poison 2), Icon String(Warning), Icon String(Stop), Icon String(Spiral), Icon String(
+			Radioactive), Icon String(Skull), Icon String(Recycle), Icon String(No), Icon String(Eye), Icon String(Asterisk));
+		Global.NamesAndOutlines_Colors = Array(Color(White), Color(Aqua), Color(Black), Color(Blue), Color(Gray), Color(Green),
+			Color(Lime Green), Color(Orange), Color(Purple), Color(Red), Color(Rose), Color(Sky Blue), Color(Turquoise), Color(Violet),
+			Color(Yellow));
+
 	}
 
 }
@@ -684,7 +715,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("JJelly"), Array(Custom String("Putin")), Custom String("Rainbow")), 
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
-			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Rock'N'Sugar")), Custom String("Blue")),
+			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Pocket Knight")), Custom String("Blue")),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -795,7 +826,10 @@ rule ("Custom nameplates list")
 				Custom String("Tracy my beloved")), Custom String("Rainbow")),
 			Array(Custom String("Jelish"), Array(Custom String("Jelicita")), Color(Red)),
 			Array(Custom String("BluTyde"), Array(Custom String("Radiance")), Color(Turquoise)),
-			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(3, 37, 126, 255))
+			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(39, 70, 155, 255)),
+			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
+			Array(Custom String("Toguro"), Array(Custom String("Toguro")), Color(Red)),
+			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White))
 		);
 	}
 }
@@ -905,7 +939,7 @@ rule("Re-evaluate nameplates (name covers title hardcode fix)")
 	conditions
 	{
 		Has Spawned(Event Player) == True;
-		Event Player.Is_Title_Given == True;
+		(Event Player.Is_Title_Given || Event Player.Regular_Player_Has_Title) == True;
 		Event Player.In_1v1_Mode == False;
 	}
 
@@ -954,7 +988,8 @@ rule("Listed_Player")
 			Custom String("Ghost"), Custom String("solevaya"), Custom String("Moistra"), Custom String("fa89"),
 			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), Custom String(
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("Kysp"), Custom String("BlueSky"), 
-			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"));
+			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
+			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("Nishiki"),
@@ -1313,14 +1348,14 @@ rule("Mode_Cycle")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 31);
+			If(Event Player.Mode_Cycle >= 32);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 31;
+				Event Player.Mode_Cycle = 32;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
@@ -1527,12 +1562,13 @@ rule("Mode_Headline_Desc")
 		Else If(Event Player.Mode_Cycle == 18);
 			Event Player.Mode_Headline = Custom String("Area Of Protection");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Make Savezone Bigger\r\n{1} : Make Savezone Smaller\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Create Savezone\r\n{1} : Remove Savezone\r\n{2} : Give | Revoke Access", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Custom String(
+				"{0} : Make Safe zone Bigger\n{1} : Make Safe zone Smaller\n{2}", Input Binding String(Button(Primary Fire)),
+				Input Binding String(Button(Secondary Fire)), Custom String("{0} : Create Safe zone\n{1} : Remove Safe zone\n{2}",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Custom String(
+				"{0} : Give | Revoke Access (Target)\n{1} : Give | Revoke Access (Self)", Input Binding String(Button(Reload)),
+				Input Binding String(Button(Melee))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String,
+				Visible Never);
 		Else If(Event Player.Mode_Cycle == 19);
 			Event Player.Mode_Headline = Custom String("Don't Touch Me");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -1567,20 +1603,22 @@ rule("Mode_Headline_Desc")
 			Event Player.Mode_Headline = Custom String("#icon #yourself");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Give Yourself - Heart\r\n{1} : Give Yourself - TrashCan\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Give Yourself  - Fire\r\n{1} : Give Yourself  - Bolt\r\n{2} : Remove Icon From Yourself", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Give yourself {1}\n{2}",
+				Input Binding String(Button(Primary Fire)), Global.Icons_List_For_Menu[Event Player.Icons_Selector], Custom String(
+				"{0} : Choose Color\n{1} : Choose Icon\n{2}", Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate)), Custom String("{0} : Give Yourself - Heart\n{1} : Give Yourself - Fire\n{2}", Input Binding String(Button(
+				Ability 2)), Input Binding String(Button(Melee)), Custom String("{0} : Destroy Your Icons", Input Binding String(Button(
+				Reload)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 24);
 			Event Player.Mode_Headline = Custom String("#icon #target");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Give Target - Heart\r\n{1} : Give Target - TrashCan\r\n{2}", 
-					Input Binding String(Button(Primary Fire)),Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Give Target - Fire\r\n{1} : Give Target - Bolt\r\n{2} : Remove Icon From Target", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Give {1} to Target\n{2}",
+				Input Binding String(Button(Primary Fire)), Global.Icons_List_For_Menu[Event Player.Icons_Selector], Custom String(
+				"{0} : Choose Color\n{1} : Choose Icon\n{2}", Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate)), Custom String("{0} : Give Target - Heart\n{1} : Give Target - Fire\n{2}", Input Binding String(Button(Ability 2)),
+				Input Binding String(Button(Melee)), Custom String("{0} : Destroy Target's Icons", Input Binding String(Button(Reload)))))),
+				Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 25);
 			Event Player.Mode_Headline = Custom String("Assign Co-Owner & Team Swap");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -1635,9 +1673,18 @@ rule("Mode_Headline_Desc")
 			Event Player.Mode_Headline = Custom String("1v1-Mode");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Enter 1v1-Mode", 
+				Custom String("{0} : (CURRENTLY DISABLED) Enter 1v1-Mode", 
 					Input Binding String(Button(Ultimate))
 				), Left, 1, Color(White),Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 32);
+			Event Player.Mode_Headline = Custom String("Outlines & names");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Custom String(
+				"{0} : Give Outline To Target\r\n{1} : Choose Color\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(
+				Button(Secondary Fire)), Custom String(
+				"{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n{2} : Remove Outline from Target",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
+				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -1692,12 +1739,69 @@ rule("Remove_Banned_Player")
 
 	actions
 	{
-		Small Message(All Players(All Teams), Custom String("{0} GTFO.", Event Player));
+		Small Message(All Players(All Teams), Custom String("{0} is banned.", Event Player));
 		Remove Player(Event Player);
 	}
 }
 
-rule("Game_Over")
+rule("Set match time to 1800s")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Assembling Heroes == False;
+	}
+
+	actions
+	{
+		"Forcing game time to 30 min, because default settings are 10 min maximum"
+		Set Match Time(1800);
+	}
+}
+
+rule("Declare draw if match time == 0")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Match Time == 0;
+		Is Assembling Heroes == False;
+	}
+
+	actions
+	{
+		Declare Match Draw;
+	}
+}
+
+rule("Disable assembling heroes all modes")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Assembling Heroes == True;
+	}
+
+	actions
+	{
+		"Disabling this feature to not wait 30s before match starts"
+		Set Match Time(0);
+	}
+}
+
+rule("Remaining Time: 10 Sec")
 {
 	event
 	{
@@ -1712,10 +1816,6 @@ rule("Game_Over")
 	actions
 	{
 		Big Message(All Players(All Teams), Custom String("Remaining Time: 10 Sec"));
-		Wait(10, Ignore Condition);
-		Declare Match Draw;
-		Wait(27, Ignore Condition);
-		Restart Match;
 	}
 }
 
@@ -2908,7 +3008,7 @@ rule("Mode_15 - Painting_NEW")
 			If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
 				"Sphere"
 				Create Effect(All Players(All Teams), Sphere, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.250,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 				Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
@@ -2917,7 +3017,7 @@ rule("Mode_15 - Painting_NEW")
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
 				"Sparkles"
 				Create Effect(All Players(All Teams), Sparkles, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Light Shaft"));
@@ -2929,31 +3029,31 @@ rule("Mode_15 - Painting_NEW")
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Orb"));
 				"Orb"
 				Create Effect(All Players(All Teams), Orb, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 3,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Ring"));
 				"Ring"
 				Create Effect(All Players(All Teams), Ring, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Cloud"));
 				"Cloud"
 				Create Effect(All Players(All Teams), Cloud, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 4,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Good Aura"));
 				"Good Aura"
 				Create Effect(All Players(All Teams), Good Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Bad Aura"));
 				"Bad Aura"
 				Create Effect(All Players(All Teams), Bad Aura, Global.Drawing_Obj_Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 2,
+					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
 					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 					Visible To);
 			End;
@@ -3359,7 +3459,7 @@ rule("Mode_18 - Savezone")
 		Event Player.Mode_Cycle == 18;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
+			Reload)) || Is Button Held(Event Player, Button(Melee))) == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
@@ -3398,6 +3498,14 @@ rule("Mode_18 - Savezone")
 			Else If(Player Closest To Reticle(Event Player, All Teams).Savezone_Access == True);
 				Player Closest To Reticle(Event Player, All Teams).Savezone_Access = False;
 				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
+			End;
+		Else If(Is Button Held(Event Player, Button(Melee)) == True);
+			If(Event Player.Savezone_Access == False);
+				Event Player.Savezone_Access = True;
+				Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+			Else If(Event Player.Savezone_Access == True);
+				Event Player.Savezone_Access = False;
+				Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Event Player, 1);
 			End;
 		End;
 	}
@@ -3721,7 +3829,7 @@ rule("Mode_22 - Heavenly_Strike")
 	}
 }
 
-rule("Mode_23 - Icon_Tag_Own")
+rule("Mode_23 - Icon_Tag_Self")
 {
 	event
 	{
@@ -3732,39 +3840,136 @@ rule("Mode_23 - Icon_Tag_Own")
 
 	conditions
 	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 23;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
+			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Abort If(Event Player.Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Heart, Visible To,
-				Color(Rose), True);
-			Event Player.Icon_ID = Last Created Entity;
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			Abort If(Event Player.Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Trashcan,
-				Visible To, Color(Gray), True);
-			Event Player.Icon_ID = Last Created Entity;
+			"Simple validator for icons, if player has > 2 icons: abort"
+			If(Event Player.Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Abort;
+			End;
+			If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Bolt"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Bolt, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Happy"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Happy, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Moon"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Moon, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Halo"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Halo, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Trashcan"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Trashcan,
+					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Dizzy"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Dizzy, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Radioactive"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Radioactive,
+					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Poison"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Poison 2,
+					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Warning"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Warning, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Stop"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Stop, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Spiral"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Spiral, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Sad"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Sad, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Skull"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Skull, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Recycle"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Recycle, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("No"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, No, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Eye"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Eye, Visible To,
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Asterisk"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Asterisk,
+					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+			End;
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
-			Abort If(Event Player.Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Fire, Visible To,
-				Color(Orange), True);
-			Event Player.Icon_ID = Last Created Entity;
+			"Simple selectors, same as drawing, from 0 to endpoint"
+			If(Event Player.Icons_Selector == 16);
+				Event Player.Icons_Selector = 0;
+				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			Else;
+				Event Player.Icons_Selector += 1;
+				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.Icons_Colors_Selector == 14);
+				Event Player.Icons_Colors_Selector = 0;
+				Small Message(Event Player, Custom String(" {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			Else;
+				Event Player.Icons_Colors_Selector += 1;
+				Small Message(Event Player, Custom String(" {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			End;
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
-			Abort If(Event Player.Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Bolt, Visible To,
-				Color(Yellow), True);
-			Event Player.Icon_ID = Last Created Entity;
+			If(Event Player.Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Abort;
+			End;
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Heart, Visible To,
+				Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+			Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
+		Else If(Is Button Held(Event Player, Button(Melee)) == True);
+			If(Event Player.Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Abort;
+			End;
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Fire, Visible To,
+				Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+			Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			Destroy Icon(Event Player.Icon_ID);
-			Event Player.Icon_ID = Null;
+			"Remove icons from player"
+			Destroy Icon(Event Player.Icon_ID[0]);
+			Destroy Icon(Event Player.Icon_ID[1]);
+			Destroy Icon(Event Player.Icon_ID[2]);
+			Destroy Icon(Event Player.Icon_ID[3]);
+			Destroy Icon(Event Player.Icon_ID[4]);
+			Destroy Icon(Event Player.Icon_ID[5]);
+			"Set validator back to default, so you can add two new icons"
+			Event Player.Icon_ID = Empty Array;
+			Small Message(Event Player, Custom String("Icons removed"));
 		End;
 	}
 }
@@ -3780,52 +3985,191 @@ rule("Mode_24 - Icon_Tag_Target")
 
 	conditions
 	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 24;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
+			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
 		Event Player.Is_Crouch_On == True;
 	}
 
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
-				Event Player, All Teams), Heart, Visible To, Color(Rose), True);
-			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
-			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
-				All Teams), Icon String(Heart)));
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
-				Event Player, All Teams), Trashcan, Visible To, Color(Gray), True);
-			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
-			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
-				All Teams), Icon String(Trashcan)));
+			"Simple validator for icons, if player has > 2 icons: abort"
+			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Abort;
+			End;
+			If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Bolt"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Bolt, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Happy"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Happy, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Moon"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Moon, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Halo"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Halo, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Trashcan"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Trashcan, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Dizzy"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Dizzy, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Radioactive"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Radioactive, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Poison"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Poison 2, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Warning"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Warning, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Stop"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Stop, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Spiral"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Spiral, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Sad"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Sad, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Skull"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Skull, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Recycle"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Recycle, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("No"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), No, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Eye"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Eye, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Asterisk"));
+				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+					Event Player, All Teams), Asterisk, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			End;
+			Small Message(All Players(All Teams), Custom String("{0} gave {1} to {2}", Event Player,
+				Global.Icons_List_For_Menu[Event Player.Icons_Selector], Player Closest To Reticle(Event Player, All Teams)));
+			Wait(0.300, Ignore Condition);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
-			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
-				Event Player, All Teams), Fire, Visible To, Color(Orange), True);
-			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
-			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
-				All Teams), Icon String(Fire)));
+			"Simple selectors, same as drawing, from 0 to endpoint"
+			If(Event Player.Icons_Selector == 16);
+				Event Player.Icons_Selector = 0;
+				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			Else;
+				Event Player.Icons_Selector += 1;
+				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.Icons_Colors_Selector == 14);
+				Event Player.Icons_Colors_Selector = 0;
+				Small Message(Event Player, Custom String("{0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			Else;
+				Event Player.Icons_Colors_Selector += 1;
+				Small Message(Event Player, Custom String("{0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+			End;
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).Icon_ID != Null);
+			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Abort;
+			End;
 			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
-				Event Player, All Teams), Bolt, Visible To, Color(Yellow), True);
-			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Last Created Entity;
-			Small Message(All Players(All Teams), Custom String("{0} Gave {1} {2}", Event Player, Player Closest To Reticle(Event Player,
-				All Teams), Icon String(Bolt)));
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID);
-			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Null;
-			Small Message(All Players(All Teams), Custom String("{0} Removed {1}'s Icon", Event Player, Player Closest To Reticle(Event Player,
+				Event Player, All Teams), Heart, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+				.Icon_ID, Last Created Entity);
+			Small Message(All Players (All Teams), Custom String("{0} gave {1} to {2}", Event Player, Icon String(Heart), Player Closest To Reticle(Event Player,
 				All Teams)));
+			Wait(0.300, Ignore Condition);
+		Else If(Is Button Held(Event Player, Button(Melee)) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
+				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Abort;
+			End;
+			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
+				Event Player, All Teams), Fire, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], True);
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+				.Icon_ID, Last Created Entity);
+			Small Message(All Players (All Teams), Custom String("{0} gave {1} to {2}", Event Player, Icon String(Fire), Player Closest To Reticle(Event Player,
+				All Teams)));
+			Wait(0.300, Ignore Condition);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			"Remove first icons from player"
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[0]);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1]);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[2]);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[3]);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[4]);
+			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[5]);
+			"Set validator back to default, so you can add two new icons"
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Empty Array;
+			Small Message(Event Player, Custom String("Icons removed from {0}", Player Closest To Reticle(Event Player, All Teams)));
+			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("{0} removed icons from you", Event Player));
+			Wait(0.300, Ignore Condition);
 		End;
 	}
 }
+
+rule("Mode_23_24 - Show message with selected Icon")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.Mode_Cycle == 23 || Event Player.Mode_Cycle == 24) == True;
+	}
+
+	actions
+	{
+		Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+			Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
+	}
+}
+
 
 rule("Mode_25 - Give_Revoke_Mod")
 {
@@ -4261,7 +4605,7 @@ rule("Mode_30 - Match_Time")
 	}
 }
 
-rule("Mode_31 - 1v1-Mode_ON")
+disabled rule("Mode_31 - 1v1-Mode_ON")
 {
 	event
 	{
@@ -4334,7 +4678,7 @@ rule("Mode_31 - 1v1-Mode_ON")
 	}
 }
 
-rule("Mode_31 - 1v1-Mode_OFF")
+disabled rule("Mode_31 - 1v1-Mode_OFF")
 {
 	event
 	{
@@ -4385,7 +4729,7 @@ rule("Mode_31 - 1v1-Mode_OFF")
 	}
 }
 
-rule("Mode_31 - Respawn_Logic")
+disabled rule("Mode_31 - Respawn_Logic")
 {
 	event
 	{
@@ -4426,6 +4770,107 @@ rule("Mode_31 - Respawn_Logic")
 	}
 }
 
+rule("Mode_32 - De-Elitate Outlines")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 32;
+		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
+			Reload))) == True;
+		Event Player.Is_Crouch_On == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't change outline of {0}, player is protected", Player Closest To Reticle(
+					Event Player, All Teams)));
+				Abort;
+			End;
+			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = True;
+			Disable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
+			Wait(0.050, Ignore Condition);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
+				Player Closest To Reticle(Event Player, All Teams)), Evaluate Once(Player Closest To Reticle(Event Player, All Teams)), 1,
+				Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
+				Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
+			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Last Text ID;
+			Start Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams), True,
+				Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
+			Wait(0.080, Ignore Condition);
+			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("{0} changed your name and outline colors!",
+				Event Player));
+			Wait(0.250, Ignore Condition);
+			""
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't remove outline from {0}, player is protected", Player Closest To Reticle(
+					Event Player, All Teams)));
+				Abort;
+			End;
+			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = False;
+			Stop Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
+			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Null;
+			Enable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			""
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Else If(Event Player.Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't change outline, you are in protected list"));
+				Abort;
+			End;
+			Event Player.Regular_Player_Has_Title = True;
+			Disable Nameplates(Event Player, All Players(All Teams));
+			Destroy In-World Text(Event Player.M32_Players_Nameplate);
+			Wait(0.050, Ignore Condition);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
+				Event Player), Evaluate Once(Event Player), 1, Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
+				Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
+			Event Player.M32_Players_Nameplate = Last Text ID;
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True,
+				Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
+			Wait(0.250, Ignore Condition);
+			""
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Else If(Event Player.Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't remove outline, you are in protected list"));
+				Abort;
+			End;
+			Event Player.Regular_Player_Has_Title = False;
+			Stop Forcing Player Outlines(Event Player, All Players(All Teams));
+			Destroy In-World Text(Event Player.M32_Players_Nameplate);
+			Event Player.M32_Players_Nameplate = Null;
+			Enable Nameplates(Event Player, All Players(All Teams));
+			""
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.NamesAndOutlines_Colors_Selector == 14);
+				Event Player.NamesAndOutlines_Colors_Selector = 0;
+				Small Message(Event Player, Custom String("{0}",
+					Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector]));
+			Else;
+				Event Player.NamesAndOutlines_Colors_Selector += 1;
+				Small Message(Event Player, Custom String("{0}",
+					Global.NamesAndOutlines_Colors[Event Player.NamesAndOutlines_Colors_Selector]));
+			End;
+		End;
+	}
+}
+
 
 rule("Extra_6 - Freeze_Widow_Bot")
 {
@@ -4447,56 +4892,6 @@ rule("Extra_6 - Freeze_Widow_Bot")
 		Set Status(Event Player, Null, Frozen, 9999);
 	}
 }
-
-rule("Extra_7 - Autokill_Xeno")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Junkrat;
-	}
-
-	conditions
-	{
-		(Custom String("{0}", Event Player) == Custom String("Xenolysith"));
-		Is Alive(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(0.1, Ignore Condition);
-		Kill(Event Player, Null);
-	}
-}
-
-
-rule("Extra_8 - Autoult_Kysp")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Reaper;
-	}
-
-	conditions
-	{
-		(Custom String("{0}", Event Player) == Custom String("Kysp"));
-		Is Alive(Event Player) == True;
-		Hero Of (Event Player) == Hero (Reaper);
-	}
-
-	actions
-	{
-		Set Ultimate Charge(Event Player, 100);
-		Start Holding Button(Event Player, Button(Ultimate));
-		Wait(0.5, Ignore Condition);
-		Stop Holding Button(Event Player, Button(Ultimate));
-		Loop If Condition Is True;
-	}
-}
-
 
 disabled rule("")
 {
@@ -4805,7 +5200,30 @@ rule("Teleports Havana")
 	}
 }
 
-disabled rule("Mercy Movement Collision True")
+rule("Play Effect while jump or crouch")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Alive(Event Player) == True;
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		(Is Button Held(Event Player, Button(Jump)) || Is Button Held(Event Player, Button(Crouch))) == True;
+	}
+
+	actions
+	{
+		Play Effect(All Players(All Teams), Ring Explosion, Global.Rainbow_Color, Event Player, 1.75);
+		Wait(0.200, Ignore Condition);
+	}
+}
+
+rule("Mercy Movement Collision True")
 {
 	event
 	{
@@ -4827,7 +5245,7 @@ disabled rule("Mercy Movement Collision True")
 	}
 }
 
-disabled rule("Mercy Movement Collision False")
+rule("Mercy Movement Collision False")
 {
 	event
 	{
