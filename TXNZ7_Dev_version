@@ -835,7 +835,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("BluTyde"), Array(Custom String("Radiance")), Color(Turquoise)),
 			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(39, 70, 155, 255)),
 			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
-			Array(Custom String("Toguro"), Array(Custom String("Toguro")), Color(Red)),
+			Array(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255))
 		);
 	}
