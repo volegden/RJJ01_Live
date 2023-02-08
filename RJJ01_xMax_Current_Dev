@@ -715,7 +715,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("JJelly"), Array(Custom String("Putin")), Custom String("Rainbow")), 
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
-			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), Custom String("Pocket Knight")), Custom String("Blue")),
+			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), 
+				Custom String("Pocket Knight"), Custom String("Loy")), Custom String("Blue")),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -757,7 +758,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("ȂĴǃ"), Array(Custom String("♥ ȂĴǃ ♥")), Custom String("Rainbow")), 
 			Array(Custom String("Satoshi"), Array(Custom String("! warning: cute !")), Custom Color(255, 215, 0, 255)), 
 			Array(Custom String("Leg"), Array(Custom String("Cowboy")), Color(Orange)),
-			Array(Custom String("AliceRowe"), Array(Custom String("69 with 7")), Custom Color(204, 204, 255, 255)),
+			Array(Custom String("AliceRowe"), Array(Custom String("{0} Umi {0}",
+				Ability Icon String(Hero(Kiriko), Button(Ultimate)))), Custom Color(74, 255, 249, 255)),
 			Array(Custom String("Shiun"), Array(Custom String("♥ ~ Her Moon ~ ♥")), Custom Color(255, 108, 125, 255)),
 			Array(Custom String("Tari"), Array(Custom String("Tari ùwú")), Custom String("Rainbow")),
 			Array(Custom String("Katt"), Array(Custom String("Enemy Spy")), Color(Sky Blue)),
@@ -828,8 +830,9 @@ rule ("Custom nameplates list")
 			Array(Custom String("BluTyde"), Array(Custom String("Radiance")), Color(Turquoise)),
 			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(39, 70, 155, 255)),
 			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
-			Array(Custom String("Toguro"), Array(Custom String("Toguro")), Color(Red)),
-			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White))
+			Array(Custom String("Toguro"), AArray(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
+			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
+			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255))
 		);
 	}
 }
@@ -989,23 +992,16 @@ rule("Listed_Player")
 			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), Custom String(
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("Kysp"), Custom String("BlueSky"), 
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
-			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"));
+			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
+			Custom String("squid"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
-		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("Nishiki"),
-			Custom String("MOONJIN"), Custom String("Mizuki"), Custom String("Millennium"), Custom String("TrickyHunter"), Custom String(
-			"minsu"), Custom String("Gerike27"), Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
+		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("MOONJIN"), 
+			Custom String("Millennium"), Custom String("TrickyHunter"), Custom String("minsu"), Custom String("Gerike27"), 
+			Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
 			Custom String("sanji"), Custom String("Miku"), Custom String("Amon"), Custom String("Axel"), Custom String("newyves"),
 			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("DontCry"),
-			Custom String("Justin"), Custom String("ColdIcePanda"), Custom String("Slahs"), Custom String("GhostDragon"), Custom String(
-			"Bankai"), Custom String("ŜŦƑ"), Custom String("zanji3abd"), Custom String("PƐPPƐR"), Custom String("Sigve456"), Custom String(
-			"papa"), Custom String("Mihael"), Custom String("darthmaul"), Custom String("Sylriff"), Custom String("S5tz"), Custom String(
-			"PolQuus"), Custom String("River"), Custom String("Hąnzo"), Custom String("xCRASHTESTx"), Custom String("Shamonef"),
-			Custom String("Alucard"), Custom String("KoHaKuH"), Custom String("Ikawu"), Custom String("ƑĿǍMĔŜ"), Custom String("ÖmeŔRX"),
-			Custom String("Kimiko"), Custom String("Pascal69"), Custom String("Divalicious"), Custom String("TitanJolt"), Custom String(
-			"NotRehmy"), Custom String("Nitro"), Custom String("Aconitum"), Custom String("Giokstorm"), Custom String("MrCookie"),
-			Custom String("tartarus"), Custom String("LittleMelody"), Custom String("Libertot"), Custom String("Bambus"), Custom String(
-			"Astaroth"), Custom String("ASTAROTH"), Custom String("LIGHT"), Custom String("Saad"), Custom String("BigPapa"));
+			Custom String("Justin"));
 	}
 }
 
