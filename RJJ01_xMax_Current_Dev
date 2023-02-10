@@ -246,6 +246,11 @@ variables
 		49: NamesAndOutlines_Colors
 		50: DEBUG_01
 		51: DEBUG_02
+		52: Jumppad_Storage
+		53: Jumppad_Helper
+		54: Jumppad_Radius
+		55: Jumppad_Style
+		56: Jumppad_Loop
 
 	player:
 		0: High_Rank
@@ -285,27 +290,26 @@ variables
 		34: Slow_Projectile
 		35: In_Action
 		36: Progress_Stop
-		37: Teleported
-		38: Drawing_Obj_Colors_Selector
-		39: Drawing_Obj_Size_Selector
-		40: Drawing_Obj_Effects_Selector
-		41: Drawing_Obj_Preview
-		42: Player_Title_And_Outline
-		43: Player_Nameplates
-		44: Is_Title_Given
-		45: Index_Help
-		46: Modification_Mode_Selector
-		47: Modification_Scalar_Selector
-		48: Auto_Respawn
-		49: In_Battle_Mode
-		50: Icons_Selector
-		51: Icons_Colors_Selector
-		52: Regular_Player_Has_Title
-		53: M32_Players_Nameplate
-		54: NamesAndOutlines_Colors_Selector
-		55: Is_Menu_Active
-		56: Non_Moderator_Menu
-		57: Non_Moderator_Menu_Description
+		37: Drawing_Obj_Colors_Selector
+		38: Drawing_Obj_Size_Selector
+		39: Drawing_Obj_Effects_Selector
+		40: Drawing_Obj_Preview
+		41: Player_Title_And_Outline
+		42: Player_Nameplates
+		43: Is_Title_Given
+		44: Index_Help
+		45: Modification_Mode_Selector
+		46: Modification_Scalar_Selector
+		47: Auto_Respawn
+		48: In_Battle_Mode
+		49: Icons_Selector
+		50: Icons_Colors_Selector
+		51: Regular_Player_Has_Title
+		52: M32_Players_Nameplate
+		53: NamesAndOutlines_Colors_Selector
+		54: Is_Menu_Active
+		55: Non_Moderator_Menu
+		56: Non_Moderator_Menu_Description
 }
 
 subroutines
@@ -445,6 +449,13 @@ rule("Global_Settings")
 		Global.Battle_Stats_Save = Array(100, 100, 100, 100, 100);
 		Global.Battle_Score = Array(0, 0);
 		Global.Battle_String = Custom String("No player in 1v1-Mode at the moment.");
+		
+		Global.Jumppad_Helper = 0;
+		Global.Jumppad_Storage = Array (Null, Null, Null);
+		Global.Jumppad_Radius = 0;
+		Global.Jumppad_Style = Null;
+		Global.Jumppad_Loop = 0;
+		
 		"Debug Tests"
 		Global.DEBUG_01 = Null;
 		Global.DEBUG_02 = Null;
@@ -1421,14 +1432,14 @@ rule("Mode_Cycle")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 32);
+			If(Event Player.Mode_Cycle >= 33);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 32;
+				Event Player.Mode_Cycle = 33;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
@@ -1762,6 +1773,13 @@ rule("Mode_Headline_Desc")
 				"{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n{2} : Remove Outline from Target",
 				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
 				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 33);
+			Event Player.Mode_Headline = Custom String("Jumppad");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Create Jumppad\r\n{1} : Delete previous Jumppad\r\n{2} : Delete All Jumppads\r\nCrouch to stop bouncing", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -3452,7 +3470,6 @@ rule("Mode_16 - Cage")
 				Teleport(Event Player, Event Player.Last_Position_Facing[0]);
 			End;
 		End;
-		Loop If Condition Is True;
 	}
 }
 
@@ -5272,6 +5289,120 @@ rule("Mode_32 - De-Elitate Outlines")
 	}
 }
 
+rule("Mode_33 - Jumppad_Create")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 33;
+		(Is Button Held(Event Player, Button(Primary Fire)) ||  Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.Is_Crouch_On == True;
+		Is On Ground(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Entity Count >= 127);
+				Small Message(Event Player, Custom String("  Maximum entity count reached!"));
+				Abort;
+			End;
+			
+			Global.Jumppad_Helper = Position Of (Event Player);
+			Global.Jumppad_Storage[0] = Append To Array(Global.Jumppad_Storage[0], Global.Jumppad_Helper);
+			
+			Create Effect(All Players(All Teams), Ring, Color(Green), Global.Jumppad_Helper, 1.75, None);
+			Global.Jumppad_Storage[1] = Append To Array(Global.Jumppad_Storage[1], Last Created Entity);
+			
+			Create Effect(Global.Jumppad_Style, Ring, Color(Lime Green), Evaluate Once(Global.Jumppad_Helper), Global.Jumppad_Radius, Visible To Position and Radius);
+			Global.Jumppad_Storage[2] = Append To Array(Global.Jumppad_Storage[2], Last Created Entity);
+		
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Global.Jumppad_Storage[0] == Null);
+				Small Message(Event Player, Custom String("  No jumppads left to delete!"));
+				Abort;
+			End;
+			Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Last Of(Global.Jumppad_Storage[0]), 1);
+			Destroy Effect(Last Of(Global.Jumppad_Storage[1]));
+			Destroy Effect(Last Of(Global.Jumppad_Storage[2]));
+			Global.Jumppad_Storage = Array(
+				Array Slice(Global.Jumppad_Storage[0], 0, Count Of (Global.Jumppad_Storage[0]) - 1), 
+				Array Slice(Global.Jumppad_Storage[1], 0, Count Of (Global.Jumppad_Storage[1]) - 1), 
+				Array Slice(Global.Jumppad_Storage[2], 0, Count Of (Global.Jumppad_Storage[2]) - 1));
+		
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			For Global Variable(Jumppad_Loop, 0, Count Of(Global.Jumppad_Storage[0]), 1);
+				Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Global.Jumppad_Storage[0][Global.Jumppad_Loop], 1);
+			End;
+			Destroy Effect(Global.Jumppad_Storage[1]);
+			Destroy Effect(Global.Jumppad_Storage[2]);
+			Global.Jumppad_Storage = Array(Null, Null, Null);
+			Small Message(Event Player, Custom String("  All Jumppads have been deleted."));
+		End;
+	}
+}
+
+rule("Mode_33 - Jumppad_Logic")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Filtered Array(Global.Jumppad_Storage[0], Distance Between(Current Array Element, Event Player) <= 1.78) != Null);
+		Is On Ground(Event Player) == True;
+		Event Player.Is_Crouch_On == False;
+	}
+
+	actions
+	{
+		Play Effect(All Players(All Teams), Explosion Sound, Null, Event Player, 30);
+		Apply Impulse(Event Player, Vector(0, 1, 0), 20, To World, Incorporate Contrary Motion);
+	}
+}
+
+rule("Mode_33 - Jumppad_Style")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Wait(4, Ignore Condition);
+		Global.Jumppad_Style = All Players(All Teams);
+		Chase Global Variable Over Time(Jumppad_Radius, 1.75, 3, None);
+		Wait Until(Global.Jumppad_Radius == 1.75, 99999);
+		Stop Chasing Global Variable(Jumppad_Radius);
+		Global.Jumppad_Style = Null;
+		Wait(0.1, Ignore Condition);
+		Global.Jumppad_Radius = 0;
+		Loop;
+	}
+}
+
+
+disabled rule("")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+}
+
 
 rule("Extra_6 - Freeze_Widow_Bot")
 {
@@ -5291,14 +5422,6 @@ rule("Extra_6 - Freeze_Widow_Bot")
 	actions
 	{
 		Set Status(Event Player, Null, Frozen, 9999);
-	}
-}
-
-disabled rule("")
-{
-	event
-	{
-		Ongoing - Global;
 	}
 }
 
@@ -5431,28 +5554,6 @@ rule("Extra_5 - Ultimate reset for mods+")
 		Set Ultimate Charge(Event Player, 100);
 	}
 }
-
-rule("Teleported state")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Teleported == True;
-	}
-
-	actions
-	{
-		Wait(0.500, Ignore Condition);
-		Event Player.Teleported = False;
-	}
-}
-
 
 rule("Tp effects Havana, Rialto, Lijiang")
 {
