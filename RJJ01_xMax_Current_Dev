@@ -4834,6 +4834,14 @@ rule("Mode_31 - Battle-Mode_ON")
 			Global.Battle_Stats_Save = Array(Event Player.Player_Modification[0], Event Player.Player_Modification[1], 
 				Event Player.Player_Modification[2], Event Player.Player_Modification[3], Event Player.Player_Modification[4]);
 			
+			Set Damage Dealt(Event Player, Global.Battle_Stats_Save[0]);
+			Set Move Speed(Event Player, Global.Battle_Stats_Main[1]);
+			Set Knockback Dealt(Event Player, Global.Battle_Stats_Main[2]);
+			Set Gravity(Event Player, Global.Battle_Stats_Main[3]);
+			Set Max Health(Event Player, Global.Battle_Stats_Main[4]);
+			Start Scaling Player(Event Player, Global.Battle_Stats_Main[4] / 100, False);
+			Heal(Event Player, Null, 12000);
+
 			Start Damage Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
 				Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Damagers);
 			Start Healing Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
@@ -4846,13 +4854,6 @@ rule("Mode_31 - Battle-Mode_ON")
 
 			Start Damage Modification(Filtered Array(All Players(All Teams), Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 
 				Array(Global.Battle_Player_1,Global.Battle_Player_2), 0, Receivers and Damagers);
-
-			Set Move Speed(Event Player, Global.Battle_Stats_Main[1]);
-			Set Knockback Dealt(Event Player, Global.Battle_Stats_Main[2]);
-			Set Gravity(Event Player, Global.Battle_Stats_Main[3]);
-			Set Max Health(Event Player, Global.Battle_Stats_Main[4]);
-			Start Scaling Player(Event Player, Global.Battle_Stats_Main[4] / 100, False);
-			Heal(Event Player, Null, 12000);
 			
 		Else;
 			Big Message(Event Player, Custom String("There are already 2 people in the 1v1-Mode!"));
@@ -5345,7 +5346,7 @@ rule("Mode_33 - Jumppad_Create")
 			Destroy Effect(Global.Jumppad_Storage[1]);
 			Destroy Effect(Global.Jumppad_Storage[2]);
 			Global.Jumppad_Storage = Array(Null, Null, Null);
-			Small Message(Event Player, Custom String("  All Jumppads have been deleted."));
+			Small Message(All Players(All Teams), Custom String("  All Jumppads have been deleted."));
 		End;
 	}
 }
