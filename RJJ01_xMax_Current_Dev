@@ -1986,8 +1986,7 @@ rule("3rd_Camera_1")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Far"));
 	}
 }
@@ -2010,8 +2009,7 @@ rule("3rd_Camera_2_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Close"));
 	}
 }
@@ -2034,8 +2032,7 @@ rule("3rd_Camera_3")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" Front View, Far"));
 	}
 }
@@ -2058,8 +2055,7 @@ rule("3rd_Camera_4_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" Front View, Close"));
 	}
 }
@@ -2082,13 +2078,11 @@ rule("Cinematic_Camera")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 100 * Facing Direction Of(Event Player)), 200);
 		Wait(0.1, Ignore Condition);
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + 2 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 0.5);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 2 * Facing Direction Of(Event Player)), 0.5);
 		Small Message(Event Player, Custom String(" Cinematic Camera"));
 	}
 }
