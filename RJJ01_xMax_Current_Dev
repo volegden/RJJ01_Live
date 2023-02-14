@@ -84,7 +84,7 @@ settings
 
 			Baptiste
 			{
-				Regenerative Burst Cooldown Time: 0%
+				Regenerative Burst Cooldown Time: 20%
 			}
 
 			Cassidy
@@ -472,26 +472,6 @@ rule("Global_Settings")
 	}
 }
 
-rule("Skip_Workshop_Maps")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		(Current Map == Map (Workshop Chamber) || Current Map == Map(Workshop Expanse) || Current Map == Map(Workshop Expanse Night) 
-			|| Current Map == Map(Workshop Green Screen) || Current Map == Map(Workshop Island) || Current Map == Map(Workshop Island Night)) == True;
-	}
-
-	actions
-	{
-		Set Match Time(10);
-		Wait(8, Ignore Condition);
-		Big Message(All Players(All Teams), Custom String("*Sigh...* skipping Map {0}...", Current Map));
-	}
-}
 
 rule("Global_Text")
 {
@@ -1188,7 +1168,7 @@ rule("Show_And_Hide_Menu")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Button Held(Event Player, Button(Melee)) == True;
-		Event Player.Mode_Cycle != 33;
+		Event Player.Mode_Cycle != 7;
 	}
 
 	actions
@@ -1461,14 +1441,14 @@ rule("Mode_Cycle")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 34);
+			If(Event Player.Mode_Cycle >= 30);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 34;
+				Event Player.Mode_Cycle = 30;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
@@ -1543,29 +1523,47 @@ rule("Mode_Headline_Desc")
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 4);
-			Event Player.Mode_Headline = Custom String("Merged with page 2");
+			Event Player.Mode_Headline = Custom String("Laser Tag");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("This page has been\r\nmerged with page 2.\r\nIt will be filled with\r\nsomething else soon."
+				Custom String("{0} : Enter Lasertag with freeze ray\r\n{1} : Enter Lasertag with heat ray\r\n{2} : Leave Lasertag", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 5);
-			Event Player.Mode_Headline = Custom String("Merged with page 2");
+			Event Player.Mode_Headline = Custom String("1v1-Mode");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("This page has been\r\nmerged with page 2.\r\nIt will be filled with\r\nsomething else soon."
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+			Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n {1}",
+				Input Binding String(Button(Ultimate)),
+			Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
+			Custom String("Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
+			Custom String("Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
+			Custom String("Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
+			Custom String("Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
+			Custom String("Size/HP: {0}%", Global.Battle_Stats_Main[4]
+			))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 6);
-			Event Player.Mode_Headline = Custom String("Merged with page 2");
+			Event Player.Mode_Headline = Custom String("Outlines & names");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("This page has been\r\nmerged with page 2.\r\nIt will be filled with\r\nsomething else soon."
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Custom String(
+				"{0} : Give Outline To Target\r\n{1} : Choose Color\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(
+				Button(Secondary Fire)), Custom String(
+				"{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n{2} : Remove Outline from Target",
+				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
+				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 7);
-			Event Player.Mode_Headline = Custom String("Merged with page 2");
+			Event Player.Mode_Headline = Custom String("Jumppad");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("This page has been\r\nmerged with page 2.\r\nIt will be filled with\r\nsomething else soon."
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Create Jumppad With Current Settings\r\n{1} : Delete previous Jumppad\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Cycle Color of inner ring\r\n{1} : Cycle Color of outer ring\r\n{2}",
+					Input Binding String(Button(Ability 1)), Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Cycle Jump strength\r\n{1} : Cycle Radius\r\n{2}",
+					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)), 
+				Custom String("{0} : Delete All Jumppads\r\nCurrent Strength: {1}\r\nOnly placeable on the ground.\r\nCrouch to stop bouncing.",
+					Input Binding String(Button(Melee)), (Event Player.Jumppad_Strength_Selector+1)*5
+				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 8);
 			Event Player.Mode_Headline = Custom String("Flying | Global Gravity");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -1778,48 +1776,6 @@ rule("Mode_Headline_Desc")
 				Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 31);
-			Event Player.Mode_Headline = Custom String("1v1-Mode");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-			Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n {1}",
-				Input Binding String(Button(Ultimate)),
-			Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
-			Custom String("Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
-			Custom String("Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
-			Custom String("Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
-			Custom String("Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
-			Custom String("Size/HP: {0}%", Global.Battle_Stats_Main[4]
-			))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 32);
-			Event Player.Mode_Headline = Custom String("Outlines & names");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), Custom String(
-				"{0} : Give Outline To Target\r\n{1} : Choose Color\r\n{2}", Input Binding String(Button(Primary Fire)), Input Binding String(
-				Button(Secondary Fire)), Custom String(
-				"{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n{2} : Remove Outline from Target",
-				Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)))), Left,
-				1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 33);
-			Event Player.Mode_Headline = Custom String("Jumppad");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Create Jumppad With Current Settings\r\n{1} : Delete previous Jumppad\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Cycle Color of inner ring\r\n{1} : Cycle Color of outer ring\r\n{2}",
-					Input Binding String(Button(Ability 1)), Input Binding String(Button(Ultimate)),
-				Custom String("{0} : Cycle Jump strength\r\n{1} : Cycle Radius\r\n{2}",
-					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)), 
-				Custom String("{0} : Delete All Jumppads\r\nCurrent Strength: {1}\r\nOnly placeable on the ground.\r\nCrouch to stop bouncing.",
-					Input Binding String(Button(Melee)), (Event Player.Jumppad_Strength_Selector+1)*5
-				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 34);
-			Event Player.Mode_Headline = Custom String("Laser Tag");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Enter Lasertag with freeze ray\r\n{1} : Enter Lasertag with heat ray\r\n{2} : Leave Lasertag", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -2028,8 +1984,10 @@ rule("3rd_Camera_1")
 
 	actions
 	{
-		Start Camera(Event Player, Update Every Frame(Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player)),
-			Update Every Frame(Eye Position(Event Player) + 100 * Facing Direction Of(Event Player)), 200);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Far"));
 	}
 }
@@ -2050,8 +2008,10 @@ rule("3rd_Camera_2_Zoom")
 
 	actions
 	{
-		Start Camera(Event Player, Update Every Frame(Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player)),
-			Update Every Frame(Eye Position(Event Player) + 100 * Facing Direction Of(Event Player)), 200);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Close"));
 	}
 }
@@ -2072,8 +2032,10 @@ rule("3rd_Camera_3")
 
 	actions
 	{
-		Start Camera(Event Player, Update Every Frame(Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player)),
-			Update Every Frame(Eye Position(Event Player) + -100 * Facing Direction Of(Event Player)), 200);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
 		Small Message(Event Player, Custom String(" Front View, Far"));
 	}
 }
@@ -2094,8 +2056,10 @@ rule("3rd_Camera_4_Zoom")
 
 	actions
 	{
-		Start Camera(Event Player, Update Every Frame(Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player)),
-			Update Every Frame(Eye Position(Event Player) + -100 * Facing Direction Of(Event Player)), 200);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
 		Small Message(Event Player, Custom String(" Front View, Close"));
 	}
 }
@@ -2116,11 +2080,15 @@ rule("Cinematic_Camera")
 
 	actions
 	{
-		Start Camera(Event Player, Update Every Frame(Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player)),
-			Update Every Frame(Eye Position(Event Player) + 100 * Facing Direction Of(Event Player)), 200);
-		Wait(0.5, Ignore Condition);
-		Start Camera(Event Player, Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player),
-			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), 0.5);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 100 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 200);
+		Wait(0.1, Ignore Condition);
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			All Players(All Teams), Event Player, True)), Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 2 * Facing Direction Of(Event Player), All Players(All Teams), Event Player, True)), 0.5);
 		Small Message(Event Player, Custom String(" Cinematic Camera"));
 	}
 }
@@ -4690,7 +4658,7 @@ rule("Mode_30 - Match_Time")
 	}
 }
 
-rule("Mode_31 - Battle-Mode_ON")
+rule("Mode_5 - Battle-Mode_ON")
 {
 	event
 	{
@@ -4703,7 +4671,7 @@ rule("Mode_31 - Battle-Mode_ON")
 	{
 		Event Player.High_Rank == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 31;
+		Event Player.Mode_Cycle == 5;
 		(Is Button Held(Event Player, Button(Ultimate))) == True;
 		Event Player.Is_Crouch_On == True;
 		Event Player.In_Battle_Mode == False;
@@ -4802,7 +4770,7 @@ rule("Mode_31 - Battle-Mode_ON")
 	}
 }
 
-rule("Mode_31 - Battle-Mode_OFF")
+rule("Mode_5 - Battle-Mode_OFF")
 {
 	event
 	{
@@ -4906,7 +4874,7 @@ rule("Mode_31 - Battle-Mode_OFF")
 	}
 }
 
-rule("Mode_31 - Respawn_Logic")
+rule("Mode_5 - Respawn_Logic")
 {
 	event
 	{
@@ -4955,7 +4923,7 @@ rule("Mode_31 - Respawn_Logic")
 	}
 }
 
-rule("Mode_31 - Punish_Battle_Disruptor")
+rule("Mode_5 - Punish_Battle_Disruptor")
 {
 	event
 	{
@@ -4987,7 +4955,7 @@ rule("Mode_31 - Punish_Battle_Disruptor")
 	}
 }
 
-rule("Mode_31 - Battle_Leaver_Handler")
+rule("Mode_5 - Battle_Leaver_Handler")
 {
 	event
 	{
@@ -5057,7 +5025,7 @@ rule("Mode_31 - Battle_Leaver_Handler")
 }
 
 
-rule("Mode_32 - De-Elitate Outlines")
+rule("Mode_6 - De-Elitate Outlines")
 {
 	event
 	{
@@ -5069,7 +5037,7 @@ rule("Mode_32 - De-Elitate Outlines")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 32;
+		Event Player.Mode_Cycle == 6;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
 			Reload))) == True;
@@ -5160,7 +5128,7 @@ rule("Mode_32 - De-Elitate Outlines")
 }
 
 
-rule("Mode_33 - Jumppad_Create_Custom")
+rule("Mode_7 - Jumppad_Create_Custom")
 {
 	event
 	{
@@ -5172,7 +5140,7 @@ rule("Mode_33 - Jumppad_Create_Custom")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 33;
+		Event Player.Mode_Cycle == 7;
 		(Is Button Held(Event Player, Button(Primary Fire)) ||  Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))
 			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(Ability 2)) ||
 			Is Button Held(Event Player, Button(Melee))) == True;
@@ -5260,7 +5228,7 @@ rule("Mode_33 - Jumppad_Create_Custom")
 	}
 }
 
-rule("Mode_33 - Jumppad_Preview_Create")
+rule("Mode_7 - Jumppad_Preview_Create")
 {
 	event
 	{
@@ -5272,7 +5240,7 @@ rule("Mode_33 - Jumppad_Preview_Create")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 33;
+		Event Player.Mode_Cycle == 7;
 		Event Player.Is_Menu_Active == True;
 	}
 
@@ -5289,7 +5257,7 @@ rule("Mode_33 - Jumppad_Preview_Create")
 	}
 }
 
-rule("Mode_33 - Jumppad_Preview_Remove")
+rule("Mode_7 - Jumppad_Preview_Remove")
 {
 	event
 	{
@@ -5300,7 +5268,7 @@ rule("Mode_33 - Jumppad_Preview_Remove")
 
 	conditions
 	{
-		Event Player.Mode_Cycle != 33;
+		Event Player.Mode_Cycle != 7;
 	}
 
 	actions
@@ -5310,7 +5278,7 @@ rule("Mode_33 - Jumppad_Preview_Remove")
 	}
 }
 
-rule("Mode_33 - Jumppad_Logic")
+rule("Mode_7 - Jumppad_Logic")
 {
 	event
 	{
@@ -5334,7 +5302,7 @@ rule("Mode_33 - Jumppad_Logic")
 	}
 }
 
-rule("Mode_34 - Tag")
+rule("Mode_4 - Tag")
 {
 	event
 	{
@@ -5347,7 +5315,7 @@ rule("Mode_34 - Tag")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 34;
+		Event Player.Mode_Cycle == 4;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))) == True;
 		Event Player.Is_Crouch_On == True;
 	}
@@ -5401,7 +5369,7 @@ rule("Mode_34 - Tag")
 	}
 }
 
-rule("Mode_34 - Tag Ray Logic")
+rule("Mode_4 - Tag Ray Logic")
 {
 	event
 	{
@@ -5439,7 +5407,7 @@ rule("Mode_34 - Tag Ray Logic")
 	}
 }
 
-rule("Mode_34 - Freeze Ray Progress Bar ON")
+rule("Mode_4 - Freeze Ray Progress Bar ON")
 {
 	event
 	{
@@ -5464,7 +5432,7 @@ rule("Mode_34 - Freeze Ray Progress Bar ON")
 	}
 }
 
-rule("Mode_34 - Freeze Ray Progress Bar ON")
+rule("Mode_4 - Freeze Ray Progress Bar ON")
 {
 	event
 	{
@@ -5486,7 +5454,7 @@ rule("Mode_34 - Freeze Ray Progress Bar ON")
 	}
 }
 
-rule("Mode_34 - Freeze Ray Slow Effect")
+rule("Mode_4 - Freeze Ray Slow Effect")
 {
 	event
 	{
@@ -5608,7 +5576,7 @@ rule("Extra_3 - Short_Hop")
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Alive(Event Player) == True;
 		Event Player.Mode_Cycle != 29;
-		Event Player.Mode_Cycle != 33;
+		Event Player.Mode_Cycle != 7;
 		Event Player.In_Battle_Mode == False;
 	}
 
