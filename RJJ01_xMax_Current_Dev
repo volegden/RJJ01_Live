@@ -324,6 +324,16 @@ variables
 		72: Jumppad_Radius_Selector
 		73: Jumppad_Strength_Selector
 		74: Jumppad_Preview
+		75: Camera_ID
+		76: Camera_Position
+		77: Camera_Placed
+		78: Camera_Smooth
+		79: Camera_Player
+		80: Camera_Text
+		81: Camera_Dot
+		82: Cinematic_Storage
+		83: Cinematic_Helper
+		84: Signal
 }
 
 subroutines
@@ -340,7 +350,7 @@ subroutines
 	9: Jail_Leaver
 }
 
-disabled rule("Anti-Crash-ON")
+rule("Anti-Crash-ON")
 {
 	event
 	{
@@ -363,7 +373,7 @@ disabled rule("Anti-Crash-ON")
 	}
 }
 
-disabled rule("Anti-Crash-OFF")
+rule("Anti-Crash-OFF")
 {
 	event
 	{
@@ -513,6 +523,8 @@ rule("Default_Player_Settings")
 			Event Player, 1, Do Not Clip, Visible To Position and String, Color(White), Default Visibility);
 		Event Player.Target_Tag_ID = Last Text ID;
 		"Default Variable"
+		
+		Event Player.Signal = False;
 		Event Player.High_Rank = False;
 		Event Player.Mod_Rank = False;
 		Event Player.Player_Modification = Array(100, 100, 100, 100, 100);
@@ -531,8 +543,7 @@ rule("Default_Player_Settings")
 		Event Player.Target_Arrow_ID = Null;
 		Event Player.Protection = Workshop Setting Toggle(Custom String("Safemode"), Custom String("Automatic Enabled"), False, 1);
 		Event Player.Target_Lock = Custom String("--- No Target ---");
-		Event Player.Camera = Workshop Setting Integer(Custom String("Camera"), Custom String(
-			"Third Person [0][1] - Front Cam [2][3] - First Person [4]"), 5, 0, 5, 2);
+		Event Player.Camera = 0;
 		Event Player.Scale_Hud_ID = Null;
 		Event Player.Progress_Lock = False;
 		Event Player.Remote_Scale = False;
@@ -582,6 +593,18 @@ rule("Default_Player_Settings")
 		Event Player.Jumppad_Radius_Selector = 1;
 		Event Player.Jumppad_Strength_Selector = 3;
 		Event Player.Jumppad_Preview = Array(Null, Null);
+
+		Event Player.Camera_ID = Null;
+		Event Player.Camera_Position = Vector(0,0,0);
+		Event Player.Camera_Placed = False;
+		Event Player.Camera_Smooth = 0.1;
+		Chase Player Variable Over Time(Event Player, Camera_Smooth, 200, 3, None);
+		Event Player.Camera_Player = Null;
+		Event Player.Camera_Text = Null;
+		Event Player.Camera_Dot = Null;
+
+		Event Player.Cinematic_Storage = Empty Array;
+		Event Player.Cinematic_Helper = Null;
 
 		"Is menu Active"
 		Event Player.Is_Menu_Active = True;
@@ -874,7 +897,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
 			Array(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
 			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
-			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255))
+			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
+			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue))
 		);
 	}
 }
@@ -1035,7 +1059,7 @@ rule("Listed_Player")
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("BlueSky"), 
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
-			Custom String("squid"), Custom String("Kysp"));
+			Custom String("squid"), Custom String("Kysp"), Custom String("rin"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("MOONJIN"), 
@@ -1441,18 +1465,45 @@ rule("Mode_Cycle")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Interact)) == True);
-			If(Event Player.Mode_Cycle >= 30);
+			If(Event Player.Mode_Cycle >= 32);
 				Event Player.Mode_Cycle = 0;
 			Else;
 				Event Player.Mode_Cycle += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Jump)) == True);
 			If(Event Player.Mode_Cycle <= 0);
-				Event Player.Mode_Cycle = 30;
+				Event Player.Mode_Cycle = 32;
 			Else;
 				Event Player.Mode_Cycle -= 1;
 			End;
 		End;
+	}
+}
+
+rule("Menu_Keys_Signal")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Crouch_On == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.In_Battle_Mode == False;
+		Event Player.Signal == False;
+		(Is Button Held(Event Player, Button(Primary Fire)) ||  Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))
+			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(Ability 2)) ||
+			Is Button Held(Event Player, Button(Melee))) == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = True;
 	}
 }
 
@@ -1469,7 +1520,6 @@ rule("Mode_Headline_Desc")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Is_Crouch_On == True;
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		(Event Player.Mode_Description != Null) == True;
 		Event Player.Is_Menu_Active == True;
@@ -1776,6 +1826,30 @@ rule("Mode_Headline_Desc")
 				Custom String("{0} : Set Match Time To 10 Sec\r\n{1} : Game Over (Declare Draw)",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 31);
+			Event Player.Mode_Headline = Custom String("Special Camera");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Place Camera Without LOS check\r\n{1} : Place Camera With LOS Check\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Place static Camera\r\n{1} : Start Cinematic Camera\r\n{2}",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Start Top-down Camera\r\n{1} : Attach Camera to target player\r\nReminder: Hold {2} to reset Camera",
+					Input Binding String(Button(Reload)), Input Binding String(Button(Ability 1)), Input Binding String(Button(Interact))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 32);
+			Event Player.Mode_Headline = Custom String("Ultra Cinematic Camera");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+				Custom String("{0} : Add Camera Position\r\n{1} : Remove Previous Camera Position\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start and Stop Camera\r\n{1} : Delete all Cameras\r\n{2}",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)),
+				Custom String("{0} : Follow Cameras of Target Player\r\n{1}",
+					Input Binding String(Button(Ability 2)),
+				Custom String("If multiple cameras can see you,\r\nthe closest will take Priority.\r\nReminder: Hold {0} to reset Camera",
+					Input Binding String(Button(Interact))
+				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -1939,7 +2013,10 @@ rule("Camera_Switch")
 	actions
 	{
 		Wait(0.400, Abort When False);
-		If(Event Player.Camera >= 5);
+		Event Player.Camera_Placed = False;
+		Destroy In-World Text(Event Player.Camera_Text);
+		Destroy Effect(Event Player.Camera_Dot);
+		If(Event Player.Camera >= 4);
 			Event Player.Camera = 0;
 		Else;
 			Event Player.Camera += 1;
@@ -1958,7 +2035,7 @@ rule("1st_Camera_0")
 
 	conditions
 	{
-		Event Player.Camera == 5;
+		Event Player.Camera == 0;
 	}
 
 	actions
@@ -1979,7 +2056,7 @@ rule("3rd_Camera_1")
 
 	conditions
 	{
-		Event Player.Camera == 0;
+		Event Player.Camera == 1;
 	}
 
 	actions
@@ -2002,7 +2079,7 @@ rule("3rd_Camera_2_Zoom")
 
 	conditions
 	{
-		Event Player.Camera == 1;
+		Event Player.Camera == 2;
 	}
 
 	actions
@@ -2025,7 +2102,7 @@ rule("3rd_Camera_3")
 
 	conditions
 	{
-		Event Player.Camera == 2;
+		Event Player.Camera == 3;
 	}
 
 	actions
@@ -2048,7 +2125,7 @@ rule("3rd_Camera_4_Zoom")
 
 	conditions
 	{
-		Event Player.Camera == 3;
+		Event Player.Camera == 4;
 	}
 
 	actions
@@ -2057,33 +2134,6 @@ rule("3rd_Camera_4_Zoom")
 			Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
 			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" Front View, Close"));
-	}
-}
-
-rule("Cinematic_Camera")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Camera == 4;
-	}
-
-	actions
-	{
-		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 100 * Facing Direction Of(Event Player)), 200);
-		Wait(0.1, Ignore Condition);
-		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
-			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 2 * Facing Direction Of(Event Player)), 0.5);
-		Small Message(Event Player, Custom String(" Cinematic Camera"));
 	}
 }
 
@@ -2102,13 +2152,12 @@ rule("Mode_00 - Kill_Rez")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 0;
 		Event Player.Is_Menu_Active == True;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			If(Is Alive(Event Player) == True);
 				Kill(Event Player, Null);
@@ -2186,14 +2235,13 @@ rule("Mode_01 - Teleport")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 1;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Signal == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Is_Crouch_On == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			Resurrect(All Dead Players(All Teams));
 			Teleport(Filtered Array(All Players(All Teams), Current Array Element.Protection == False && Current Array Element.In_Battle_Mode == False), Event Player);
@@ -2236,14 +2284,13 @@ rule("Mode_02 - Apply Status")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Mode_Cycle == 2;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
+		Event Player.Signal == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Is_Crouch_On == True;
 	}
 
 	actions
 	{		
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			
@@ -2380,13 +2427,13 @@ rule("Mode_03 - Protection")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 3;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).Restricted == False;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
@@ -2434,6 +2481,822 @@ rule("Mode_03 - Protection (Subroutine)")
 	}
 }
 
+rule("Mode_04 - Tag")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 4;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		"TODO: delete effect for players who left"
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Event Player.Tag_Mode == True);
+				Small Message(Event Player, Custom String(" Already In tag mode"));
+				Abort;
+			End;
+			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
+			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
+			Color(Sky Blue), Visible To Position and Radius);
+			Event Player.Tag_ID = Last Created Entity;
+			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Mei), Button(Ultimate))),
+				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
+			Event Player.Tag_Icon = Last Text Id;
+			Set Damage Dealt(Event Player, 0);
+			Event Player.Protection = False;
+			Event Player.Tag_Weapon = 1;
+			Event Player.Tag_Mode = True;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.Tag_Mode == True);
+				Small Message(Event Player, Custom String(" Already In tag mode"));
+				Abort;
+			End;
+			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
+			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
+			Color(Red), Visible To Position and Radius);
+			Event Player.Tag_ID = Last Created Entity;
+			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Torbjörn), Button(Ultimate))),
+				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
+			Event Player.Tag_Icon = Last Text Id;
+			Set Damage Dealt(Event Player, 0);
+			Event Player.Protection = False;
+			Event Player.Tag_Weapon = 2;
+			Event Player.Tag_Mode = True;
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			If(Event Player.Tag_Mode == False);
+				Small Message(Event Player, Custom String(" Not in tag mode at the moment"));
+				Abort;
+			End;
+			Destroy Effect(Event Player.Tag_ID);
+			Destroy In-World Text(Event Player.Tag_Icon);
+			Set Damage Dealt(Event Player, 100);
+			Event Player.Tag_Weapon = 0;
+			Event Player.Tag_Mode = False;
+		End;
+	}
+}
+
+rule("Mode_04 - Tag Ray Logic")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Tag_Mode == True;
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.Tag_Laser_Hit = Ray Cast Hit Player(Eye Position(Event Player), 
+			Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True);
+		Wait(0.01, Ignore Condition);
+		Loop If(Event Player.Tag_Laser_Hit.Tag_Mode == False);
+		If(Event Player.Tag_Weapon == 1);
+			If(Has Status(Event Player.Tag_Laser_Hit, Frozen) != True);
+				Event Player.Tag_Laser_Hit.Tag_Timer += 2;
+			End;
+			If(Event Player.Tag_Laser_Hit.Tag_Timer >=100);
+				Set Status(Event Player.Tag_Laser_Hit, Event Player, Frozen, 5);
+				Set Move Speed(Event Player, 100);
+				Event Player.Tag_Laser_Hit.Tag_Timer = 0.01;
+			End;
+		Else If(Event Player.Tag_Weapon == 2);
+			Set Status(Event Player.Tag_Laser_Hit, Event Player, Burning, 1);
+			Damage(Event Player.Tag_Laser_Hit, Null, 3);
+		End;
+		Loop If Condition Is True;
+	}
+}
+
+rule("Mode_04 - Freeze Ray Progress Bar ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Tag_Timer > 0;
+	}
+
+	actions
+	{
+		Create Progress Bar In-World Text(All Players(All Teams), Event Player.Tag_Timer, Custom String("F R E E Z E"), 
+			Event Player, 0.5, Clip Against Surfaces, Color(Sky Blue), Color(White), Position and Values, Visible Never);
+		Event Player.Tag_Progress_All = Last Text ID;
+		Create Progress Bar HUD Text(Event Player, Event Player.Tag_Timer, Custom String("F R E E Z E"), 
+			Top, 2, Color(Sky Blue), Color(White), Values, Visible Never);
+		Event Player.Tag_Progress_Self = Last Text ID;
+	}
+}
+
+rule("Mode_04 - Freeze Ray Progress Bar ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Tag_Timer <= 0;
+	}
+
+	actions
+	{
+		Destroy Progress Bar In-World Text(Event Player.Tag_Progress_All);
+		Destroy Progress Bar HUD Text(Event Player.Tag_Progress_Self);
+		Set Move Speed(Event Player, 100);
+	}
+}
+
+rule("Mode_04 - Freeze Ray Slow Effect")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Tag_Timer > 0;
+	}
+
+	actions
+	{
+		Set Move Speed(Event Player, 100 - Event Player.Tag_Timer);
+		Wait(0.01, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
+rule("Mode_05 - Battle-Mode_ON")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.High_Rank == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 5;
+		Event Player.Signal == True;
+		Event Player.In_Battle_Mode == False;
+	}
+
+	actions
+	{	
+		Event Player.Signal = False;
+		"TODO: Leaver Check+Abort?, handle ALL outside player interactions?, fix 0 0?, fix white nameplate bug?, handle nameplates?, CD adjustment?, reset CD on death?"
+		If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If (Global.Battle_Player_1 == Null);
+				Global.Battle_Player_1 = Event Player;
+				Big Message(All Players(All Teams), Custom String("{0} is searching for an opponent in the 1v1-Mode!", Event Player));
+				Small Message(Event Player, Custom String(" You are Player 1!"));
+				Small Message(Event Player, Custom String(" Player 2 will have their stats set to yours."));
+				Global.Battle_Stats_Main = Event Player.Player_Modification;
+				Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
+			Else If(Global.Battle_Player_2 == Null);
+				If(Team Of(Global.Battle_Player_1) == Team Of(Event Player));
+					If(Team Of(Global.Battle_Player_1) == Team 1);
+						If(Count Of(All Players(Team 2)) < 6);
+							Big Message(Event Player, Custom String("Participants must be in different teams, try again after teamswap!"));
+							Wait(5, Ignore Condition);
+							Move Player to Team(Event Player, Host Player, -1);
+							Wait(0.250, Ignore Condition);
+							Move Player to Team(Event Player, Team 2, -1);
+							Abort;
+						Else;
+							Big Message(Event Player, Custom String("Other team is full, cannot move you to enemy team of {0}!", Global.Battle_Player_1));
+							Big Message(Global.Battle_Player_1, Custom String("{0} tried to enter 1v1-Mode with you, but enemy team is full!", Event Player));
+							Abort;
+						End;
+					Else;
+						If(Count Of(All Players(Team 1)) < 6);
+							Big Message(Event Player, Custom String("Participants must be in different teams, try again after teamswap!"));
+							Wait(5, Ignore Condition);
+							Move Player to Team(Event Player, Host Player, -1);
+							Wait(0.250, Ignore Condition);
+							Move Player to Team(Event Player, Team 1, -1);
+							Abort;
+						Else;
+							Big Message(Event Player, Custom String("Other team is full, cannot move you to enemy team of {0}!", Global.Battle_Player_1));
+							Big Message(Global.Battle_Player_1, Custom String("{0} tried to enter 1v1-Mode with you, but enemy team is full!", Event Player));
+						Abort;
+						End;
+					End;
+				End;
+
+				Global.Battle_Player_2 = Event Player;
+				Big Message(All Players(All Teams), Custom String("{0} has accepted to be the opponent of {1}!", Event Player, Global.Battle_Player_1));
+				Small Message(Event Player, Custom String(" You are Player 2!"));
+				Global.Battle_Stats_Save = Array(Event Player.Player_Modification[0], Event Player.Player_Modification[1], 
+					Event Player.Player_Modification[2], Event Player.Player_Modification[3], Event Player.Player_Modification[4]);
+			
+				Set Damage Dealt(Event Player, Global.Battle_Stats_Save[0]);
+				Set Move Speed(Event Player, Global.Battle_Stats_Main[1]);
+				Set Knockback Dealt(Event Player, Global.Battle_Stats_Main[2]);
+				Set Gravity(Event Player, Global.Battle_Stats_Main[3]);
+				Set Max Health(Event Player, Global.Battle_Stats_Main[4]);
+				Start Scaling Player(Event Player, Global.Battle_Stats_Main[4] / 100, False);
+				Heal(Event Player, Null, 12000);
+
+				Start Damage Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
+					Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Damagers);
+				Start Healing Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
+					Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Healers);
+
+				Start Damage Modification(Global.Battle_Player_2, Filtered Array(All Players(All Teams), 
+					Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Damagers);
+				Start Healing Modification(Global.Battle_Player_2, Filtered Array(All Players(All Teams), 
+					Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Healers);
+
+				Start Damage Modification(Filtered Array(All Players(All Teams), Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 
+					Array(Global.Battle_Player_1,Global.Battle_Player_2), 0, Receivers and Damagers);
+			
+			Else;
+				Big Message(Event Player, Custom String("There are already 2 people in the 1v1-Mode!"));
+				Abort;
+			End;	
+
+			Destroy HUD Text(Event Player.Mode_Description);
+			Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+			Destroy HUD Text(Event Player.Mode_Hud_ID);
+			Enable Nameplates(Event Player, All Players(All Teams));
+			Destroy In-World Text(Event Player.Player_Nameplates);
+			Stop Forcing Player Outlines(Event Player, All Players(All Teams));
+		
+			Event Player.Mode_Headline = Custom String("You are currently in 1v1-Mode!");
+			Create HUD Text(Event Player, Null, Null, Custom String(
+				"Hold {0} and {1} for\r\n3 seconds to leave 1v1-Mode\r\nScore:\r\n{2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Reload)), 
+				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
+				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Event Player.Mode_Description = Last Text ID;
+			Event Player.Camera = 5;
+			Event Player.In_Battle_Mode = True;
+			Event Player.Protection = False;
+		End;
+	}
+}
+
+rule("Mode_05 - Battle-Mode_OFF")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.High_Rank == True;
+		(Is Button Held(Event Player, Button(Reload)) && Is Button Held(Event Player, Button(Crouch))) == True;
+		Event Player.In_Battle_Mode == True;
+	}
+
+	actions
+	{
+		Wait(3, Abort When False);
+		
+		Big Message(All Players(All Teams), Custom String("{0} has left 1v1-Mode.", Event Player));
+
+		If(Global.Battle_Player_1 == Event Player);
+			If(Global.Battle_Player_2 == Null);
+				Global.Battle_Stats_Main = Array(100, 100, 100, 100, 100);
+				Global.Battle_String = Custom String("No player in 1v1-Mode at the moment.");
+				Global.Battle_Player_1 = Null;
+			Else;
+				Big Message(Array(Global.Battle_Player_1, Global.Battle_Player_2), 
+					Custom String("Final Score: {0}", 
+					Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
+					Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
+				))));
+				Wait(0.1, Ignore Condition);
+
+				Global.Battle_Player_1 = Global.Battle_Player_2;
+				
+				Global.Battle_Stats_Main = Global.Battle_Stats_Save;
+				Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
+				
+				Global.Battle_Player_2 = Null;
+				
+				Set Damage Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[0]);
+				Set Move Speed(Global.Battle_Player_1, Global.Battle_Stats_Save[1]);
+				Set Knockback Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[2]);
+				Set Gravity(Global.Battle_Player_1, Global.Battle_Stats_Save[3]);
+				Set Max Health(Global.Battle_Player_1, Global.Battle_Stats_Save[4]);
+				Stop Scaling Player(Global.Battle_Player_1);
+				Heal(Global.Battle_Player_1, Null, 12000);
+
+				Global.Battle_Stats_Save = Array(100, 100, 100, 100, 100);
+			End;
+		Else;
+			Big Message(Array(Global.Battle_Player_1, Global.Battle_Player_2), 
+				Custom String("Final Score: {0}", 
+				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
+				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
+			))));
+			Wait(0.1, Ignore Condition);
+			
+			Global.Battle_Player_2 = Null;
+			
+			Set Damage Dealt(Event Player, Global.Battle_Stats_Save[0]);
+			Set Move Speed(Event Player, Global.Battle_Stats_Save[1]);
+			Set Knockback Dealt(Event Player, Global.Battle_Stats_Save[2]);
+			Set Gravity(Event Player, Global.Battle_Stats_Save[3]);
+			Set Max Health(Event Player, Global.Battle_Stats_Save[4]);
+			Stop Scaling Player(Event Player);
+			Heal(Event Player, Null, 12000);
+		End;
+		Stop All Damage Modifications;
+		Stop All Healing Modifications;
+		
+		Global.Battle_Score = Array(0, 0);
+
+		Destroy HUD Text(Event Player.Mode_Description);
+
+		Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+		Event Player.Mode_Hud_ID = Last Text ID;
+
+		Event Player.Mode_Headline = Custom String("1v1-Mode");
+		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
+			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+			Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n{1}",
+				Input Binding String(Button(Ultimate)),
+			Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
+			Custom String("-Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
+			Custom String("-Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
+			Custom String("-Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
+			Custom String("-Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
+			Custom String("-Size/HP: {0}%", Global.Battle_Stats_Main[4]
+			))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Event Player.Mode_Description = Last Text ID;
+
+		Event Player.Protection = True;
+		Start Rule(Give_Custom_Nameplate, Restart Rule);
+		Wait(0.1, Ignore Condition);
+		Event Player.In_Battle_Mode = False;
+
+	}
+}
+
+rule("Mode_05 - Respawn_Logic")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.In_Battle_Mode == True;
+	}
+
+	actions
+	{
+		If(Global.Battle_Player_1 != Null && Global.Battle_Player_2 != Null);
+			If(Event Player == Global.Battle_Player_1);
+				Global.Battle_Score[1] += 1;
+			Else;
+				Global.Battle_Score[0] += 1;
+			End;
+		End;
+		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+		Resurrect(Event Player);
+		Heal(Event Player, Null, 12000);
+		Set Invisible(Event Player, All);
+		Set Status(Event Player, Null, Hacked, 0.2);
+		Set Status(Event Player, Null, Invincible, 1.5);
+		Set Status(Event Player, Null, Phased Out, 1.5);
+		Set Ability 1 Enabled(Event Player, False);
+		Set Ability 2 Enabled(Event Player, False);
+		Set Melee Enabled(Event Player, False);
+		Set Primary Fire Enabled(Event Player, False);
+		Set Secondary Fire Enabled(Event Player, False);
+		Set Ultimate Ability Enabled(Event Player, False);
+
+		Wait(1.5, Ignore Condition);
+
+		Set Invisible(Event Player, None);
+		Set Ability 1 Enabled(Event Player, True);
+		Set Ability 2 Enabled(Event Player, True);
+		Set Melee Enabled(Event Player, True);
+		Set Primary Fire Enabled(Event Player, True);
+		Set Secondary Fire Enabled(Event Player, True);
+		Set Ultimate Ability Enabled(Event Player, True);
+	}
+}
+
+rule("Mode_05 - Punish_Battle_Disruptor")
+{
+	event
+	{
+		Player Dealt Knockback;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Victim.In_Battle_Mode == True;
+		Attacker.In_Battle_Mode == False;
+	}
+
+	actions
+	{
+		Apply Impulse(Attacker, Vector(0, 1, 0), 20, To World, Cancel Contrary Motion);
+		Apply Impulse(Attacker, Direction Towards(Position Of(Victim), Position Of(Attacker)), 100, To World, Incorporate Contrary Motion);
+		If(Attacker.Protection == True);
+			Clear Status(Attacker, Phased Out);
+			Wait(0.1, Ignore Condition);
+			Set Status(Attacker, Victim, Frozen, 8);
+			Set Status (Attacker, Null, Phased Out, 9999);
+		Else;
+			Set Status(Attacker, Victim, Frozen, 8);
+		End;
+		Set Status(Attacker, Victim, Hacked, 8);
+		Big Message(Attacker, Custom String("Don't disrupt 1v1-Mode players!"));
+	}
+}
+
+rule("Mode_05 - Battle_Leaver_Handler")
+{
+	event
+	{
+		Player Left Match;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player == Global.Battle_Player_1 || Event Player == Global.Battle_Player_2) == True;
+	}
+
+	actions
+	{
+		"TODO: Rework leaver behavior"
+		Wait(3, Ignore Condition);
+		Big Message(All Players(All Teams), Custom String("{0} has left the game while in 1v1-Mode!", Event Player));
+		If(Global.Battle_Player_1 == Null && Global.Battle_Player_2 == Null);
+			Global.Battle_Stats_Main = Array(100, 100, 100, 100, 100);
+			Global.Battle_String = Custom String("No player in 1v1-Mode at the moment.");
+			Global.Battle_Player_1 = Null;
+		Else If(Global.Battle_Player_1 == Null);
+			Big Message(Global.Battle_Player_2, 
+				Custom String("Final Score: {0}", 
+				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
+				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
+			))));			
+			Wait(0.1, Ignore Condition);
+
+			Global.Battle_Player_1 = Global.Battle_Player_2;
+				
+			Global.Battle_Stats_Main = Global.Battle_Stats_Save;
+			Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
+				
+			Global.Battle_Player_2 = Null;
+				
+			Set Damage Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[0]);
+			Set Move Speed(Global.Battle_Player_1, Global.Battle_Stats_Save[1]);
+			Set Knockback Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[2]);
+			Set Gravity(Global.Battle_Player_1, Global.Battle_Stats_Save[3]);
+			Set Max Health(Global.Battle_Player_1, Global.Battle_Stats_Save[4]);
+			Stop Scaling Player(Global.Battle_Player_1);
+			Heal(Global.Battle_Player_1, Null, 12000);
+
+			Global.Battle_Stats_Save = Array(100, 100, 100, 100, 100);
+			
+			Stop All Damage Modifications;
+			Stop All Healing Modifications;
+		
+			Global.Battle_Score = Array(0, 0);
+		Else If(Global.Battle_Player_2 == Null);
+			Big Message(Global.Battle_Player_1, 
+				Custom String("Final Score: {0}", 
+				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
+				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
+			))));
+			Wait(0.1, Ignore Condition);
+			
+			Global.Battle_Player_2 = Null;
+		End;
+
+		Stop All Damage Modifications;
+		Stop All Healing Modifications;
+		
+		Global.Battle_Score = Array(0, 0);
+	}
+}
+
+
+rule("Mode_06 - De-Elitate Outlines")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 6;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't change outline of {0}, player is protected", Player Closest To Reticle(
+					Event Player, All Teams)));
+				Abort;
+			End;
+			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = True;
+			Disable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
+			Wait(0.050, Ignore Condition);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
+				Player Closest To Reticle(Event Player, All Teams)), Evaluate Once(Player Closest To Reticle(Event Player, All Teams)), 1,
+				Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
+				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
+			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Last Text ID;
+			Start Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams), True,
+				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
+			Wait(0.080, Ignore Condition);
+			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("{0} changed your name and outline colors!",
+				Event Player));
+			Wait(0.250, Ignore Condition);
+			""
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't remove outline from {0}, player is protected", Player Closest To Reticle(
+					Event Player, All Teams)));
+				Abort;
+			End;
+			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = False;
+			Stop Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
+			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Null;
+			Enable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
+			""
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Else If(Event Player.Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't change outline, you are in protected list"));
+				Abort;
+			End;
+			Event Player.Regular_Player_Has_Title = True;
+			Disable Nameplates(Event Player, All Players(All Teams));
+			Destroy In-World Text(Event Player.M32_Players_Nameplate);
+			Wait(0.050, Ignore Condition);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
+				Event Player), Evaluate Once(Event Player), 1, Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
+				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
+			Event Player.M32_Players_Nameplate = Last Text ID;
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True,
+				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
+			Wait(0.250, Ignore Condition);
+			""
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
+			Else If(Event Player.Is_Title_Given == True);
+				Small Message(Event Player, Custom String("Can't remove outline, you are in protected list"));
+				Abort;
+			End;
+			Event Player.Regular_Player_Has_Title = False;
+			Stop Forcing Player Outlines(Event Player, All Players(All Teams));
+			Destroy In-World Text(Event Player.M32_Players_Nameplate);
+			Event Player.M32_Players_Nameplate = Null;
+			Enable Nameplates(Event Player, All Players(All Teams));
+			""
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Event Player.NamesAndOutlines_Colors_Selector == 14);
+				Event Player.NamesAndOutlines_Colors_Selector = 0;
+				Small Message(Event Player, Custom String("{0}",
+					Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]));
+			Else;
+				Event Player.NamesAndOutlines_Colors_Selector += 1;
+				Small Message(Event Player, Custom String("{0}",
+					Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]));
+			End;
+		End;
+	}
+}
+
+
+rule("Mode_07 - Jumppad_Create_Custom")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 7;
+		Event Player.Signal == True;
+		Event Player.Is_Menu_Active == True;
+		Is On Ground(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Entity Count >= 125);
+				Small Message(Event Player, Custom String("  Maximum entity count reached!"));
+				Abort;
+			End;
+			
+			Event Player.Jumppad_Helper = Position Of (Event Player);
+			Event Player.Jumppad_Entry[0] = Event Player.Jumppad_Helper;
+			
+			Create Effect(All Players(All Teams), Ring, Global.Colors[Event Player.Jumppad_Color_Out_Selector], 
+				Event Player.Jumppad_Helper, Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector], None);
+			Event Player.Jumppad_Entry[1] = Last Created Entity;
+			
+			Create Effect(All Players(All Teams), Ring, Global.Colors[Event Player.Jumppad_Color_In_Selector], 
+				Evaluate Once(Event Player.Jumppad_Helper), Update Every Frame(Evaluate Once(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2) 
+				+ (Evaluate Once(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] - Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2)) 
+				* Sine From Radians(Global.Jumppad_Animation)), Position and Radius);
+			Event Player.Jumppad_Entry[2] = Last Created Entity;
+
+			Event Player.Jumppad_Entry[3] = (Event Player.Jumppad_Strength_Selector + 1) * 5;
+
+			Event Player.Jumppad_Entry[4] = Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector];
+
+			Modify Global Variable(Jumppad_Storage, Append To Array, Array(Event Player.Jumppad_Entry));
+			
+			Small Message(Event Player, Custom String("  Jumppad placed!"));
+		
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Global.Jumppad_Storage == Empty Array);
+				Small Message(Event Player, Custom String("  No jumppads left to delete!"));
+				Abort;
+			End;
+			Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Last Of(Global.Jumppad_Storage)[0], 1);
+			Destroy Effect(Last Of(Global.Jumppad_Storage)[1]);
+			Destroy Effect(Last Of(Global.Jumppad_Storage)[2]);
+			Global.Jumppad_Storage = Array Slice(Global.Jumppad_Storage, 0, Count Of (Global.Jumppad_Storage) - 1);
+
+		Else If(Is Button Held(Event Player, Button(Ability 1)) == True);
+			If(Event Player.Jumppad_Color_In_Selector >= 14);
+				Event Player.Jumppad_Color_In_Selector = 0;
+			Else;
+				Event Player.Jumppad_Color_In_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String("  Inside Color: {0}", Global.Colors[Event Player.Jumppad_Color_In_Selector]));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Jumppad_Color_Out_Selector >= 14);
+				Event Player.Jumppad_Color_Out_Selector = 0;
+			Else;
+				Event Player.Jumppad_Color_Out_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String("  Outside Color: {0}", Global.Colors[Event Player.Jumppad_Color_Out_Selector]));
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Event Player.Jumppad_Strength_Selector >= 7);
+				Event Player.Jumppad_Strength_Selector = 0;
+			Else;
+				Event Player.Jumppad_Strength_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String("  Jump Strength: {0}", (Event Player.Jumppad_Strength_Selector + 1) * 5));
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			If(Event Player.Jumppad_Radius_Selector >= 3);
+				Event Player.Jumppad_Radius_Selector = 0;
+			Else;
+				Event Player.Jumppad_Radius_Selector += 1;
+			End;
+			Small Message(Event Player, Custom String("  Radius: {0}m", Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector]));
+		Else If(Is Button Held(Event Player, Button(Melee)) == True);
+			For Player Variable(Event Player, Jumppad_Loop, 0, Count Of(Global.Jumppad_Storage), 1);
+				Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Global.Jumppad_Storage[Event Player.Jumppad_Loop][0], 1);
+				Destroy Effect(Global.Jumppad_Storage[Event Player.Jumppad_Loop][1]);
+				Destroy Effect(Global.Jumppad_Storage[Event Player.Jumppad_Loop][2]);
+			End;
+			Global.Jumppad_Storage = Empty Array;
+			Small Message(All Players(All Teams), Custom String("  All Jumppads have been deleted."));
+		End;
+	}
+}
+
+rule("Mode_07 - Jumppad_Preview_Create")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 7;
+		Event Player.Is_Menu_Active == True;
+	}
+
+	actions
+	{
+		Create Effect(Event Player, Ring, Global.Colors[Event Player.Jumppad_Color_Out_Selector], 
+			Update Every Frame(Position Of (Event Player)), Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector], Position Radius and Color);
+		Event Player.Jumppad_Preview[0] = Last Created Entity;
+		Create Effect(Event Player, Ring, Global.Colors[Event Player.Jumppad_Color_In_Selector], 
+			Update Every Frame(Position Of (Event Player)), Update Every Frame(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2 
+			+ (Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] - Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2) 
+			* Sine From Radians(Global.Jumppad_Animation)), Position Radius and Color);
+		Event Player.Jumppad_Preview[1] = Last Created Entity;
+	}
+}
+
+rule("Mode_07 - Jumppad_Preview_Remove")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Mode_Cycle != 7;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.Jumppad_Preview[0]);
+		Destroy Effect(Event Player.Jumppad_Preview[1]);
+	}
+}
+
+rule("Mode_07 - Jumppad_Logic")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Filtered Array(Global.Jumppad_Storage, Distance Between(Current Array Element[0], Event Player) <= Current Array Element[4] + 0.2) != Empty Array);
+		Is On Ground(Event Player) == True;
+		Event Player.Is_Crouch_On == False;
+	}
+
+	actions
+	{
+		Event Player.Jumppad_Helper = Filtered Array(Global.Jumppad_Storage, Distance Between(Current Array Element[0], Event Player) <= Current Array Element[4] + 0.3);
+		Play Effect(All Players(All Teams), Explosion Sound, Null, Event Player, 30);
+		Apply Impulse(Event Player, Vector(0, 1, 0), Event Player.Jumppad_Helper[0][3], To World, Incorporate Contrary Motion);
+	}
+}
 
 rule("Mode_08 - Flying_Gravity")
 {
@@ -2449,13 +3312,12 @@ rule("Mode_08 - Flying_Gravity")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 8;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			If(Event Player.Is_Flying == False);
 				Event Player.Is_Flying = True;
@@ -2538,13 +3400,13 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 9;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		"TODO: Check if broken after menu rework"
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.Player_Modification[Event Player.Modification_Mode_Selector] += Raise To Power(10, Event Player.Modification_Scalar_Selector);
 			If(Event Player.Player_Modification[0] > 10000);
@@ -2609,12 +3471,13 @@ rule("Mode_10 - Target_Carry_Control")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 10;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		"TODO: Check if broken after menu rework"
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
@@ -2660,15 +3523,13 @@ rule("Mode_11 - Scale_Own_Size")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 11;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Event Player.Progress_Lock == False;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Reload)) == True);
 			Event Player.Scale_Prev = 1;
 			Event Player.Scale_Real = 1;
@@ -2681,15 +3542,15 @@ rule("Mode_11 - Scale_Own_Size")
 		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
 				Event Player.Scale_Prev += 0.100;
+				Modify Player Variable(Event Player, Scale_Prev, Min, 20);
 				Wait(0.100, Ignore Condition);
 			End;
-			Modify Player Variable(Event Player, Scale_Prev, Min, 20);
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 				Event Player.Scale_Prev -= 0.100;
+				Modify Player Variable(Event Player, Scale_Prev, Max, 0.100);
 				Wait(0.100, Ignore Condition);
 			End;
-			Modify Player Variable(Event Player, Scale_Prev, Max, 0.100);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			Call Subroutine(Scale_Progress);
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
@@ -2758,17 +3619,19 @@ rule("Mode_11 - Abort_Scaling")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 11;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Event Player.Progress_Lock == True;
 	}
 
 	actions
 	{
-		Event Player.Progress_Stop = True;
-		Wait(0.100, Ignore Condition);
-		Event Player.Progress_Stop = False;
+		Event Player.Signal = False;
+		If((Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
+			Event Player, Button(Reload))) == True);
+			Event Player.Progress_Stop = True;
+			Wait(0.100, Ignore Condition);
+			Event Player.Progress_Stop = False;
+		End;
 	}
 }
 
@@ -2786,18 +3649,19 @@ rule("Mode_12 - Scale_Target_Size")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 12;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).Progress_Lock == False;
 		Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == False;
 	}
 
 	actions
 	{
+		"TODO: Check if broken after menu rework"
+		Event Player.Signal = False;
 		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
-		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		If(Player Closest To Reticle(Event Player, All Teams) != Null);
+			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
+		End;
 		If(Is Button Held(Event Player, Button(Reload)) == True);
 			Event Player.Target_Lock.Scale_Prev = 1;
 			Event Player.Target_Lock.Scale_Real = 1;
@@ -2868,9 +3732,7 @@ rule("Mode_12 - Abort_Scaling")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 12;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).Progress_Lock == True;
 	}
 
@@ -2898,13 +3760,12 @@ rule("Mode_13 - Attach_System")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 13;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			Attach Players(Event Player, Player Closest To Reticle(Event Player, All Teams), Vector(0, 2, 0));
@@ -2937,13 +3798,12 @@ rule("Mode_14 - Grapple_Line")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 14;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))
-			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Event Player.Grap_Line[2] == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
@@ -3017,14 +3877,12 @@ rule("Mode_15 - Painting_NEW")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 15;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
-			Ability 2)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Melee))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		"Draw effects"
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
@@ -3217,13 +4075,12 @@ rule("Mode_16 - Mute")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 16;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Restricted == True);
@@ -3430,15 +4287,13 @@ rule("Mode_17 - Spawn_Hero_Force")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 17;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == False;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Start Forcing Player To Be Hero(Player Closest To Reticle(Event Player, All Teams), Hero(Mercy));
 			Small Message(All Players(All Teams), Custom String("{0} Is Now {1}", Player Closest To Reticle(Event Player, All Teams),
@@ -3483,14 +4338,12 @@ rule("Mode_18 - Savezone")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 18;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload)) || Is Button Held(Event Player, Button(Melee))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Global.Savezone_Radius += 0.500;
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
@@ -3632,13 +4485,12 @@ rule("Mode_19 - Damage_Reflection")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 19;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			If(Event Player.Damage_Reflect == False);
 				Event Player.Damage_Reflect = True;
@@ -3702,14 +4554,12 @@ rule("Mode_20 - Voice_Pitch_Moan_Spam")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 20;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			Abort If(Event Player.Voice_Pitch == 1.500);
 			Event Player.Voice_Pitch += 0.250;
@@ -3763,12 +4613,14 @@ rule("Mode_21 - Kick_&_Ban")
 		Event Player == Host Player;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 21;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
+		"TODO: Check if broken after menu rework"
+		Abort If((Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire))) == False);
 		"Permission Check"
 		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 		If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player.Target_Lock)) == True);
@@ -3809,13 +4661,15 @@ rule("Mode_22 - Heavenly_Strike")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 22;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Event Player.Target_Lock.Progress_Lock == False;
 	}
 
 	actions
 	{
+		"TODO: Rework without breaking it!"
+		Event Player.Signal = False;
+		Abort If((Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Ultimate))) == False);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
@@ -3875,111 +4729,90 @@ rule("Mode_23 - Icon_Tag_Self")
 	{
 		Event Player.Mode_Cycle == 23;
 		Event Player.Is_Menu_Active == True;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			"Simple validator for icons, if player has > 2 icons: abort"
 			If(Event Player.Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons and try again (limit reached: 2)"));
 				Abort;
 			End;
 			If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Bolt"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Bolt, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Happy"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Happy, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Moon"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Moon, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Halo"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Halo, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Trashcan"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Trashcan,
 					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Dizzy"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Dizzy, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Radioactive"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Radioactive,
 					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Poison"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Poison 2,
 					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Warning"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Warning, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Stop"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Stop, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Spiral"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Spiral, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Sad"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Sad, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Skull"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Skull, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Recycle"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Recycle, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("No"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, No, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Eye"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Eye, Visible To,
 					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Asterisk"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Asterisk,
 					Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 			End;
+			Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			"Simple selectors, same as drawing, from 0 to endpoint"
 			If(Event Player.Icons_Selector == 16);
 				Event Player.Icons_Selector = 0;
-				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
-					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			Else;
 				Event Player.Icons_Selector += 1;
-				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
-					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			End;
+			Small Message(Event Player, Custom String("  {0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			If(Event Player.Icons_Colors_Selector == 14);
 				Event Player.Icons_Colors_Selector = 0;
-				Small Message(Event Player, Custom String(" {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			Else;
 				Event Player.Icons_Colors_Selector += 1;
-				Small Message(Event Player, Custom String(" {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			End;
+			Small Message(Event Player, Custom String(" {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
 			If(Event Player.Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons and try again (limit reached: 2)"));
 				Abort;
 			End;
 			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Heart, Visible To,
@@ -3987,7 +4820,7 @@ rule("Mode_23 - Icon_Tag_Self")
 			Event Player.Icon_ID = Append To Array(Event Player.Icon_ID, Last Created Entity);
 		Else If(Is Button Held(Event Player, Button(Melee)) == True);
 			If(Event Player.Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons and try again (limit reached: 2)"));
 				Abort;
 			End;
 			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Event Player, Fire, Visible To,
@@ -4003,7 +4836,7 @@ rule("Mode_23 - Icon_Tag_Self")
 			Destroy Icon(Event Player.Icon_ID[5]);
 			"Set validator back to default, so you can add two new icons"
 			Event Player.Icon_ID = Empty Array;
-			Small Message(Event Player, Custom String("Icons removed"));
+			Small Message(Event Player, Custom String("  Icons removed"));
 		End;
 	}
 }
@@ -4021,150 +4854,113 @@ rule("Mode_24 - Icon_Tag_Target")
 	{
 		Event Player.Mode_Cycle == 24;
 		Event Player.Is_Menu_Active == True;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload)) || Is Button Held(Event Player, Button(Melee)) == True) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			"Simple validator for icons, if player has > 2 icons: abort"
 			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons from player and try again (limit reached: 2)"));
 				Abort;
 			End;
 			If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Bolt"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Bolt, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Happy"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Happy, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Moon"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Moon, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Halo"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Halo, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Trashcan"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Trashcan, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Dizzy"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Dizzy, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Radioactive"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Radioactive, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Poison"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Poison 2, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Warning"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Warning, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Stop"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Stop, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Spiral"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Spiral, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Sad"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Sad, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Skull"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Skull, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Recycle"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Recycle, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("No"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), No, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Eye"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Eye, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			Else If(Global.Icons_List[Event Player.Icons_Selector] == Custom String("Asterisk"));
 				Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 					Event Player, All Teams), Asterisk, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
-				Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
-					.Icon_ID, Last Created Entity);
 			End;
-			Small Message(All Players(All Teams), Custom String("{0} gave {1} to {2}", Event Player,
+			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
+					.Icon_ID, Last Created Entity);
+			Small Message(All Players(All Teams), Custom String("  {0} gave {1} to {2}", Event Player,
 				Global.Icons_List_For_Menu[Event Player.Icons_Selector], Player Closest To Reticle(Event Player, All Teams)));
 			Wait(0.300, Ignore Condition);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			"Simple selectors, same as drawing, from 0 to endpoint"
 			If(Event Player.Icons_Selector == 16);
 				Event Player.Icons_Selector = 0;
-				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
-					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			Else;
 				Event Player.Icons_Selector += 1;
-				Small Message(Event Player, Custom String("{0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
-					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			End;
+			Small Message(Event Player, Custom String("  {0}, {1}", Global.Icons_List_For_Menu[Event Player.Icons_Selector],
+					Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			If(Event Player.Icons_Colors_Selector == 14);
 				Event Player.Icons_Colors_Selector = 0;
-				Small Message(Event Player, Custom String("{0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			Else;
 				Event Player.Icons_Colors_Selector += 1;
-				Small Message(Event Player, Custom String("{0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 			End;
+			Small Message(Event Player, Custom String("  {0}", Global.Icons_Colors_List[Event Player.Icons_Colors_Selector]));
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
 			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons from player and try again (limit reached: 2)"));
 				Abort;
 			End;
 			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 				Event Player, All Teams), Heart, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
 			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
 				.Icon_ID, Last Created Entity);
-			Small Message(All Players (All Teams), Custom String("{0} gave {1} to {2}", Event Player, Icon String(Heart), Player Closest To Reticle(Event Player,
+			Small Message(All Players (All Teams), Custom String("  {0} gave {1} to {2}", Event Player, Icon String(Heart), Player Closest To Reticle(Event Player,
 				All Teams)));
 			Wait(0.300, Ignore Condition);
 		Else If(Is Button Held(Event Player, Button(Melee)) == True);
 			If(Player Closest To Reticle(Event Player, All Teams).Icon_ID[1] != Null);
-				Small Message(Event Player, Custom String("Remove Icons from player and try again (limit reached: 2)"));
+				Small Message(Event Player, Custom String("  Remove Icons from player and try again (limit reached: 2)"));
 				Abort;
 			End;
 			Create Icon(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Player Closest To Reticle(
 				Event Player, All Teams), Fire, Visible To, Global.Icons_Colors_List[Event Player.Icons_Colors_Selector], False);
 			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Append To Array(Player Closest To Reticle(Event Player, All Teams)
 				.Icon_ID, Last Created Entity);
-			Small Message(All Players (All Teams), Custom String("{0} gave {1} to {2}", Event Player, Icon String(Fire), Player Closest To Reticle(Event Player,
+			Small Message(All Players (All Teams), Custom String("  {0} gave {1} to {2}", Event Player, Icon String(Fire), Player Closest To Reticle(Event Player,
 				All Teams)));
 			Wait(0.300, Ignore Condition);
 		Else If(Is Button Held(Event Player, Button(Reload)) == True);
@@ -4177,8 +4973,8 @@ rule("Mode_24 - Icon_Tag_Target")
 			Destroy Icon(Player Closest To Reticle(Event Player, All Teams).Icon_ID[5]);
 			"Set validator back to default, so you can add two new icons"
 			Player Closest To Reticle(Event Player, All Teams).Icon_ID = Empty Array;
-			Small Message(Event Player, Custom String("Icons removed from {0}", Player Closest To Reticle(Event Player, All Teams)));
-			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("{0} removed icons from you", Event Player));
+			Small Message(Event Player, Custom String("  Icons removed from {0}", Player Closest To Reticle(Event Player, All Teams)));
+			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("  {0} removed icons from you", Event Player));
 			Wait(0.300, Ignore Condition);
 		End;
 	}
@@ -4221,13 +5017,12 @@ rule("Mode_25 - Give_Revoke_Mod")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 25;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.Mod_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
@@ -4281,13 +5076,12 @@ rule("Mode_26 - Ghost_Mode")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 26;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Ghost_Mode == True);
@@ -4334,13 +5128,12 @@ rule("Mode_27 - Slowmotion_&_Slow_Projectile")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 27;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Slow_Projectile == True);
@@ -4397,13 +5190,12 @@ rule("Mode_28 - Create_Bodyguard")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 28;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Team Of(Player Closest To Reticle(Event Player, All Teams)) == Team Of(Event Player));
@@ -4580,15 +5372,14 @@ rule("Mode_29 - Remote_Control")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 29;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(
-			Ability 2))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == False;
 	}
 
 	actions
 	{
+		"TODO: Finish rework"
+		Event Player.Signal = False;
 		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
@@ -4629,13 +5420,12 @@ rule("Mode_30 - Match_Time")
 		Event Player.High_Rank == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 30;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Set Match Time(3600);
 			Big Message(All Players(All Teams), Custom String("Remaining Time: 60 min", Event Player));
@@ -4643,8 +5433,10 @@ rule("Mode_30 - Match_Time")
 			Set Match Time(1800);
 			Big Message(All Players(All Teams), Custom String("Remaining Time: 30 min", Event Player));
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Abort If(Event Player != Host Player);
 			Set Match Time(10);
 		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Abort If(Event Player != Host Player);
 			Declare Match Draw;
 			Wait(27, Ignore Condition);
 			Restart Match;
@@ -4652,374 +5444,7 @@ rule("Mode_30 - Match_Time")
 	}
 }
 
-rule("Mode_5 - Battle-Mode_ON")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.High_Rank == True;
-		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 5;
-		(Is Button Held(Event Player, Button(Ultimate))) == True;
-		Event Player.Is_Crouch_On == True;
-		Event Player.In_Battle_Mode == False;
-	}
-
-	actions
-	{	
-		"TODO: Leaver Check+Abort?, handle ALL outside player interactions?, fix 0 0?, fix white nameplate bug?, handle nameplates?, CD adjustment?, reset CD on death?"
-		If (Global.Battle_Player_1 == Null);
-			Global.Battle_Player_1 = Event Player;
-			Big Message(All Players(All Teams), Custom String("{0} is searching for an opponent in the 1v1-Mode!", Event Player));
-			Small Message(Event Player, Custom String(" You are Player 1!"));
-			Small Message(Event Player, Custom String(" Player 2 will have their stats set to yours."));
-			Global.Battle_Stats_Main = Event Player.Player_Modification;
-			Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
-		Else If(Global.Battle_Player_2 == Null);
-			If(Team Of(Global.Battle_Player_1) == Team Of(Event Player));
-				If(Team Of(Global.Battle_Player_1) == Team 1);
-					If(Count Of(All Players(Team 2)) < 6);
-						Big Message(Event Player, Custom String("Participants must be in different teams, try again after teamswap!"));
-						Wait(5, Ignore Condition);
-						Move Player to Team(Event Player, Host Player, -1);
-						Wait(0.250, Ignore Condition);
-						Move Player to Team(Event Player, Team 2, -1);
-						Abort;
-					Else;
-						Big Message(Event Player, Custom String("Other team is full, cannot move you to enemy team of {0}!", Global.Battle_Player_1));
-						Big Message(Global.Battle_Player_1, Custom String("{0} tried to enter 1v1-Mode with you, but enemy team is full!", Event Player));
-						Abort;
-					End;
-				Else;
-					If(Count Of(All Players(Team 1)) < 6);
-						Big Message(Event Player, Custom String("Participants must be in different teams, try again after teamswap!"));
-						Wait(5, Ignore Condition);
-						Move Player to Team(Event Player, Host Player, -1);
-						Wait(0.250, Ignore Condition);
-						Move Player to Team(Event Player, Team 1, -1);
-						Abort;
-					Else;
-						Big Message(Event Player, Custom String("Other team is full, cannot move you to enemy team of {0}!", Global.Battle_Player_1));
-						Big Message(Global.Battle_Player_1, Custom String("{0} tried to enter 1v1-Mode with you, but enemy team is full!", Event Player));
-						Abort;
-					End;
-				End;
-			End;
-
-			Global.Battle_Player_2 = Event Player;
-			Big Message(All Players(All Teams), Custom String("{0} has accepted to be the opponent of {1}!", Event Player, Global.Battle_Player_1));
-			Small Message(Event Player, Custom String(" You are Player 2!"));
-			Global.Battle_Stats_Save = Array(Event Player.Player_Modification[0], Event Player.Player_Modification[1], 
-				Event Player.Player_Modification[2], Event Player.Player_Modification[3], Event Player.Player_Modification[4]);
-			
-			Set Damage Dealt(Event Player, Global.Battle_Stats_Save[0]);
-			Set Move Speed(Event Player, Global.Battle_Stats_Main[1]);
-			Set Knockback Dealt(Event Player, Global.Battle_Stats_Main[2]);
-			Set Gravity(Event Player, Global.Battle_Stats_Main[3]);
-			Set Max Health(Event Player, Global.Battle_Stats_Main[4]);
-			Start Scaling Player(Event Player, Global.Battle_Stats_Main[4] / 100, False);
-			Heal(Event Player, Null, 12000);
-
-			Start Damage Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
-				Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Damagers);
-			Start Healing Modification(Global.Battle_Player_1, Filtered Array(All Players(All Teams), 
-				Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Healers);
-
-			Start Damage Modification(Global.Battle_Player_2, Filtered Array(All Players(All Teams), 
-				Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Damagers);
-			Start Healing Modification(Global.Battle_Player_2, Filtered Array(All Players(All Teams), 
-				Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 0, Receivers and Healers);
-
-			Start Damage Modification(Filtered Array(All Players(All Teams), Current Array Element != Global.Battle_Player_1 && Current Array Element != Global.Battle_Player_2), 
-				Array(Global.Battle_Player_1,Global.Battle_Player_2), 0, Receivers and Damagers);
-			
-		Else;
-			Big Message(Event Player, Custom String("There are already 2 people in the 1v1-Mode!"));
-			Abort;
-		End;	
-
-		Destroy HUD Text(Event Player.Mode_Description);
-		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
-		Destroy HUD Text(Event Player.Mode_Hud_ID);
-		Enable Nameplates(Event Player, All Players(All Teams));
-		Destroy In-World Text(Event Player.Player_Nameplates);
-		Stop Forcing Player Outlines(Event Player, All Players(All Teams));
-		
-		Event Player.Mode_Headline = Custom String("You are currently in 1v1-Mode!");
-		Create HUD Text(Event Player, Null, Null, Custom String(
-			"Hold {0} and {1} for\r\n3 seconds to leave 1v1-Mode\r\nScore:\r\n{2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Reload)), 
-			Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
-			Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
-			))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Event Player.Mode_Description = Last Text ID;
-		Event Player.Camera = 5;
-		Event Player.In_Battle_Mode = True;
-		Event Player.Protection = False;
-	}
-}
-
-rule("Mode_5 - Battle-Mode_OFF")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.High_Rank == True;
-		(Is Button Held(Event Player, Button(Reload)) && Is Button Held(Event Player, Button(Crouch))) == True;
-		Event Player.In_Battle_Mode == True;
-	}
-
-	actions
-	{
-		Wait(3, Abort When False);
-		
-		Big Message(All Players(All Teams), Custom String("{0} has left 1v1-Mode.", Event Player));
-
-		If(Global.Battle_Player_1 == Event Player);
-			If(Global.Battle_Player_2 == Null);
-				Global.Battle_Stats_Main = Array(100, 100, 100, 100, 100);
-				Global.Battle_String = Custom String("No player in 1v1-Mode at the moment.");
-				Global.Battle_Player_1 = Null;
-			Else;
-				Big Message(Array(Global.Battle_Player_1, Global.Battle_Player_2), 
-					Custom String("Final Score: {0}", 
-					Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
-					Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
-				))));
-				Wait(0.1, Ignore Condition);
-
-				Global.Battle_Player_1 = Global.Battle_Player_2;
-				
-				Global.Battle_Stats_Main = Global.Battle_Stats_Save;
-				Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
-				
-				Global.Battle_Player_2 = Null;
-				
-				Set Damage Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[0]);
-				Set Move Speed(Global.Battle_Player_1, Global.Battle_Stats_Save[1]);
-				Set Knockback Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[2]);
-				Set Gravity(Global.Battle_Player_1, Global.Battle_Stats_Save[3]);
-				Set Max Health(Global.Battle_Player_1, Global.Battle_Stats_Save[4]);
-				Stop Scaling Player(Global.Battle_Player_1);
-				Heal(Global.Battle_Player_1, Null, 12000);
-
-				Global.Battle_Stats_Save = Array(100, 100, 100, 100, 100);
-			End;
-		Else;
-			Big Message(Array(Global.Battle_Player_1, Global.Battle_Player_2), 
-				Custom String("Final Score: {0}", 
-				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
-				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
-			))));
-			Wait(0.1, Ignore Condition);
-			
-			Global.Battle_Player_2 = Null;
-			
-			Set Damage Dealt(Event Player, Global.Battle_Stats_Save[0]);
-			Set Move Speed(Event Player, Global.Battle_Stats_Save[1]);
-			Set Knockback Dealt(Event Player, Global.Battle_Stats_Save[2]);
-			Set Gravity(Event Player, Global.Battle_Stats_Save[3]);
-			Set Max Health(Event Player, Global.Battle_Stats_Save[4]);
-			Stop Scaling Player(Event Player);
-			Heal(Event Player, Null, 12000);
-		End;
-		Stop All Damage Modifications;
-		Stop All Healing Modifications;
-		
-		Global.Battle_Score = Array(0, 0);
-
-		Destroy HUD Text(Event Player.Mode_Description);
-
-		Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
-			Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
-			Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
-		Event Player.Mode_Hud_ID = Last Text ID;
-
-		Event Player.Mode_Headline = Custom String("1v1-Mode");
-		Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-			Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-			Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n{1}",
-				Input Binding String(Button(Ultimate)),
-			Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
-			Custom String("-Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
-			Custom String("-Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
-			Custom String("-Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
-			Custom String("-Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
-			Custom String("-Size/HP: {0}%", Global.Battle_Stats_Main[4]
-			))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Event Player.Mode_Description = Last Text ID;
-
-		Event Player.Protection = True;
-		Start Rule(Give_Custom_Nameplate, Restart Rule);
-		Wait(0.1, Ignore Condition);
-		Event Player.In_Battle_Mode = False;
-
-	}
-}
-
-rule("Mode_5 - Respawn_Logic")
-{
-	event
-	{
-		Player Died;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.In_Battle_Mode == True;
-	}
-
-	actions
-	{
-		If(Global.Battle_Player_1 != Null && Global.Battle_Player_2 != Null);
-			If(Event Player == Global.Battle_Player_1);
-				Global.Battle_Score[1] += 1;
-			Else;
-				Global.Battle_Score[0] += 1;
-			End;
-		End;
-		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
-		Resurrect(Event Player);
-		Heal(Event Player, Null, 12000);
-		Set Invisible(Event Player, All);
-		Set Status(Event Player, Null, Hacked, 0.2);
-		Set Status(Event Player, Null, Invincible, 1.5);
-		Set Status(Event Player, Null, Phased Out, 1.5);
-		Set Ability 1 Enabled(Event Player, False);
-		Set Ability 2 Enabled(Event Player, False);
-		Set Melee Enabled(Event Player, False);
-		Set Primary Fire Enabled(Event Player, False);
-		Set Secondary Fire Enabled(Event Player, False);
-		Set Ultimate Ability Enabled(Event Player, False);
-
-		Wait(1.5, Ignore Condition);
-
-		Set Invisible(Event Player, None);
-		Set Ability 1 Enabled(Event Player, True);
-		Set Ability 2 Enabled(Event Player, True);
-		Set Melee Enabled(Event Player, True);
-		Set Primary Fire Enabled(Event Player, True);
-		Set Secondary Fire Enabled(Event Player, True);
-		Set Ultimate Ability Enabled(Event Player, True);
-	}
-}
-
-rule("Mode_5 - Punish_Battle_Disruptor")
-{
-	event
-	{
-		Player Dealt Knockback;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Victim.In_Battle_Mode == True;
-		Attacker.In_Battle_Mode == False;
-	}
-
-	actions
-	{
-		Apply Impulse(Attacker, Vector(0, 1, 0), 20, To World, Cancel Contrary Motion);
-		Apply Impulse(Attacker, Direction Towards(Position Of(Victim), Position Of(Attacker)), 100, To World, Incorporate Contrary Motion);
-		If(Attacker.Protection == True);
-			Clear Status(Attacker, Phased Out);
-			Wait(0.1, Ignore Condition);
-			Set Status(Attacker, Victim, Frozen, 8);
-			Set Status (Attacker, Null, Phased Out, 9999);
-		Else;
-			Set Status(Attacker, Victim, Frozen, 8);
-		End;
-		Set Status(Attacker, Victim, Hacked, 8);
-		Big Message(Attacker, Custom String("Don't disrupt 1v1-Mode players!"));
-	}
-}
-
-rule("Mode_5 - Battle_Leaver_Handler")
-{
-	event
-	{
-		Player Left Match;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player == Global.Battle_Player_1 || Event Player == Global.Battle_Player_2) == True;
-	}
-
-	actions
-	{
-		Wait(3, Ignore Condition);
-		Big Message(All Players(All Teams), Custom String("{0} has left the game while in 1v1-Mode!", Event Player));
-		If(Global.Battle_Player_1 == Null && Global.Battle_Player_2 == Null);
-			Global.Battle_Stats_Main = Array(100, 100, 100, 100, 100);
-			Global.Battle_String = Custom String("No player in 1v1-Mode at the moment.");
-			Global.Battle_Player_1 = Null;
-		Else If(Global.Battle_Player_1 == Null);
-			Big Message(Global.Battle_Player_2, 
-				Custom String("Final Score: {0}", 
-				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
-				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
-			))));			
-			Wait(0.1, Ignore Condition);
-
-			Global.Battle_Player_1 = Global.Battle_Player_2;
-				
-			Global.Battle_Stats_Main = Global.Battle_Stats_Save;
-			Global.Battle_String = Custom String("Current player 1: {0}", Global.Battle_Player_1);
-				
-			Global.Battle_Player_2 = Null;
-				
-			Set Damage Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[0]);
-			Set Move Speed(Global.Battle_Player_1, Global.Battle_Stats_Save[1]);
-			Set Knockback Dealt(Global.Battle_Player_1, Global.Battle_Stats_Save[2]);
-			Set Gravity(Global.Battle_Player_1, Global.Battle_Stats_Save[3]);
-			Set Max Health(Global.Battle_Player_1, Global.Battle_Stats_Save[4]);
-			Stop Scaling Player(Global.Battle_Player_1);
-			Heal(Global.Battle_Player_1, Null, 12000);
-
-			Global.Battle_Stats_Save = Array(100, 100, 100, 100, 100);
-			
-			Stop All Damage Modifications;
-			Stop All Healing Modifications;
-		
-			Global.Battle_Score = Array(0, 0);
-		Else If(Global.Battle_Player_2 == Null);
-			Big Message(Global.Battle_Player_1, 
-				Custom String("Final Score: {0}", 
-				Custom String("{0}: {1} - {2}", Global.Battle_Player_1, Global.Battle_Score[0],
-				Custom String("{0}: {1}", Global.Battle_Player_2, Global.Battle_Score[1]
-			))));
-			Wait(0.1, Ignore Condition);
-			
-			Global.Battle_Player_2 = Null;
-		End;
-
-		Stop All Damage Modifications;
-		Stop All Healing Modifications;
-		
-		Global.Battle_Score = Array(0, 0);
-	}
-}
-
-
-rule("Mode_6 - De-Elitate Outlines")
+rule("Mode_31 - Special_Camera")
 {
 	event
 	{
@@ -5031,272 +5456,107 @@ rule("Mode_6 - De-Elitate Outlines")
 	conditions
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 6;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
-			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 2)) || Is Button Held(Event Player, Button(
-			Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 31;
+		Event Player.Signal == True;
 	}
 
 	actions
 	{
+		Event Player.Signal = False;
+		Abort If(Is Button Held(Event Player, Button(Melee)));
+		Destroy Effect(Event Player.Camera_Dot);
+		Destroy In-World Text(Event Player.Camera_Text);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
-			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
-			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
-				Small Message(Event Player, Custom String("Can't change outline of {0}, player is protected", Player Closest To Reticle(
-					Event Player, All Teams)));
-				Abort;
-			End;
-			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = True;
-			Disable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
-			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
-			Wait(0.050, Ignore Condition);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
-				Player Closest To Reticle(Event Player, All Teams)), Evaluate Once(Player Closest To Reticle(Event Player, All Teams)), 1,
-				Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
-				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
-			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Last Text ID;
-			Start Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams), True,
-				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
-			Wait(0.080, Ignore Condition);
-			Small Message(Player Closest To Reticle(Event Player, All Teams), Custom String("{0} changed your name and outline colors!",
-				Event Player));
-			Wait(0.250, Ignore Condition);
-			""
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
-			Else If(Player Closest To Reticle(Event Player, All Teams).Is_Title_Given == True);
-				Small Message(Event Player, Custom String("Can't remove outline from {0}, player is protected", Player Closest To Reticle(
-					Event Player, All Teams)));
-				Abort;
-			End;
-			Player Closest To Reticle(Event Player, All Teams).Regular_Player_Has_Title = False;
-			Stop Forcing Player Outlines(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
-			Destroy In-World Text(Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate);
-			Player Closest To Reticle(Event Player, All Teams).M32_Players_Nameplate = Null;
-			Enable Nameplates(Player Closest To Reticle(Event Player, All Teams), All Players(All Teams));
-			""
-		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
-			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
-			Else If(Event Player.Is_Title_Given == True);
-				Small Message(Event Player, Custom String("Can't change outline, you are in protected list"));
-				Abort;
-			End;
-			Event Player.Regular_Player_Has_Title = True;
-			Disable Nameplates(Event Player, All Players(All Teams));
-			Destroy In-World Text(Event Player.M32_Players_Nameplate);
-			Wait(0.050, Ignore Condition);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), Custom String("{0}",
-				Event Player), Evaluate Once(Event Player), 1, Clip Against Surfaces, Visible To Position and Color, Evaluate Once(
-				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]), Default Visibility);
-			Event Player.M32_Players_Nameplate = Last Text ID;
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True,
-				Global.Colors[Event Player.NamesAndOutlines_Colors_Selector], Always);
-			Wait(0.250, Ignore Condition);
-			""
+			Event Player.Camera_Position = Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
+			Start Camera(Event Player, Event Player.Camera_Position, Update Every Frame(Eye Position(Event Player)), 200);
+			
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player),Event Player.Camera_Position, 0.1, 
+				Clip Against Surfaces, Visible To, Color(White), Visible Never);
+			Event Player.Camera_Text = Last Text ID;
+
+			Create Effect(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Sphere, Color(White), 
+				Event Player.Camera_Position, 0.1, Position and Radius);
+			Event Player.Camera_Dot = Last Created Entity;
+			
+			Event Player.Camera = 5;
+			Small Message(Event Player, Custom String("  Camera: Look at player, no LOS"));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Event Player.Camera_Position = Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
+			
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
+				Clip Against Surfaces, Visible To, Color(White), Visible Never);
+			Event Player.Camera_Text = Last Text ID;
+
+			Create Effect(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Sphere, Color(White), 
+				Event Player.Camera_Position, 0.1, Position and Radius);
+			Event Player.Camera_Dot = Last Created Entity;
+			
+			Event Player.Camera = 6;
+			Small Message(Event Player, Custom String("  Camera: Look at player, with LOS"));
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
-			If(Array Contains(Global.High_Rank, Custom String("{0}", Event Player)) == True);
-			Else If(Event Player.Is_Title_Given == True);
-				Small Message(Event Player, Custom String("Can't remove outline, you are in protected list"));
-				Abort;
-			End;
-			Event Player.Regular_Player_Has_Title = False;
-			Stop Forcing Player Outlines(Event Player, All Players(All Teams));
-			Destroy In-World Text(Event Player.M32_Players_Nameplate);
-			Event Player.M32_Players_Nameplate = Null;
-			Enable Nameplates(Event Player, All Players(All Teams));
-			""
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			If(Event Player.NamesAndOutlines_Colors_Selector == 14);
-				Event Player.NamesAndOutlines_Colors_Selector = 0;
-				Small Message(Event Player, Custom String("{0}",
-					Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]));
-			Else;
-				Event Player.NamesAndOutlines_Colors_Selector += 1;
-				Small Message(Event Player, Custom String("{0}",
-					Global.Colors[Event Player.NamesAndOutlines_Colors_Selector]));
-			End;
-		End;
-	}
-}
-
-
-rule("Mode_7 - Jumppad_Create_Custom")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 7;
-		(Is Button Held(Event Player, Button(Primary Fire)) ||  Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))
-			|| Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(Ability 2)) ||
-			Is Button Held(Event Player, Button(Melee))) == True;
-		Event Player.Is_Menu_Active == True;
-		Event Player.Is_Crouch_On == True;
-		Is On Ground(Event Player) == True;
-	}
-
-	actions
-	{
-		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			If(Entity Count >= 125);
-				Small Message(Event Player, Custom String("  Maximum entity count reached!"));
-				Abort;
-			End;
+			Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Event Player.Scale_Real * Facing Direction Of(Event Player)), 200);
+			Wait(0.1, Ignore Condition);
+			Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 2 * Event Player.Scale_Real * Facing Direction Of(Event Player)), 0.5);
 			
-			Event Player.Jumppad_Helper = Position Of (Event Player);
-			Event Player.Jumppad_Entry[0] = Event Player.Jumppad_Helper;
+			Event Player.Camera = 7;
+			Small Message(Event Player, Custom String(" Camera: Cinematic"));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			Event Player.Camera_Position = Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
+			Start Camera(Event Player, Event Player.Camera_Position, Evaluate Once(Eye Position(Event Player)), 0);
+			Start Camera(Event Player, Event Player.Camera_Position, Evaluate Once(Eye Position(Event Player)), 0);
 			
-			Create Effect(All Players(All Teams), Ring, Global.Colors[Event Player.Jumppad_Color_Out_Selector], 
-				Event Player.Jumppad_Helper, Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector], None);
-			Event Player.Jumppad_Entry[1] = Last Created Entity;
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
+				Clip Against Surfaces, Visible To, Color(White), Visible Never);
+			Event Player.Camera_Text = Last Text ID;
+
+			Create Effect(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Sphere, Color(White), 
+				Event Player.Camera_Position, 0.1, Position and Radius);
+			Event Player.Camera_Dot = Last Created Entity;
 			
-			Create Effect(All Players(All Teams), Ring, Global.Colors[Event Player.Jumppad_Color_In_Selector], 
-				Evaluate Once(Event Player.Jumppad_Helper), Update Every Frame(Evaluate Once(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2) 
-				+ (Evaluate Once(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] - Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2)) 
-				* Sine From Radians(Global.Jumppad_Animation)), Position and Radius);
-			Event Player.Jumppad_Entry[2] = Last Created Entity;
-
-			Event Player.Jumppad_Entry[3] = (Event Player.Jumppad_Strength_Selector + 1) * 5;
-
-			Event Player.Jumppad_Entry[4] = Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector];
-
-			Modify Global Variable(Jumppad_Storage, Append To Array, Array(Event Player.Jumppad_Entry));
+			Event Player.Camera_Text = Last Text ID;
+			Event Player.Camera = 8;
+			Small Message(Event Player, Custom String("  Camera: Static"));
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Start Camera(Event Player, Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				World Vector Of(Vector(0,15,-0.001), Event Player, Rotation And Translation), 
+				Null, Event Player, True), Multiply(Vector(0.3, 0.3, 0.3), Direction Towards 
+				(Eye Position(Event Player),World Vector Of(Vector(0,15,-0.001), Event Player, Rotation And Translation)))), Update Every Frame(Eye Position(Event Player)), 200);
 			
-			Small Message(Event Player, Custom String("  Jumppad placed!"));
-		
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			If(Global.Jumppad_Storage == Empty Array);
-				Small Message(Event Player, Custom String("  No jumppads left to delete!"));
-				Abort;
-			End;
-			Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Last Of(Global.Jumppad_Storage)[0], 1);
-			Destroy Effect(Last Of(Global.Jumppad_Storage)[1]);
-			Destroy Effect(Last Of(Global.Jumppad_Storage)[2]);
-			Global.Jumppad_Storage = Array Slice(Global.Jumppad_Storage, 0, Count Of (Global.Jumppad_Storage) - 1);
-
+			Event Player.Camera = 9;
+			Small Message(Event Player, Custom String("  Camera: Top-Down"));
 		Else If(Is Button Held(Event Player, Button(Ability 1)) == True);
-			If(Event Player.Jumppad_Color_In_Selector >= 14);
-				Event Player.Jumppad_Color_In_Selector = 0;
-			Else;
-				Event Player.Jumppad_Color_In_Selector += 1;
-			End;
-			Small Message(Event Player, Custom String("  Inside Color: {0}", Global.Colors[Event Player.Jumppad_Color_In_Selector]));
-		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
-			If(Event Player.Jumppad_Color_Out_Selector >= 14);
-				Event Player.Jumppad_Color_Out_Selector = 0;
-			Else;
-				Event Player.Jumppad_Color_Out_Selector += 1;
-			End;
-			Small Message(Event Player, Custom String("  Outside Color: {0}", Global.Colors[Event Player.Jumppad_Color_Out_Selector]));
-		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
-			If(Event Player.Jumppad_Strength_Selector >= 7);
-				Event Player.Jumppad_Strength_Selector = 0;
-			Else;
-				Event Player.Jumppad_Strength_Selector += 1;
-			End;
-			Small Message(Event Player, Custom String("  Jump Strength: {0}", (Event Player.Jumppad_Strength_Selector + 1) * 5));
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			If(Event Player.Jumppad_Radius_Selector >= 3);
-				Event Player.Jumppad_Radius_Selector = 0;
-			Else;
-				Event Player.Jumppad_Radius_Selector += 1;
-			End;
-			Small Message(Event Player, Custom String("  Radius: {0}m", Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector]));
-		Else If(Is Button Held(Event Player, Button(Melee)) == True);
-			For Player Variable(Event Player, Jumppad_Loop, 0, Count Of(Global.Jumppad_Storage), 1);
-				Play Effect(All Players(All Teams), Bad Explosion, Color(Blue), Global.Jumppad_Storage[Event Player.Jumppad_Loop][0], 1);
-				Destroy Effect(Global.Jumppad_Storage[Event Player.Jumppad_Loop][1]);
-				Destroy Effect(Global.Jumppad_Storage[Event Player.Jumppad_Loop][2]);
-			End;
-			Global.Jumppad_Storage = Empty Array;
-			Small Message(All Players(All Teams), Custom String("  All Jumppads have been deleted."));
+			Event Player.Camera_Player = Player Closest To Reticle(Event Player, All Teams);
+			Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player.Camera_Player), 
+				Eye Position(Event Player.Camera_Player) + -3 * Event Player.Camera_Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player.Camera_Player, True)), Update Every Frame(Eye Position(Event Player.Camera_Player) + 
+				10 * Event Player.Camera_Player.Scale_Real * Facing Direction Of(Event Player)), 200);
+			
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}", Event Player),
+				Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player.Camera_Player), 
+				Eye Position(Event Player.Camera_Player) + -3 * Event Player.Camera_Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player.Camera_Player, True)), 0.1, Clip Against Surfaces, Visible To and Position, Color(White), Visible Never);
+			Event Player.Camera_Text = Last Text ID;
+
+			Event Player.Camera = 10;
+			Small Message(Event Player, Custom String("  Camera: Follow {0}" , Player Closest To Reticle(Event Player, All Teams)));
 		End;
+		Event Player.Camera_Placed = True;
+		Destroy Effect(Event Player.Camera_ID);
 	}
 }
 
-rule("Mode_7 - Jumppad_Preview_Create")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Event Player.Mode_Cycle == 7;
-		Event Player.Is_Menu_Active == True;
-	}
-
-	actions
-	{
-		Create Effect(Event Player, Ring, Global.Colors[Event Player.Jumppad_Color_Out_Selector], 
-			Update Every Frame(Position Of (Event Player)), Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector], Position Radius and Color);
-		Event Player.Jumppad_Preview[0] = Last Created Entity;
-		Create Effect(Event Player, Ring, Global.Colors[Event Player.Jumppad_Color_In_Selector], 
-			Update Every Frame(Position Of (Event Player)), Update Every Frame(Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2 
-			+ (Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] - Global.Jumppad_Radius[Event Player.Jumppad_Radius_Selector] / 3 * 2) 
-			* Sine From Radians(Global.Jumppad_Animation)), Position Radius and Color);
-		Event Player.Jumppad_Preview[1] = Last Created Entity;
-	}
-}
-
-rule("Mode_7 - Jumppad_Preview_Remove")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Mode_Cycle != 7;
-	}
-
-	actions
-	{
-		Destroy Effect(Event Player.Jumppad_Preview[0]);
-		Destroy Effect(Event Player.Jumppad_Preview[1]);
-	}
-}
-
-rule("Mode_7 - Jumppad_Logic")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Filtered Array(Global.Jumppad_Storage, Distance Between(Current Array Element[0], Event Player) <= Current Array Element[4] + 0.2) != Empty Array);
-		Is On Ground(Event Player) == True;
-		Event Player.Is_Crouch_On == False;
-	}
-
-	actions
-	{
-		Event Player.Jumppad_Helper = Filtered Array(Global.Jumppad_Storage, Distance Between(Current Array Element[0], Event Player) <= Current Array Element[4] + 0.3);
-		Play Effect(All Players(All Teams), Explosion Sound, Null, Event Player, 30);
-		Apply Impulse(Event Player, Vector(0, 1, 0), Event Player.Jumppad_Helper[0][3], To World, Incorporate Contrary Motion);
-	}
-}
-
-rule("Mode_4 - Tag")
+rule("Mode_31 - Cam_Preview_On")
 {
 	event
 	{
@@ -5309,61 +5569,167 @@ rule("Mode_4 - Tag")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 4;
-		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload))) == True;
-		Event Player.Is_Crouch_On == True;
+		(Event Player.Mode_Cycle == 31 || Event Player.Mode_Cycle == 32) == True;
+		Event Player.Camera_Placed == False;
 	}
 
 	actions
 	{
-		"TODO: delete effect for players who left"
+		Create Effect(Event Player, Sphere, Color(White), Update Every Frame(Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			Null, Event Player, True), Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)))), 0.1, Position and Radius);
+		Event Player.Camera_ID = Last Created Entity;
+	}
+}
+
+rule("Mode_31 - Cam_Preview_Off")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Is_Menu_Active == True;
+		(Event Player.Mode_Cycle != 31 && Event Player.Mode_Cycle != 32) == True;
+	}
+
+	actions
+	{
+		Destroy Effect(Event Player.Camera_ID);
+	}
+}
+
+
+rule("Mode_31 - LOS_True")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera_Placed == True;
+		Event Player.Camera == 6;
+		Is In Line of Sight(Eye Position(Event Player), Event Player.Camera_Position, Barriers Do Not Block LOS) == True;
+	}
+
+	actions
+	{
+		Event Player.Camera_Smooth = 0.1;
+		Start Camera(Event Player, Event Player.Camera_Position, Update Every Frame(Eye Position(Event Player)), Event Player.Camera_Smooth);
+	}
+}
+
+rule("Mode_31 - LOS_False")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera_Placed == True;
+		Event Player.Camera == 6;
+		Is In Line of Sight(Eye Position(Event Player), Event Player.Camera_Position, Barriers Do Not Block LOS) == False;
+	}
+
+	actions
+	{
+		Event Player.Camera_Smooth = 0.1;
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), Event Player.Camera_Smooth);
+	}
+}
+
+rule("Mode_32 - Cinematic_Camera")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
+		Event Player.Mode_Cycle == 32;
+		Event Player.Signal == True;
+		Event Player.Is_Menu_Active == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			If(Event Player.Tag_Mode == True);
-				Small Message(Event Player, Custom String(" Already In tag mode"));
+			If(Count Of(Event Player.Cinematic_Storage) >= 50);
+				Small Message(Event Player, Custom String("  Only a maximum of 50 cameras allowed!"));
 				Abort;
 			End;
-			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
-			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
-			Color(Sky Blue), Visible To Position and Radius);
-			Event Player.Tag_ID = Last Created Entity;
-			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Mei), Button(Ultimate))),
-				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
-			Event Player.Tag_Icon = Last Text Id;
-			Set Damage Dealt(Event Player, 0);
-			Event Player.Protection = False;
-			Event Player.Tag_Weapon = 1;
-			Event Player.Tag_Mode = True;
+			
+			Modify Player Variable(Event Player, Cinematic_Storage, Append To Array, Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player))));
+			Play Effect(Event Player, Good Explosion, Color(Sky Blue), Last Of(Event Player.Cinematic_Storage), 0.1);
+			Small Message(Event Player, Custom String("  Camera Position added"));
+
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			If(Event Player.Tag_Mode == True);
-				Small Message(Event Player, Custom String(" Already In tag mode"));
+			If(Event Player.Cinematic_Storage == Empty Array);
+				Small Message(Event Player, Custom String("  No Camera positions to delete!"));
 				Abort;
 			End;
-			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
-			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
-			Color(Red), Visible To Position and Radius);
-			Event Player.Tag_ID = Last Created Entity;
-			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Torbjörn), Button(Ultimate))),
-				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
-			Event Player.Tag_Icon = Last Text Id;
-			Set Damage Dealt(Event Player, 0);
-			Event Player.Protection = False;
-			Event Player.Tag_Weapon = 2;
-			Event Player.Tag_Mode = True;
+			Play Effect(Event Player, Bad Explosion, Color(Red), Last Of(Event Player.Cinematic_Storage), 0.1);
+			Event Player.Cinematic_Storage = Array Slice(Event Player.Cinematic_Storage, 0, Count Of (Event Player.Cinematic_Storage) - 1);
+			Small Message(Event Player, Custom String("  Removed Last Camera Position"));
+
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Camera_Placed);
+				Event Player.Camera_Placed = False;
+				Event Player.Camera = 0;
+				Destroy In-World Text(Event Player.Camera_Text);
+				Destroy Effect(Event Player.Camera_Dot);
+			Else;
+				Event Player.Cinematic_Helper = Null;
+				Event Player.Camera_Placed = True;
+				Event Player.Camera = 11;
+				Destroy Effect(Event Player.Camera_ID);
+				Small Message(Event Player, Custom String("  Camera Started!"));
+			End;
+		
 		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			If(Event Player.Tag_Mode == False);
-				Small Message(Event Player, Custom String(" Not in tag mode at the moment"));
-				Abort;
+			Event Player.Cinematic_Storage = Empty Array;
+			Small Message(Event Player, Custom String("  All Camera Positions deleted"));
+
+		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
+			If(Player Closest To Reticle(Event Player, All Teams).Cinematic_Storage == Empty Array);
+				Small Message(Event Player, Custom String("  Target Player has no cameras placed!"));
+			Else;
+				Event Player.Cinematic_Storage = Player Closest To Reticle(Event Player, All Teams).Cinematic_Storage;
+				Event Player.Cinematic_Helper = Null;
+				Event Player.Camera_Placed = True;
+				Event Player.Camera = 11;
+				Destroy Effect(Event Player.Camera_ID);
+				Small Message(Event Player, Custom String("  Using Cameras of {0}", Player Closest To Reticle(Event Player, All Teams)));
 			End;
-			Destroy Effect(Event Player.Tag_ID);
-			Destroy In-World Text(Event Player.Tag_Icon);
-			Set Damage Dealt(Event Player, 100);
-			Event Player.Tag_Weapon = 0;
-			Event Player.Tag_Mode = False;
+
 		End;
 	}
 }
+			
 
-rule("Mode_4 - Tag Ray Logic")
+rule("Mode_32 - Player_Entered_New_LOS")
 {
 	event
 	{
@@ -5374,102 +5740,51 @@ rule("Mode_4 - Tag Ray Logic")
 
 	conditions
 	{
-		Event Player.Tag_Mode == True;
-		Is Alive(Event Player) == True;
+		Event Player.Camera_Placed == True;
+		Event Player.Camera == 11;
+		(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True) != Empty Array);
 	}
 
 	actions
 	{
-		Event Player.Tag_Laser_Hit = Ray Cast Hit Player(Eye Position(Event Player), 
-			Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True);
-		Wait(0.01, Ignore Condition);
-		Loop If(Event Player.Tag_Laser_Hit.Tag_Mode == False);
-		If(Event Player.Tag_Weapon == 1);
-			If(Has Status(Event Player.Tag_Laser_Hit, Frozen) != True);
-				Event Player.Tag_Laser_Hit.Tag_Timer += 2;
-			End;
-			If(Event Player.Tag_Laser_Hit.Tag_Timer >=100);
-				Set Status(Event Player.Tag_Laser_Hit, Event Player, Frozen, 5);
-				Set Move Speed(Event Player, 100);
-				Event Player.Tag_Laser_Hit.Tag_Timer = 0.01;
-			End;
-		Else If(Event Player.Tag_Weapon == 2);
-			Set Status(Event Player.Tag_Laser_Hit, Event Player, Burning, 1);
-			Damage(Event Player.Tag_Laser_Hit, Null, 3);
+		If(Event Player.Cinematic_Helper != Sorted Array(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True), 
+				Distance Between(Eye Position(Event Player), Current Array Element))[0]);
+			Event Player.Camera_Smooth = 0.1;
+			Event Player.Cinematic_Helper = Sorted Array(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True), 
+				Distance Between(Eye Position(Event Player), Current Array Element))[0];
+			Start Camera(Event Player, Event Player.Cinematic_Helper, Update Every Frame(Eye Position(Event Player)), Event Player.Camera_Smooth);
 		End;
-		Loop If Condition Is True;
-	}
-}
-
-rule("Mode_4 - Freeze Ray Progress Bar ON")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer > 0;
-	}
-
-	actions
-	{
-		Create Progress Bar In-World Text(All Players(All Teams), Event Player.Tag_Timer, Custom String("F R E E Z E"), 
-			Event Player, 0.5, Clip Against Surfaces, Color(Sky Blue), Color(White), Position and Values, Visible Never);
-		Event Player.Tag_Progress_All = Last Text ID;
-		Create Progress Bar HUD Text(Event Player, Event Player.Tag_Timer, Custom String("F R E E Z E"), 
-			Top, 2, Color(Sky Blue), Color(White), Values, Visible Never);
-		Event Player.Tag_Progress_Self = Last Text ID;
-	}
-}
-
-rule("Mode_4 - Freeze Ray Progress Bar ON")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer <= 0;
-	}
-
-	actions
-	{
-		Destroy Progress Bar In-World Text(Event Player.Tag_Progress_All);
-		Destroy Progress Bar HUD Text(Event Player.Tag_Progress_Self);
-		Set Move Speed(Event Player, 100);
-	}
-}
-
-rule("Mode_4 - Freeze Ray Slow Effect")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer > 0;
-	}
-
-	actions
-	{
-		Set Move Speed(Event Player, 100 - Event Player.Tag_Timer);
 		Wait(0.01, Ignore Condition);
 		Loop If Condition Is True;
 	}
 }
 
+
+rule("Mode_32 - LOS_Lost")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera_Placed == True;
+		Event Player.Camera == 11;
+		(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True) == Empty Array);
+	}
+
+	actions
+	{
+		Event Player.Cinematic_Helper = Null;
+		Event Player.Camera_Smooth = 0.1;
+		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
+			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), Event Player.Camera_Smooth);
+	}
+}
 
 disabled rule("")
 {
@@ -5571,6 +5886,7 @@ rule("Extra_3 - Short_Hop")
 		Is Alive(Event Player) == True;
 		Event Player.Mode_Cycle != 29;
 		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 31;
 		Event Player.In_Battle_Mode == False;
 	}
 
