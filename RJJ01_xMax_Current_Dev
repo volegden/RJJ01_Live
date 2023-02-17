@@ -307,33 +307,27 @@ variables
 		55: Is_Menu_Active
 		56: Non_Moderator_Menu
 		57: Non_Moderator_Menu_Description
-		58: Tag_ID
-		59: Tag_Mode
-		60: Tag_Laser_Hit
-		61: Tag_Timer
-		62: Tag_Progress_All
-		63: Tag_Progress_Self
-		64: Tag_Icon
-		65: Tag_Weapon
-		66: Status_Selector
-		67: Jumppad_Helper
-		68: Jumppad_Entry
-		69: Jumppad_Loop
-		70: Jumppad_Color_In_Selector
-		71: Jumppad_Color_Out_Selector
-		72: Jumppad_Radius_Selector
-		73: Jumppad_Strength_Selector
-		74: Jumppad_Preview
-		75: Camera_ID
-		76: Camera_Position
-		77: Camera_Placed
-		78: Camera_Smooth
-		79: Camera_Player
-		80: Camera_Text
-		81: Camera_Dot
-		82: Cinematic_Storage
-		83: Cinematic_Helper
-		84: Signal
+		58: Laser_ID
+		59: Laser_Selector
+		60: Status_Selector
+		61: Jumppad_Helper
+		62: Jumppad_Entry
+		63: Jumppad_Loop
+		64: Jumppad_Color_In_Selector
+		65: Jumppad_Color_Out_Selector
+		66: Jumppad_Radius_Selector
+		67: Jumppad_Strength_Selector
+		68: Jumppad_Preview
+		69: Camera_ID
+		70: Camera_Position
+		71: Camera_Placed
+		72: Camera_Smooth
+		73: Camera_Player
+		74: Camera_Text
+		75: Camera_Dot
+		76: Cinematic_Storage
+		77: Cinematic_Helper
+		78: Signal
 }
 
 subroutines
@@ -573,15 +567,8 @@ rule("Default_Player_Settings")
 		Event Player.Icons_Selector = 0;
 		Event Player.Icons_Colors_Selector = 0;
 
-		Event Player.Tag_ID = Null;
-		Event Player.Tag_Mode = False;
-		Event Player.Tag_Laser_Hit = Null;
-		Event Player.Tag_Timer = 0;
-		Chase Player Variable At Rate(Event Player, Tag_Timer, 0, 12.5, None);
-		Event Player.Tag_Progress_All = Null;
-		Event Player.Tag_Progress_Self = Null;
-		Event Player.Tag_Icon = Null;
-		Event Player.Tag_Weapon = 0;
+		Event Player.Laser_Selector = 9;
+		Event Player.Laser_ID = Null;
 
 		Event Player.Status_Selector = 0;
 
@@ -898,7 +885,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
 			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
-			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue))
+			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
+			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red))
 		);
 	}
 }
@@ -1059,7 +1047,7 @@ rule("Listed_Player")
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("BlueSky"), 
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
-			Custom String("squid"), Custom String("Kysp"), Custom String("rin"));
+			Custom String("squid"), Custom String("Kysp"), Custom String("rin"), Custom String("commander"));
 		"Automatic Mod"
 		Global.Mod_Rank = Array(Custom String("BigeN"));
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("MOONJIN"), 
@@ -1313,7 +1301,6 @@ rule("Protection_4_Free")
 		Has Status(Event Player, Knocked Down) == False;
 		Has Status(Event Player, Stunned) == False;
 		Event Player.In_Battle_Mode == False;
-		Event Player.Tag_Mode == False;
 	}
 
 	actions
@@ -1573,11 +1560,11 @@ rule("Mode_Headline_Desc")
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 4);
-			Event Player.Mode_Headline = Custom String("Laser Tag");
+			Event Player.Mode_Headline = Custom String("Laser Pointer");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
 				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
-				Custom String("{0} : Enter Lasertag with freeze ray\r\n{1} : Enter Lasertag with heat ray\r\n{2} : Leave Lasertag", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload))
+				Custom String("{0} : Start Laser pointer\r\n{1} : Stop Laser pointer\r\n{2} : Cycle Color", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 5);
 			Event Player.Mode_Headline = Custom String("1v1-Mode");
@@ -2217,6 +2204,7 @@ rule("Mode_00 - Auto_Respawn")
 	{
 		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
 		Resurrect(Event Player);
+		Heal(Event Player, Null, 12000);
 		Wait(0.100, Ignore Condition);
 	}
 }
@@ -2503,155 +2491,31 @@ rule("Mode_04 - Tag")
 		Event Player.Signal = False;
 		"TODO: delete effect for players who left"
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			If(Event Player.Tag_Mode == True);
-				Small Message(Event Player, Custom String(" Already In tag mode"));
+			If(Event Player.Laser_ID != Null);
+				Small Message(Event Player, Custom String("  Laser already exists!"));
 				Abort;
 			End;
-			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
+			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Add(Eye Position(Event Player), World Vector Of(Vector(0,15,0), Event Player, Rotation))), 
 			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
-			Color(Sky Blue), Visible To Position and Radius);
-			Event Player.Tag_ID = Last Created Entity;
-			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Mei), Button(Ultimate))),
-				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
-			Event Player.Tag_Icon = Last Text Id;
-			Set Damage Dealt(Event Player, 0);
-			Event Player.Protection = False;
-			Event Player.Tag_Weapon = 1;
-			Event Player.Tag_Mode = True;
+			Global.Colors[Event Player.Laser_Selector], Visible To Position Radius and Color);
+			Event Player.Laser_ID = Last Created Entity;
+			Small Message(Event Player, Custom String("  Laser Created"));
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			If(Event Player.Tag_Mode == True);
-				Small Message(Event Player, Custom String(" Already In tag mode"));
+			If(Event Player.Laser_ID == Null);
+				Small Message(Event Player, Custom String("  No laser active at the moment"));
 				Abort;
 			End;
-			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Eye Position(Event Player)), 
-			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
-			Color(Red), Visible To Position and Radius);
-			Event Player.Tag_ID = Last Created Entity;
-			Create In-World Text(All Players(All Teams), Custom String("{0}\r\n", Ability Icon String(Hero(Torbjörn), Button(Ultimate))),
-				Event Player, 1, Clip Against Surfaces, Visible To and Position, Color(Blue), Default Visibility);
-			Event Player.Tag_Icon = Last Text Id;
-			Set Damage Dealt(Event Player, 0);
-			Event Player.Protection = False;
-			Event Player.Tag_Weapon = 2;
-			Event Player.Tag_Mode = True;
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			If(Event Player.Tag_Mode == False);
-				Small Message(Event Player, Custom String(" Not in tag mode at the moment"));
-				Abort;
+			Destroy Effect(Event Player.Laser_ID);
+			Event Player.Laser_ID = Null;
+			Small Message(Event Player, Custom String("  Laser Removed"));
+		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
+			If(Event Player.Laser_Selector >= 14);
+				Event Player.Laser_Selector = 0;
+			Else;
+				Event Player.Laser_Selector += 1;
 			End;
-			Destroy Effect(Event Player.Tag_ID);
-			Destroy In-World Text(Event Player.Tag_Icon);
-			Set Damage Dealt(Event Player, 100);
-			Event Player.Tag_Weapon = 0;
-			Event Player.Tag_Mode = False;
+			Small Message(Event Player, Custom String("  Color: {0}", Global.Colors[Event Player.Laser_Selector]));
 		End;
-	}
-}
-
-rule("Mode_04 - Tag Ray Logic")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Mode == True;
-		Is Alive(Event Player) == True;
-	}
-
-	actions
-	{
-		Event Player.Tag_Laser_Hit = Ray Cast Hit Player(Eye Position(Event Player), 
-			Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True);
-		Wait(0.01, Ignore Condition);
-		Loop If(Event Player.Tag_Laser_Hit.Tag_Mode == False);
-		If(Event Player.Tag_Weapon == 1);
-			If(Has Status(Event Player.Tag_Laser_Hit, Frozen) != True);
-				Event Player.Tag_Laser_Hit.Tag_Timer += 2;
-			End;
-			If(Event Player.Tag_Laser_Hit.Tag_Timer >=100);
-				Set Status(Event Player.Tag_Laser_Hit, Event Player, Frozen, 5);
-				Set Move Speed(Event Player, 100);
-				Event Player.Tag_Laser_Hit.Tag_Timer = 0.01;
-			End;
-		Else If(Event Player.Tag_Weapon == 2);
-			Set Status(Event Player.Tag_Laser_Hit, Event Player, Burning, 1);
-			Damage(Event Player.Tag_Laser_Hit, Null, 3);
-		End;
-		Loop If Condition Is True;
-	}
-}
-
-rule("Mode_04 - Freeze Ray Progress Bar ON")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer > 0;
-	}
-
-	actions
-	{
-		Create Progress Bar In-World Text(All Players(All Teams), Event Player.Tag_Timer, Custom String("F R E E Z E"), 
-			Event Player, 0.5, Clip Against Surfaces, Color(Sky Blue), Color(White), Position and Values, Visible Never);
-		Event Player.Tag_Progress_All = Last Text ID;
-		Create Progress Bar HUD Text(Event Player, Event Player.Tag_Timer, Custom String("F R E E Z E"), 
-			Top, 2, Color(Sky Blue), Color(White), Values, Visible Never);
-		Event Player.Tag_Progress_Self = Last Text ID;
-	}
-}
-
-rule("Mode_04 - Freeze Ray Progress Bar ON")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer <= 0;
-	}
-
-	actions
-	{
-		Destroy Progress Bar In-World Text(Event Player.Tag_Progress_All);
-		Destroy Progress Bar HUD Text(Event Player.Tag_Progress_Self);
-		Set Move Speed(Event Player, 100);
-	}
-}
-
-rule("Mode_04 - Freeze Ray Slow Effect")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Tag_Timer > 0;
-	}
-
-	actions
-	{
-		Set Move Speed(Event Player, 100 - Event Player.Tag_Timer);
-		Wait(0.01, Ignore Condition);
-		Loop If Condition Is True;
 	}
 }
 
@@ -3674,15 +3538,15 @@ rule("Mode_12 - Scale_Target_Size")
 		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			While(Is Button Held(Event Player, Button(Primary Fire)) == True);
 				Event Player.Target_Lock.Scale_Prev += 0.100;
+				Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Min, 20);
 				Wait(0.100, Ignore Condition);
 			End;
-			Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Min, 20);
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			While(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 				Event Player.Target_Lock.Scale_Prev -= 0.100;
+				Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Max, 0.100);
 				Wait(0.100, Ignore Condition);
 			End;
-			Modify Player Variable(Event Player.Target_Lock, Scale_Prev, Max, 0.100);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			Event Player.Target_Lock.Remote_Scale = 1;
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
@@ -3887,13 +3751,14 @@ rule("Mode_15 - Painting_NEW")
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
 				"Sphere"
-				Create Effect(All Players(All Teams), Sphere, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
-					Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
-					All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
-					Visible To);
-				Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
-				Wait(0.110, Ignore Condition);
-				Loop If Condition Is True;
+				While(Is Button Held(Event Player, Button(Primary Fire)));
+					Create Effect(All Players(All Teams), Sphere, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+						Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 1.750,
+						All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+						Visible To);
+					Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
+					Wait(0.110, Ignore Condition);
+				End;
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
 				"Sparkles"
 				Create Effect(All Players(All Teams), Sparkles, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
@@ -3985,36 +3850,52 @@ rule("Mode_15 - Drawing Objects Preview (Subroutine)")
 	{
 		Destroy Effect(Event Player.Drawing_Obj_Preview);
 		If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sphere"));
-			Create Effect(Event Player, Sphere, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750),
-				Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector], Visible To Position and Radius);
+			Create Effect(Event Player, Sphere, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
-			Create Effect(Event Player, Sparkles, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Sparkles, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Light Shaft"));
-			Create Effect(Event Player, Light Shaft, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 7), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Light Shaft, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 7,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Orb"));
-			Create Effect(Event Player, Orb, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Orb, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Ring"));
-			Create Effect(Event Player, Ring, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Ring, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Cloud"));
-			Create Effect(Event Player, Cloud, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Cloud, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Good Aura"));
-			Create Effect(Event Player, Good Aura, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Good Aura, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Bad Aura"));
-			Create Effect(Event Player, Bad Aura, Global.Colors[Event Player.Drawing_Obj_Colors_Selector], Update Every Frame(Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 1.750), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
+			Create Effect(Event Player, Bad Aura, Global.Colors[Event Player.Drawing_Obj_Colors_Selector],
+				Update Every Frame(Ray Cast Hit Position(Update Every Frame(Eye Position(Event Player)), Update Every Frame(Eye Position(Event Player))
+				 + Update Every Frame(Facing Direction Of(Event Player)) * 1.750,
+				All Players(All Teams), Event Player, True)), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 				Visible To Position and Radius);
 		End;
 		Event Player.Drawing_Obj_Preview = Last Created Entity;
@@ -5864,6 +5745,7 @@ rule("Extra_2 - Self_Rez")
 	{
 		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
 		Resurrect(Event Player);
+		Heal(Event Player, Null, 12000);
 		Wait(0.100, Ignore Condition);
 		Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
 	}
