@@ -325,9 +325,14 @@ variables
 		73: Camera_Player
 		74: Camera_Text
 		75: Camera_Dot
-		76: Cinematic_Storage
-		77: Cinematic_Helper
-		78: Signal
+		76: Camera_Helper
+		77: Camera_Loop
+		78: Camera_LOS
+		79: Camera_Default
+		80: Camera_Target
+		81: Cinematic_Storage
+		82: Cinematic_Helper
+		83: Signal
 }
 
 subroutines
@@ -589,6 +594,11 @@ rule("Default_Player_Settings")
 		Event Player.Camera_Player = Null;
 		Event Player.Camera_Text = Null;
 		Event Player.Camera_Dot = Null;
+		Event Player.Camera_Helper = Null;
+		Event Player.Camera_Loop = 0;
+		Event Player.Camera_LOS = Empty Array;
+		Event Player.Camera_Default = Null;
+		Event Player.Camera_Target = Custom String("Currently No Target");
 
 		Event Player.Cinematic_Storage = Empty Array;
 		Event Player.Cinematic_Helper = Null;
@@ -1181,6 +1191,7 @@ rule("Show_And_Hide_Menu")
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Button Held(Event Player, Button(Melee)) == True;
 		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 31;
 	}
 
 	actions
@@ -1821,9 +1832,11 @@ rule("Mode_Headline_Desc")
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
 				Custom String("{0} : Place static Camera\r\n{1} : Start Cinematic Camera\r\n{2}",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Start Top-down Camera\r\n{1} : Attach Camera to target player\r\nReminder: Hold {2} to reset Camera",
-					Input Binding String(Button(Reload)), Input Binding String(Button(Ability 1)), Input Binding String(Button(Interact))
-				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				Custom String("{0} : Start Top-down Camera\r\n{1} : Attach Camera to target player\r\n{2}",
+					Input Binding String(Button(Reload)), Input Binding String(Button(Ability 1)),
+				Custom String("{0} : Start Security Camera\r\nReminder: Hold {1} to reset Camera.",
+					Input Binding String(Button(Melee)), Input Binding String(Button(Interact))
+				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 32);
 			Event Player.Mode_Headline = Custom String("Ultra Cinematic Camera");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
@@ -2469,7 +2482,7 @@ rule("Mode_03 - Protection (Subroutine)")
 	}
 }
 
-rule("Mode_04 - Tag")
+rule("Mode_04 - Placeholder Laser")
 {
 	event
 	{
@@ -5078,7 +5091,6 @@ rule("Mode_28 - Create_Bodyguard")
 	{
 		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Team Of(Player Closest To Reticle(Event Player, All Teams)) == Team Of(Event Player));
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
@@ -5345,7 +5357,6 @@ rule("Mode_31 - Special_Camera")
 	actions
 	{
 		Event Player.Signal = False;
-		Abort If(Is Button Held(Event Player, Button(Melee)));
 		Destroy Effect(Event Player.Camera_Dot);
 		Destroy In-World Text(Event Player.Camera_Text);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
@@ -5354,7 +5365,7 @@ rule("Mode_31 - Special_Camera")
 				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
 			Start Camera(Event Player, Event Player.Camera_Position, Update Every Frame(Eye Position(Event Player)), 200);
 			
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player),Event Player.Camera_Position, 0.1, 
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Cam following {0}\r\n", Event Player),Event Player.Camera_Position, 0.1, 
 				Clip Against Surfaces, Visible To, Color(White), Visible Never);
 			Event Player.Camera_Text = Last Text ID;
 
@@ -5369,7 +5380,7 @@ rule("Mode_31 - Special_Camera")
 				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
 				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
 			
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Cam with LOS check of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
 				Clip Against Surfaces, Visible To, Color(White), Visible Never);
 			Event Player.Camera_Text = Last Text ID;
 
@@ -5397,7 +5408,7 @@ rule("Mode_31 - Special_Camera")
 			Start Camera(Event Player, Event Player.Camera_Position, Evaluate Once(Eye Position(Event Player)), 0);
 			Start Camera(Event Player, Event Player.Camera_Position, Evaluate Once(Eye Position(Event Player)), 0);
 			
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Camera of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Custom String("Static Cam of {0}\r\n", Event Player), Event Player.Camera_Position, 0.1, 
 				Clip Against Surfaces, Visible To, Color(White), Visible Never);
 			Event Player.Camera_Text = Last Text ID;
 
@@ -5431,8 +5442,26 @@ rule("Mode_31 - Special_Camera")
 
 			Event Player.Camera = 10;
 			Small Message(Event Player, Custom String("  Camera: Follow {0}" , Player Closest To Reticle(Event Player, All Teams)));
+		Else If(Is Button Held(Event Player, Button(Melee)));
+			Event Player.Camera_Position = Subtract(Ray Cast Hit Position(Eye Position(Event Player), 
+				Eye Position(Event Player) + 20 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+				Null, Event Player, True),  Multiply(Vector(0.3, 0.3, 0.3), Event Player.Scale_Real * Facing Direction Of(Event Player)));
+			
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element != Event Player), 
+				Custom String("Security Cam of {0}\r\n{1}\r\n", Event Player, Event Player.Camera_Target), Event Player.Camera_Position, 0.1, 
+				Clip Against Surfaces, Visible To and String, Color(White), Visible Never);
+			Event Player.Camera_Text = Last Text ID;
+
+			Create Effect(Filtered Array(All Players(All Teams), Current Array Element != Event Player), Sphere, Color(White), 
+				Event Player.Camera_Position, 0.1, Position and Radius);
+			Event Player.Camera_Dot = Last Created Entity;
+
+			Event Player.Camera_Helper = Null;
+			Event Player.Camera_Default = Eye Position(Event Player);
+
+			Event Player.Camera = 11;
+			Small Message(Event Player, Custom String("  Camera: Security"));
 		End;
-		Event Player.Camera_Placed = True;
 		Destroy Effect(Event Player.Camera_ID);
 	}
 }
@@ -5451,7 +5480,7 @@ rule("Mode_31 - Cam_Preview_On")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
 		(Event Player.Mode_Cycle == 31 || Event Player.Mode_Cycle == 32) == True;
-		Event Player.Camera_Placed == False;
+		Event Player.Camera <= 4;
 	}
 
 	actions
@@ -5486,7 +5515,7 @@ rule("Mode_31 - Cam_Preview_Off")
 }
 
 
-rule("Mode_31 - LOS_True")
+rule("Mode_31 - Cam_LOS_True")
 {
 	event
 	{
@@ -5497,7 +5526,6 @@ rule("Mode_31 - LOS_True")
 
 	conditions
 	{
-		Event Player.Camera_Placed == True;
 		Event Player.Camera == 6;
 		Is In Line of Sight(Eye Position(Event Player), Event Player.Camera_Position, Barriers Do Not Block LOS) == True;
 	}
@@ -5509,7 +5537,7 @@ rule("Mode_31 - LOS_True")
 	}
 }
 
-rule("Mode_31 - LOS_False")
+rule("Mode_31 - Cam_LOS_False")
 {
 	event
 	{
@@ -5520,7 +5548,6 @@ rule("Mode_31 - LOS_False")
 
 	conditions
 	{
-		Event Player.Camera_Placed == True;
 		Event Player.Camera == 6;
 		Is In Line of Sight(Eye Position(Event Player), Event Player.Camera_Position, Barriers Do Not Block LOS) == False;
 	}
@@ -5531,6 +5558,68 @@ rule("Mode_31 - LOS_False")
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
 			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), Event Player.Camera_Smooth);
+	}
+}
+
+rule("Mode_31 - Security_LOS_True")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 11;
+		Is True For Any(All Living Players(All Teams), Is In Line of Sight(Event Player.Camera_Position, Current Array Element, Barriers Do Not Block LOS)) == True;
+	}
+
+	actions
+	{
+		Event Player.Camera_LOS = Empty Array;
+		For Player Variable(Event Player, Camera_Loop, 0, Count Of(All Living Players(All Teams)), 1);
+			If(Is In Line of Sight(Event Player.Camera_Position, Eye Position(All Living Players(All Teams)[Event Player.Camera_Loop]), Barriers Do Not Block LOS));
+				Modify Player Variable(Event Player, Camera_LOS, Append To Array, All Living Players(All Teams)[Event Player.Camera_Loop]);
+			End;
+		End;
+		If(Event Player.Camera_LOS == Empty Array);
+			Wait(0.1, Ignore Condition);
+			Loop If Condition Is True;
+		End;
+		If(Event Player.Camera_Helper != Sorted Array(Event Player.Camera_LOS, Distance Between(Event Player.Camera_Position, Eye Position(Current Array Element)))[0]);
+			Event Player.Camera_Smooth = 0.1;
+			Event Player.Camera_Helper = Sorted Array(Event Player.Camera_LOS, Distance Between(Event Player.Camera_Position, Eye Position(Current Array Element)))[0];
+			Event Player.Camera_Target = Custom String("Currently spectating {0}", Event Player.Camera_Helper);
+			Start Camera(Event Player, Event Player.Camera_Position, Update Every Frame(Eye Position(Event Player.Camera_Helper)), Event Player.Camera_Smooth);
+		End;
+		Wait(0.1, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
+rule("Mode_31 - Security_LOS_False")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Camera == 11;
+		Is True For Any(All Living Players(All Teams), Is In Line of Sight(Event Player.Camera_Position, Current Array Element, Barriers Do Not Block LOS)) == False;
+	}
+
+	actions
+	{
+		Event Player.Camera_Helper = Null;
+		Event Player.Camera_Target = Custom String("Currently No Target");
+		Event Player.Camera_Smooth = 0.1;
+		Start Camera(Event Player, Event Player.Camera_Position, Event Player.Camera_Default, Event Player.Camera_Smooth);
 	}
 }
 
@@ -5584,7 +5673,7 @@ rule("Mode_32 - Cinematic_Camera")
 			Else;
 				Event Player.Cinematic_Helper = Null;
 				Event Player.Camera_Placed = True;
-				Event Player.Camera = 11;
+				Event Player.Camera = 12;
 				Destroy Effect(Event Player.Camera_ID);
 				Small Message(Event Player, Custom String("  Camera Started!"));
 			End;
@@ -5595,12 +5684,12 @@ rule("Mode_32 - Cinematic_Camera")
 
 		Else If(Is Button Held(Event Player, Button(Ability 2)) == True);
 			If(Player Closest To Reticle(Event Player, All Teams).Cinematic_Storage == Empty Array);
-				Small Message(Event Player, Custom String("  Target Player has no cameras placed!"));
+				Small Message(Event Player, Custom String("  {0} has no cameras placed!", Player Closest To Reticle(Event Player, All Teams)));
 			Else;
 				Event Player.Cinematic_Storage = Player Closest To Reticle(Event Player, All Teams).Cinematic_Storage;
 				Event Player.Cinematic_Helper = Null;
 				Event Player.Camera_Placed = True;
-				Event Player.Camera = 11;
+				Event Player.Camera = 12;
 				Destroy Effect(Event Player.Camera_ID);
 				Small Message(Event Player, Custom String("  Using Cameras of {0}", Player Closest To Reticle(Event Player, All Teams)));
 			End;
@@ -5621,9 +5710,8 @@ rule("Mode_32 - Player_Entered_New_LOS")
 
 	conditions
 	{
-		Event Player.Camera_Placed == True;
-		Event Player.Camera == 11;
-		(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True) != Empty Array);
+		Event Player.Camera == 12;
+		Is True For Any(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS)) == True;
 	}
 
 	actions
@@ -5652,9 +5740,8 @@ rule("Mode_32 - LOS_Lost")
 
 	conditions
 	{
-		Event Player.Camera_Placed == True;
-		Event Player.Camera == 11;
-		(Filtered Array(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS) == True) == Empty Array);
+		Event Player.Camera == 12;
+		Is True For Any(Event Player.Cinematic_Storage, Is In Line of Sight(Eye Position(Event Player), Current Array Element, Barriers Do Not Block LOS)) == False;
 	}
 
 	actions
