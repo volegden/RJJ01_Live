@@ -763,7 +763,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
 			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), 
-				Custom String("Pocket Knight"), Custom String("Loy")), Custom String("Blue")),
+				Custom String("Pocket Knight")), Custom String("Blue")),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -882,7 +882,10 @@ rule ("Custom nameplates list")
 			Array(Custom String("kosmos"), Array(Custom String("{0} I'm so full from uranium yum {0}", Icon String(Radioactive)), 
 				Custom String("{0} I am in your walls {0}", Icon String(Radioactive))), Custom Color(80, 179, 149, 255)), 
 			Array(Custom String("LilHanzo"), Array(Custom String("Esskatter")), Color(Sky Blue)), 
-			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255))
+			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥")), Color(Purple)), 
+			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
+			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
+			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red))
 		);
 	}
 }
@@ -1043,9 +1046,10 @@ rule("Listed_Player")
 			"PHEINU"), Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("BlueSky"), 
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
-			Custom String("squid"), Custom String("Kysp"), Custom String("Sithrael"), Custom String("LilHanzo"), Custom String("kosmos"));
+			Custom String("squid"), Custom String("Kysp"), Custom String("Sithrael"), Custom String("LilHanzo"), Custom String("kosmos"), 
+			Custom String("Heather"), Custom String("rin"), Custom String("commander"));
 		"Automatic Mod"
-		Global.Mod_Rank = Array(Custom String("BigeN"));
+		Global.Mod_Rank = Empty Array;
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("MOONJIN"), 
 			Custom String("Millennium"), Custom String("TrickyHunter"), Custom String("minsu"), Custom String("Gerike27"), 
 			Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
@@ -1174,7 +1178,7 @@ rule("Show_And_Hide_Menu")
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Button Held(Event Player, Button(Melee)) == True;
-		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 6;
 	}
 
 	actions
@@ -2514,7 +2518,7 @@ rule("Mode_08 - Flying_Controls")
 	}
 }
 
-rule("Mode_09 - Damage_Speed_KB_Gravity")
+rule("Mode_08 - Damage_Speed_KB_Gravity")
 {
 	event
 	{
@@ -2527,7 +2531,7 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 	{
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
 		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 7;
+		Event Player.Mode_Cycle == 8;
 		(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(
 			Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Reload)) || Is Button Held(Event Player, Button(Ability 2))) == True;
 		Event Player.Is_Crouch_On == True;
@@ -2606,7 +2610,6 @@ rule("Mode_10 - Target_Carry_Control")
 	actions
 	{
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 			Set Status(Event Player.Target_Lock, Null, Rooted, 9999);
 			Disallow Button(Event Player.Target_Lock, Button(Ultimate));
@@ -2614,7 +2617,8 @@ rule("Mode_10 - Target_Carry_Control")
 			Start Forcing Player Position(Event Player.Target_Lock, World Vector Of(Vector(X Component Of(Event Player), (
 				Vertical Facing Angle Of(Event Player) - Vertical Facing Angle Of(Event Player) * 2) / 10, Z Component Of(Event Player) + 5),
 				Event Player, Rotation And Translation), True);
-			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Secondary Fire))
+            Wait(0.500, Ignore Condition);
+			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == True || Is Button Held(Event Player, Button(Secondary Fire))
 				== True, 99999);
 			Stop Forcing Player Position(Event Player.Target_Lock);
 			If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
@@ -5363,8 +5367,8 @@ rule("Extra_3 - Short_Hop")
 		Is Button Held(Event Player, Button(Ability 1)) == True;
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Alive(Event Player) == True;
-		Event Player.Mode_Cycle != 29;
-		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 28;
+		Event Player.Mode_Cycle != 6;
 		Event Player.In_Battle_Mode == False;
 	}
 
