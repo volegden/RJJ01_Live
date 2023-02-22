@@ -1585,14 +1585,14 @@ rule("Mode_Cycle")
 		Else;
 			Event Player.Mode_Cycle = -1;
 			If(Is Button Held(Event Player, Button(Interact)) == True);
-				If(Event Player.Mode_Cycle_Default >= 15);
+				If(Event Player.Mode_Cycle_Default >= 14);
 					Event Player.Mode_Cycle_Default = 0;
 				Else;
 					Event Player.Mode_Cycle_Default += 1;
 				End;
 			Else If(Is Button Held(Event Player, Button(Jump)) == True);
 				If(Event Player.Mode_Cycle_Default <= 0);
-					Event Player.Mode_Cycle_Default = 15;
+					Event Player.Mode_Cycle_Default = 14;
 				Else;
 					Event Player.Mode_Cycle_Default -= 1;
 				End;
@@ -1681,7 +1681,7 @@ rule("Mode_Headline_Desc_Mod")
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))), 
 				Custom String("{0} : Apply Status to Target\r\n{1} : Remove Status from Target\r\n{2}", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)),
-				Custom String("{0} : Apply/Remove Status: yourself\r\n{1} : Remove All Status: Yourself\r\n{2}",
+				Custom String("{0} : Apply/Remove Status: yourself\r\n{1} : Quick Cleanse: Yourself\r\n{2}",
 					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)),
 				Custom String("{0} : Cycle Status\r\nCurrently Selected Status:\r\n[ {1} ]",
 					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
@@ -2385,7 +2385,7 @@ rule("3rd_Camera_1")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 30);
 		Small Message(Event Player, Custom String(" 3rd Person, Far"));
 	}
 }
@@ -2408,7 +2408,7 @@ rule("3rd_Camera_2_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 30);
 		Small Message(Event Player, Custom String(" 3rd Person, Close"));
 	}
 }
@@ -2431,7 +2431,7 @@ rule("3rd_Camera_3")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 30);
 		Small Message(Event Player, Custom String(" Front View, Far"));
 	}
 }
@@ -2454,7 +2454,7 @@ rule("3rd_Camera_4_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 30);
 		Small Message(Event Player, Custom String(" Front View, Close"));
 	}
 }
@@ -3188,9 +3188,16 @@ rule("Mode_05 - Respawn_Logic")
 			End;
 		End;
 		
-		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
-		Resurrect(Event Player);
-		Heal(Event Player, Null, 12000);
+		"Kanezaka falling out of map hardcoded fix"
+		If(Current Map == Map(Kanezaka));
+			Teleport(Event Player, Random Value In Array(Global.Kanezaka_Teleports));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+		Else;
+			Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+		End;
 		Set Invisible(Event Player, All);
 		Set Status(Event Player, Null, Hacked, 0.2);
 		Set Status(Event Player, Null, Invincible, 1.5);
