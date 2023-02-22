@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\nDevelopers version.\nLastest code (07 Feb 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n* Hold Crouch + Interact to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n* Hold 'CTRL' (crouch) + R|E|Q to change voice\n* New heroes and maps added\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
+		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\nDevelopers version.\nLastest code (22 Feb 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n* Press Crouch + Interact or Jump to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
 		Mode Name: "<FGe96df3FF>Fri<FGe656f1FF>en<FGe23eefFF>dly <FGff003fFF>♥"
 	}
 
@@ -29,7 +29,6 @@ settings
 				Hollywood 0
 				King's Row 0
 				Volskaya Industries 0
-				Watchpoint: Gibraltar 0
 				Workshop Chamber 0
 				Workshop Expanse 0
 				Workshop Expanse Night 0
@@ -246,6 +245,7 @@ variables
 		52: Jumppad_Storage
 		53: Jumppad_Animation
 		54: Jumppad_Radius
+		55: Kanezaka_Teleports
 
 	player:
 		0: High_Rank
@@ -337,6 +337,7 @@ variables
 		86: Signal
 		87: Mode_Cycle_Default
 		88: Spam_Cooldown
+		89: Beams
 }
 
 subroutines
@@ -408,19 +409,16 @@ rule("Game_Description")
 	{
 		Set Objective Description(All Players(All Teams), Custom String(
 			"{0} » Coded by Warloy, xMaxuss and TbyCoLive « {0}", Icon String(Bolt)),Visible To and String);
-		Wait(12, Ignore Condition);
+		Wait(10, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (0.5 sec) | Enable Protection « {1}",
 			Input Binding String(Button(Reload)), Ability Icon String(Hero(Baptiste), Button(Ability 2))), Visible To and String);
 		Wait(10, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (0.5 sec) | Switch Camera « {1}",
 			Input Binding String(Button(Interact)), Icon String(Eye)), Visible To and String);
-		Wait(12, Ignore Condition);
+		Wait(10, Ignore Condition);
 		Set Objective Description(All Players(All Teams), Custom String("{1} » Hold: {0} (0.5 sec) | Change Hero « {1}",
 			Input Binding String(Button(Melee)), Icon String(Recycle)), Visible To and String);
-		Wait(12, Ignore Condition);
-		Set Objective Description(All Players(All Teams), Custom String("{0} » Have a great day! « {0}", Icon String(Heart)),
-			Visible To and String);
-		Wait(12, Ignore Condition);
+		Wait(10, Ignore Condition);
 		Loop;
 	}
 }
@@ -616,6 +614,8 @@ rule("Default_Player_Settings")
 		Event Player.Spam_Cooldown = 3;
 		Chase Player Variable Over Time(Event Player, Spam_Cooldown, 0, 3, None);
 
+		Event Player.Beams = Array(Null, Null, Null);
+
 		"Is menu Active"
 		Event Player.Is_Menu_Active = True;
 
@@ -778,6 +778,7 @@ rule ("Custom Strings")
 		Global.Status_String = Array(Custom String("Knocked Down"), Custom String("Stunned"), Custom String("Frozen"), Custom String("Burning"), Custom String("Hacked"));
 
 		Global.Jumppad_Radius = Array(0.75, 1.75, 3, 6);
+		Global.Kanezaka_Teleports = Array(Vector(-17.86, 10.50, 17.91), Vector(-1.06, 9.00, -46.18), Vector(-44.15, 11.00, -12.76), Vector(-28.72, 4.00, 41.27));
 	}
 
 }
@@ -807,7 +808,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
 			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), 
-				Custom String("Pocket Knight"), Custom String("Loy")), Custom String("Blue")),
+				Custom String("Pocket Knight")), Custom String("Blue")),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -910,7 +911,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
 			Array(Custom String("fa89"), Array(Custom String("{0}  fa89  {1}", Ability Icon String(Hero(Zenyatta), Button(Ability 1)),
 				Ability Icon String(Hero(Zenyatta), Button(Ability 2)))), Color(Red)),
-			Array(Custom String("MÎÜ"), Array(Custom String("♥ Eggroll - Pastel Pink ♥")), Color(Violet)),
+			Array(Custom String("MÎÜ"), Array(Custom String("♥ Eggroll ♥")), Color(Violet)),
 			Array(Custom String("Eggman"), Array(Custom String("The only orthodox")), Color(Yellow)),
 			Array(Custom String("PHEINU"), Array(Custom String("◆ SALMIAKKI ◆")), Color(Black)),
 			Array(Custom String("Vanessav"), Array(Custom String("♥ Assassin ♥"),Custom String("♥ Wrathful One ♥"), Custom String("♥ Torturer ♥")), Color(Purple)),
@@ -922,6 +923,11 @@ rule ("Custom nameplates list")
 			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(39, 70, 155, 255)),
 			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
 			Array(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
+			Array(Custom String("Sithrael"), Array(Custom String("Sleepy Mercy")), Color(Blue)),
+			Array(Custom String("kosmos"), Array(Custom String("{0} I'm so full from uranium yum {0}", Icon String(Radioactive)), 
+				Custom String("{0} I am in your walls {0}", Icon String(Radioactive))), Custom Color(80, 179, 149, 255)), 
+			Array(Custom String("LilHanzo"), Array(Custom String("Esskatter")), Color(Sky Blue)), 
+			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥")), Color(Purple)), 
 			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
 			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
@@ -1086,17 +1092,15 @@ rule("Listed_Player")
 			Custom String("Silvaris"), Custom String("MOOOUSH"), Custom String("BlueSky"), 
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
-			Custom String("squid"), Custom String("rin"), Custom String("commander"), 
-			Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"));
+			Custom String("squid"), Custom String("rin"), Custom String("commander"), Custom String("Sithrael"), Custom String("LilHanzo"),
+			Custom String("kosmos"), Custom String("Heather"), Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"));
 		"Automatic Mod"
-		Global.Mod_Rank = Array(Custom String("BigeN"));
+		Global.Mod_Rank = Empty Array;
 		"Automatic Ban"
-		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("Dean"), Custom String("wolf"), Custom String("MOONJIN"), 
-			Custom String("Millennium"), Custom String("TrickyHunter"), Custom String("minsu"), Custom String("Gerike27"), 
+		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("TrickyHunter"), Custom String("Gerike27"), 
 			Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
 			Custom String("sanji"), Custom String("Miku"), Custom String("Amon"), Custom String("Axel"), Custom String("newyves"),
-			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("DontCry"),
-			Custom String("Justin"));
+			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("Justin"));
 	}
 }
 
@@ -1253,8 +1257,8 @@ rule("Show_And_Hide_Menu")
 		Event Player.Mode_Cycle != 9;
 		Event Player.Mode_Cycle != 15;
 		Event Player.Mode_Cycle != 31;
-		Event Player.Mode_Cycle_Default != 6;
-		Event Player.Mode_Cycle_Default != 14;
+		Event Player.Mode_Cycle_Default != 5;
+		Event Player.Mode_Cycle_Default != 13;
 	}
 
 	actions
@@ -1683,18 +1687,18 @@ rule("Mode_Headline_Desc_Mod")
 					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
 				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 3);
+			Event Player.Mode_Headline = Custom String("Beams (Placeholder)");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Place first beam point\r\n{1} : Place second beam point\r\n{2} : Remove Beam\r\nBeam will be created once\r\nboth positions are set.", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload)) 
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 4);
 			Event Player.Mode_Headline = Custom String("Protection");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
 				Custom String("{0} : Give Target Immunity\r\n{1} : Revoke Target Immunity", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 4);
-			Event Player.Mode_Headline = Custom String("Laser Pointer");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Start Laser pointer\r\n{1} : Stop Laser pointer\r\n{2} : Cycle Color", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 5);
 			Event Player.Mode_Headline = Custom String("1v1-Mode");
@@ -1990,6 +1994,189 @@ rule("Mode_Headline_Desc_Mod")
 	}
 }
 
+rule("Mode_Headline_Desc_Default")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		(Event Player.High_Rank || Event Player.Mod_Rank) == False;
+		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
+		(Event Player.Mode_Description != Null) == True;
+		Event Player.Is_Menu_Active == True;
+		Event Player.In_Battle_Mode == False;
+	}
+
+	actions
+	{
+		Destroy HUD Text(Event Player.Mode_Description);
+		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+		
+		If(Event Player.Mode_Cycle_Default == 0);
+			Event Player.Mode_Headline = Custom String("Kill | Resurrection");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Kill | Rez Yourself\r\n{1} : Set Auto-Respawn, yourself\r\n{2}", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
+				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", 
+					Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 1);
+			Event Player.Mode_Headline = Custom String("Status Effect");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Apply/Remove Status: yourself\r\n{1} : Remove All Status: Yourself\r\n{2}",
+					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)),
+				Custom String("{0} : Cycle Status\r\nCurrently Selected Status:\r\n[ {1} ]",
+					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 2);
+			Event Player.Mode_Headline = Custom String("1v1-Mode");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n{1}",
+					Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Spawn as random hero: {1}\r\n{2}",
+					Input Binding String(Button(Ability 2)), Global.Battle_Random,
+				Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
+				Custom String("Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
+				Custom String("Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
+				Custom String("Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
+				Custom String("Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
+				Custom String("Size/HP: {0}%", Global.Battle_Stats_Main[4]
+				)))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 3);
+			Event Player.Mode_Headline = Custom String("Outlines & names");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Choose Color\r\n{1}", 
+					Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 4);
+			Event Player.Mode_Headline = Custom String("Flying");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Give | Remove Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 5);
+			Event Player.Mode_Headline = Custom String("DMG | Speed | Knockback | Gravity");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} is currently set to: {1}%!\r\n{2}", 
+					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Player_Modification[Event Player.Modification_Mode_Selector],
+				Custom String("{0} : Increase by {1}%\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
+				Custom String("{0} : Decrease by {1}%\r\n{2}", 
+					Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
+				Custom String("{0} : Cycle Mode [DMG, Speed, KB, Gravity]\r\n{1}", 
+					Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", 
+					Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Reset {1}\r\n{2}", 
+					Input Binding String(Button (Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector],
+				Custom String("{0} : Reset all stats",
+					Input Binding String(Button(Melee))
+				))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 6);
+			Event Player.Mode_Headline = Custom String("Unstuck");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Fix and Unstuck", 
+					Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 7);
+			Create Progress Bar HUD Text(Event Player, Event Player.Scale_Real * 5, Custom String("Destination: {0}% | Current: {1}%",
+				Event Player.Scale_Prev * 100, Event Player.Scale_Real * 100), Top, 1, Color(Blue), Color(Gray), Visible To and Values,
+				Visible Never);
+			Event Player.Scale_Hud_ID = Last Text ID;
+			
+			Event Player.Mode_Headline = Custom String("Growth | Shrink (Yourself)");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", 
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 8);
+			Event Player.Mode_Headline = Custom String("Voice Options");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Voice Pitch Up\r\n{1}",
+					Input Binding String(Button(Ultimate)), 
+				Custom String("{0} : Voice Pitch Down\r\n{1} : Back To Normal Voice", 
+					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 9);
+			Event Player.Mode_Headline = Custom String("Brazil");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Send yourself to Brazil", 
+					Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String,Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 10);
+			Event Player.Mode_Headline = Custom String("Give icon: yourself");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Give yourself {1}\n{2}",
+				Input Binding String(Button(Primary Fire)), Global.Icons_List_For_Menu[Event Player.Icons_Selector], Custom String(
+				"{0} : Choose Color\n{1} : Choose Icon\n{2}", Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
+				Ultimate)), Custom String("{0} : Give Yourself - Heart\n{1} : Give Yourself - Fire\n{2}", Input Binding String(Button(
+				Ability 2)), Input Binding String(Button(Melee)), Custom String("{0} : Destroy Your Icons", Input Binding String(Button(
+				Reload)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 11);
+			Event Player.Mode_Headline = Custom String("Team Swap");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Switch Team - Yourself",
+					Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 12);
+			Event Player.Mode_Headline = Custom String("Slow Projectile");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Set Yourself Slow Projectile",
+					Input Binding String(Button(Ultimate))
+				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 13);
+			Event Player.Mode_Headline = Custom String("Special Camera");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Place Camera Without LOS check\r\n{1} : Place Camera With LOS Check\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Place static Camera\r\n{1} : Start Cinematic Camera\r\n{2}",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
+				Custom String("{0} : Start Top-down Camera\r\nReminder: Hold {1} to reset Camera.",
+					Input Binding String(Button(Reload)), Input Binding String(Button(Interact))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 14);
+			Event Player.Mode_Headline = Custom String("Ultra Cinematic Camera");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Add Camera Position\r\n{1} : Remove Previous Camera Position\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start and Stop Camera\r\n{1} : Delete all Cameras\r\n{2}",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)),
+				Custom String("{0} : Follow Cameras of Target Player\r\n{1}",
+					Input Binding String(Button(Ability 2)),
+				Custom String("If multiple cameras can see you,\r\nthe closest will take Priority.\r\nReminder: Hold {0} to reset Camera",
+					Input Binding String(Button(Interact))
+				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		End;
+
+		Event Player.Mode_Description = Last Text ID;
+	}
+}
+
+
 rule("Remove_AFK_Player")
 {
 	event
@@ -2198,7 +2385,7 @@ rule("3rd_Camera_1")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 100);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Far"));
 	}
 }
@@ -2221,7 +2408,7 @@ rule("3rd_Camera_2_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + -1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 100);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + 10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" 3rd Person, Close"));
 	}
 }
@@ -2244,7 +2431,7 @@ rule("3rd_Camera_3")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 3 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 100);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" Front View, Far"));
 	}
 }
@@ -2267,7 +2454,7 @@ rule("3rd_Camera_4_Zoom")
 	{
 		Start Camera(Event Player, Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), 
 			Eye Position(Event Player) + 1 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
-			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 100);
+			Null, Event Player, True)), Update Every Frame(Eye Position(Event Player) + -10 * Facing Direction Of(Event Player)), 200);
 		Small Message(Event Player, Custom String(" Front View, Close"));
 	}
 }
@@ -2357,10 +2544,20 @@ rule("Mode_00 - Auto_Respawn")
 
 	actions
 	{
-		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
-		Resurrect(Event Player);
-		Heal(Event Player, Null, 12000);
-		Wait(0.100, Ignore Condition);
+		"Kanezaka falling out of map hardcoded fix"
+		If(Current Map == Map(Kanezaka));
+			Teleport(Event Player, Random Value In Array(Global.Kanezaka_Teleports));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+			Wait(0.100, Ignore Condition);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else;
+			Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+			Wait(0.100, Ignore Condition);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		End;
 	}
 }
 
@@ -2575,7 +2772,7 @@ rule("Mode_02 - Apply Status")
 }
 
 
-rule("Mode_03 - Protection")
+rule("Mode_03 - Player_Rays_Painting")
 {
 	event
 	{
@@ -2586,8 +2783,55 @@ rule("Mode_03 - Protection")
 
 	conditions
 	{
-		Event Player.Is_Menu_Active == True;
 		Event Player.Mode_Cycle == 3;
+		Event Player.Signal == True;
+		Event Player.Is_Menu_Active == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		Abort If(Not(Is Button Held(Event Player, Button(Reload))) && Not(Is Button Held(Event Player, Button(Primary Fire))) && Not(Is Button Held(Event Player, Button(Secondary Fire))));
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			Event Player.Beams[0] = Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + 
+				Facing Direction Of(Event Player) * 2, Null, Event Player, True);
+			Small Message(Event Player, Custom String("  Beam Position 1 set"));
+			disabled Create Effect(All Players(All Teams), Sphere, Color(Blue), Ray Cast Hit Position(Eye Position(Event Player), Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, All Players(All Teams), Event Player, True), 0.100, Visible To);
+        Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			Event Player.Beams[1] = Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + 
+				Facing Direction Of(Event Player) * 2, Null, Event Player, True);
+			Small Message(Event Player, Custom String("  Beam Position 2 set"));
+			disabled Create Effect(All Players(All Teams), Sphere, Color(Blue), Ray Cast Hit Position(Eye Position(Event Player), Eye Position(
+				Event Player) + Facing Direction Of(Event Player) * 2, All Players(All Teams), Event Player, True), 0.100, Visible To);
+		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			Destroy Effect(Event Player.Beams[2]);
+			Event Player.Beams[0] = Null;
+			Event Player.Beams[1] = Null;
+			Event Player.Beams[2] = Null;
+			Small Message(Event Player, Custom String("  Beam removed"));
+		End;
+		If(((Event Player.Beams[0] != Null) && (Event Player.Beams[1] != Null)) == True);
+			Destroy Effect(Event Player.Beams[2]);
+			Create Beam Effect(All Players(All Teams), Good Beam, Evaluate Once(Event Player.Beams[0]), Evaluate Once(Event Player.Beams[1]), Color(Orange), Visible To Position and Radius);
+			Event Player.Beams[2] = Last Created Entity;
+		End;
+	}
+}
+
+rule("Mode_04 - Protection")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Mode_Cycle == 4;
+		Event Player.Is_Menu_Active == True;
 		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).Restricted == False;
 	}
@@ -2609,7 +2853,7 @@ rule("Mode_03 - Protection")
 	}
 }
 
-rule("Mode_03 - Protection (Subroutine)")
+rule("Mode_04 - Protection (Subroutine)")
 {
 	event
 	{
@@ -2642,54 +2886,6 @@ rule("Mode_03 - Protection (Subroutine)")
 	}
 }
 
-rule("Mode_04 - Placeholder Laser")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player.Mode_Cycle == 4 || Event Player.Mode_Cycle_Default == 2) == True;
-		Event Player.Is_Menu_Active == True;
-		Event Player.Signal == True;
-	}
-
-	actions
-	{
-		Event Player.Signal = False;
-		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			If(Event Player.Laser_ID != Null);
-				Small Message(Event Player, Custom String("  Laser already exists!"));
-				Abort;
-			End;
-			Create Beam Effect(All Players(All Teams), Bad Beam, Update Every Frame(Add(Eye Position(Event Player), World Vector Of(Vector(0,15,0), Event Player, Rotation))), 
-			Update Every Frame(Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 200, All Players(All Teams), Event Player, True)), 
-			Global.Colors[Event Player.Laser_Selector], Visible To Position Radius and Color);
-			Event Player.Laser_ID = Last Created Entity;
-			Small Message(Event Player, Custom String("  Laser Created"));
-		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			If(Event Player.Laser_ID == Null);
-				Small Message(Event Player, Custom String("  No laser active at the moment"));
-				Abort;
-			End;
-			Destroy Effect(Event Player.Laser_ID);
-			Event Player.Laser_ID = Null;
-			Small Message(Event Player, Custom String("  Laser Removed"));
-		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
-			If(Event Player.Laser_Selector >= 14);
-				Event Player.Laser_Selector = 0;
-			Else;
-				Event Player.Laser_Selector += 1;
-			End;
-			Small Message(Event Player, Custom String("  Color: {0}", Global.Colors[Event Player.Laser_Selector]));
-		End;
-	}
-}
-
 rule("Mode_05 - Battle-Mode_ON")
 {
 	event
@@ -2701,7 +2897,7 @@ rule("Mode_05 - Battle-Mode_ON")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 5 || Event Player.Mode_Cycle_Default == 3) == True;
+		(Event Player.Mode_Cycle == 5 || Event Player.Mode_Cycle_Default == 2) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Signal == True;
 		Event Player.In_Battle_Mode == False;
@@ -3132,7 +3328,7 @@ rule("Mode_06 - De-Elitate Outlines")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 6 || Event Player.Mode_Cycle_Default == 4) == True;
+		(Event Player.Mode_Cycle == 6 || Event Player.Mode_Cycle_Default == 3) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3405,7 +3601,7 @@ rule("Mode_08 - Flying_Gravity")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 8 || Event Player.Mode_Cycle_Default == 5) == True;
+		(Event Player.Mode_Cycle == 8 || Event Player.Mode_Cycle_Default == 4) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3493,7 +3689,7 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 9 || Event Player.Mode_Cycle_Default == 6) == True;
+		(Event Player.Mode_Cycle == 9 || Event Player.Mode_Cycle_Default == 5) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3582,7 +3778,7 @@ rule("Mode_10 - Target_Carry_Control")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 10 || Event Player.Mode_Cycle_Default == 7) == True;
+		(Event Player.Mode_Cycle == 10 || Event Player.Mode_Cycle_Default == 6) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3633,7 +3829,7 @@ rule("Mode_11 - Scale_Own_Size")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 11 || Event Player.Mode_Cycle_Default == 8) == True;
+		(Event Player.Mode_Cycle == 11 || Event Player.Mode_Cycle_Default == 7) == True;
 		Event Player.Signal == True;
 		Event Player.Progress_Lock == False;
 	}
@@ -3732,7 +3928,7 @@ rule("Mode_11 - Abort_Scaling")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 11 || Event Player.Mode_Cycle_Default == 8) == True;
+		(Event Player.Mode_Cycle == 11 || Event Player.Mode_Cycle_Default == 7) == True;
 		Event Player.Signal == True;
 		Event Player.Progress_Lock == True;
 	}
@@ -4693,7 +4889,7 @@ rule("Mode_20 - Voice_Pitch_Moan_Spam")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 20 || Event Player.Mode_Cycle_Default == 9) == True;
+		(Event Player.Mode_Cycle == 20 || Event Player.Mode_Cycle_Default == 8) == True;
 		Event Player.Signal == True;
 	}
 
@@ -4801,7 +4997,7 @@ rule("Mode_22 - Brazil")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 22 || Event Player.Mode_Cycle_Default == 10) == True;
+		(Event Player.Mode_Cycle == 22 || Event Player.Mode_Cycle_Default == 9) == True;
 		Event Player.Signal == True;
 		Event Player.Target_Lock.Progress_Lock == False;
 	}
@@ -4877,7 +5073,7 @@ rule("Mode_23 - Icon_Tag_Self")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 23 || Event Player.Mode_Cycle_Default == 11) == True;
+		(Event Player.Mode_Cycle == 23 || Event Player.Mode_Cycle_Default == 10) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Signal == True;
 	}
@@ -5143,7 +5339,7 @@ rule("Mode_23_24 - Show message with selected Icon")
 	{
 		Event Player.Is_Menu_Active == True;
 		((Event Player.Mode_Cycle == 23 || Event Player.Mode_Cycle == 24) ||
-		Event Player.Mode_Cycle_Default == 12) == True;
+		Event Player.Mode_Cycle_Default == 10) == True;
 	}
 
 	actions
@@ -5154,7 +5350,7 @@ rule("Mode_23_24 - Show message with selected Icon")
 }
 
 
-rule("Mode_25 - Give_Revoke_Mod")
+rule("Mode_25 - Give_Revoke_Mod_And_Teamswap")
 {
 	event
 	{
@@ -5166,7 +5362,7 @@ rule("Mode_25 - Give_Revoke_Mod")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 25 || Event Player.Mode_Cycle_Default == 12) == True;
+		(Event Player.Mode_Cycle == 25 || Event Player.Mode_Cycle_Default == 11) == True;
 		Event Player.Signal == True;
 	}
 
@@ -5327,7 +5523,7 @@ rule("Mode_27 - Slowmotion_&_Slow_Projectile")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 27 || Event Player.Mode_Cycle_Default == 13) == True;
+		(Event Player.Mode_Cycle == 27 || Event Player.Mode_Cycle_Default == 12) == True;
 		Event Player.Signal == True;
 	}
 
@@ -5655,7 +5851,7 @@ rule("Mode_31 - Special_Camera")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 31 || Event Player.Mode_Cycle_Default == 14) == True;
+		(Event Player.Mode_Cycle == 31 || Event Player.Mode_Cycle_Default == 13) == True;
 		Event Player.Signal == True;
 	}
 
@@ -5812,7 +6008,7 @@ rule("Mode_31 - Cam_Preview_On")
 	{
 		Event Player.Is_Menu_Active == True;
 		((Event Player.Mode_Cycle == 31 || Event Player.Mode_Cycle == 32) ||
-		(Event Player.Mode_Cycle_Default == 14 || Event Player.Mode_Cycle_Default == 15)) == True;
+		(Event Player.Mode_Cycle_Default == 13 || Event Player.Mode_Cycle_Default == 14)) == True;
 		Event Player.Camera <= 4;
 	}
 
@@ -5838,7 +6034,7 @@ rule("Mode_31 - Cam_Preview_Off")
 	{
 		Event Player.Is_Menu_Active == True;
 		(Event Player.Mode_Cycle != 31 && Event Player.Mode_Cycle != 32) == True;
-		(Event Player.Mode_Cycle_Default != 14 && Event Player.Mode_Cycle_Default != 15) == True;
+		(Event Player.Mode_Cycle_Default != 13 && Event Player.Mode_Cycle_Default != 14) == True;
 	}
 
 	actions
@@ -5970,7 +6166,7 @@ rule("Mode_32 - Cinematic_Camera")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 32 || Event Player.Mode_Cycle_Default == 15) == True;
+		(Event Player.Mode_Cycle == 32 || Event Player.Mode_Cycle_Default == 14) == True;
 		Event Player.Signal == True;
 		Event Player.Is_Menu_Active == True;
 	}
@@ -6151,11 +6347,20 @@ rule("Extra_2 - Self_Rez")
 
 	actions
 	{
-		Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
-		Resurrect(Event Player);
-		Heal(Event Player, Null, 12000);
-		Wait(0.100, Ignore Condition);
-		Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		"Kanezaka falling out of map hardcoded fix"
+		If(Current Map == Map(Kanezaka));
+			Teleport(Event Player, Random Value In Array(Global.Kanezaka_Teleports));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+			Wait(0.100, Ignore Condition);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		Else;
+			Teleport(Event Player, Nearest Walkable Position(Position Of(Event Player)));
+			Resurrect(Event Player);
+			Heal(Event Player, Null, 12000);
+			Wait(0.100, Ignore Condition);
+			Play Effect(All Players(All Teams), Good Pickup Effect, Color(Blue), Event Player, 1);
+		End;
 	}
 }
 
@@ -6681,7 +6886,6 @@ rule("Play Effect while jump or crouch")
 	{
 		Is Alive(Event Player) == True;
 		(Event Player.High_Rank || Event Player.Mod_Rank) == True;
-		Is On Ground(Event Player) == True;
 		(Is Button Held(Event Player, Button(Jump)) || Is Button Held(Event Player, Button(Crouch))) == True;
 		Event Player.In_Battle_Mode == False;
 	}
@@ -6736,194 +6940,5 @@ rule("Mercy Movement Collision False")
 	{
 		Set Move Speed(Event Player, 100);
 		Enable Movement Collision With Environment(Event Player);
-	}
-}
-
-rule("Mode_Headline_Desc_Default")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		(Event Player.High_Rank || Event Player.Mod_Rank) == False;
-		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
-		(Event Player.Mode_Description != Null) == True;
-		Event Player.Is_Menu_Active == True;
-		Event Player.In_Battle_Mode == False;
-	}
-
-	actions
-	{
-		Destroy HUD Text(Event Player.Mode_Description);
-		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
-		
-		If(Event Player.Mode_Cycle_Default == 0);
-			Event Player.Mode_Headline = Custom String("Kill | Resurrection");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Kill | Rez Yourself\r\n{1} : Set Auto-Respawn, yourself\r\n{2}", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
-				Custom String("Current Auto-Respawn Settings: \r\n[You: {0}, Target: {1}]", 
-					Event Player.Auto_Respawn, Player Closest To Reticle(Event Player, All Teams).Auto_Respawn
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 1);
-			Event Player.Mode_Headline = Custom String("Status Effect");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Apply/Remove Status: yourself\r\n{1} : Remove All Status: Yourself\r\n{2}",
-					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)),
-				Custom String("{0} : Cycle Status\r\nCurrently Selected Status:\r\n[ {1} ]",
-					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 2);
-			Event Player.Mode_Headline = Custom String("Laser Pointer");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Start Laser pointer\r\n{1} : Stop Laser pointer\r\n{2} : Cycle Color", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Ultimate))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 3);
-			Event Player.Mode_Headline = Custom String("1v1-Mode");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Enter 1v1-Mode.\r\nA teamswap may be performed first. \r\nIn this case, enter 1v1-Mode afterwards. \r\n{1}",
-					Input Binding String(Button(Ultimate)),
-				Custom String("{0} : Spawn as random hero: {1}\r\n{2}",
-					Input Binding String(Button(Ability 2)), Global.Battle_Random,
-				Custom String("The stats of player 1 will be \r\napplied to player 2.\r\n{0}\r\nCurrent Stats:\r\n{1}", Global.Battle_String,
-				Custom String("Damage: {0}%\r\n{1}", Global.Battle_Stats_Main[0],
-				Custom String("Speed: {0}%\r\n{1}", Global.Battle_Stats_Main[1],
-				Custom String("Knockback: {0}%\r\n{1}", Global.Battle_Stats_Main[2],
-				Custom String("Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
-				Custom String("Size/HP: {0}%", Global.Battle_Stats_Main[4]
-				)))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 4);
-			Event Player.Mode_Headline = Custom String("Outlines & names");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Choose Color\r\n{1}", 
-					Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n",
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 5);
-			Event Player.Mode_Headline = Custom String("Flying");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Give | Remove Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 6);
-			Event Player.Mode_Headline = Custom String("DMG | Speed | Knockback | Gravity");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} is currently set to: {1}%!\r\n{2}", 
-					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Player_Modification[Event Player.Modification_Mode_Selector],
-				Custom String("{0} : Increase by {1}%\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
-				Custom String("{0} : Decrease by {1}%\r\n{2}", 
-					Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
-				Custom String("{0} : Cycle Mode [DMG, Speed, KB, Gravity]\r\n{1}", 
-					Input Binding String(Button(Ultimate)),
-				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", 
-					Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Reset {1}\r\n{2}", 
-					Input Binding String(Button (Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector],
-				Custom String("{0} : Reset all stats",
-					Input Binding String(Button(Melee))
-				))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 7);
-			Event Player.Mode_Headline = Custom String("Unstuck");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Fix and Unstuck", 
-					Input Binding String(Button(Ultimate))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 8);
-			Create Progress Bar HUD Text(Event Player, Event Player.Scale_Real * 5, Custom String("Destination: {0}% | Current: {1}%",
-				Event Player.Scale_Prev * 100, Event Player.Scale_Real * 100), Top, 1, Color(Blue), Color(Gray), Visible To and Values,
-				Visible Never);
-			Event Player.Scale_Hud_ID = Last Text ID;
-			
-			Event Player.Mode_Headline = Custom String("Growth | Shrink (Yourself)");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Set Destination Growth\r\n{1} : Set Destination Shrink\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Confirm & Start Fast Scaling\r\n{2} : Confirm & Start Slow Scaling\r\n{1} : Reset Size", 
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)), Input Binding String(Button(Ability 2))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 9);
-			Event Player.Mode_Headline = Custom String("Voice Options");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Voice Pitch Up\r\n{1}",
-					Input Binding String(Button(Ultimate)), 
-				Custom String("{0} : Voice Pitch Down\r\n{1} : Back To Normal Voice", 
-					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
-				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 10);
-			Event Player.Mode_Headline = Custom String("Brazil");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Send yourself to Brazil", 
-					Input Binding String(Button(Ultimate))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String,Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 11);
-			Event Player.Mode_Headline = Custom String("Give icon: yourself");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Give yourself {1}\n{2}",
-				Input Binding String(Button(Primary Fire)), Global.Icons_List_For_Menu[Event Player.Icons_Selector], Custom String(
-				"{0} : Choose Color\n{1} : Choose Icon\n{2}", Input Binding String(Button(Secondary Fire)), Input Binding String(Button(
-				Ultimate)), Custom String("{0} : Give Yourself - Heart\n{1} : Give Yourself - Fire\n{2}", Input Binding String(Button(
-				Ability 2)), Input Binding String(Button(Melee)), Custom String("{0} : Destroy Your Icons", Input Binding String(Button(
-				Reload)))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 12);
-			Event Player.Mode_Headline = Custom String("Team Swap");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Switch Team - Yourself",
-					Input Binding String(Button(Ultimate))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 13);
-			Event Player.Mode_Headline = Custom String("Slow Projectile");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Set Yourself Slow Projectile",
-					Input Binding String(Button(Ultimate))
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 14);
-			Event Player.Mode_Headline = Custom String("Special Camera");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Place Camera Without LOS check\r\n{1} : Place Camera With LOS Check\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Place static Camera\r\n{1} : Start Cinematic Camera\r\n{2}",
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Start Top-down Camera\r\nReminder: Hold {1} to reset Camera.",
-					Input Binding String(Button(Reload)), Input Binding String(Button(Interact))
-				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle_Default == 15);
-			Event Player.Mode_Headline = Custom String("Ultra Cinematic Camera");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Add Camera Position\r\n{1} : Remove Previous Camera Position\r\n{2}", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Start and Stop Camera\r\n{1} : Delete all Cameras\r\n{2}",
-					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)),
-				Custom String("{0} : Follow Cameras of Target Player\r\n{1}",
-					Input Binding String(Button(Ability 2)),
-				Custom String("If multiple cameras can see you,\r\nthe closest will take Priority.\r\nReminder: Hold {0} to reset Camera",
-					Input Binding String(Button(Interact))
-				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		End;
-
-		Event Player.Mode_Description = Last Text ID;
 	}
 }
