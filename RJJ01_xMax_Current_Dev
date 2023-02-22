@@ -1687,10 +1687,10 @@ rule("Mode_Headline_Desc_Mod")
 					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
 				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 3);
-			Event Player.Mode_Headline = Custom String("Beams (Placeholder)");
+			Event Player.Mode_Headline = Custom String("Beams");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Place first beam point\r\n{1} : Place second beam point\r\n{2} : Remove Beam\r\nBeam will be created once\r\nboth positions are set.", 
+				Custom String("{0} : Place first beam point\r\n{1} : Place second beam point\r\n{2} : Remove Beam", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload)) 
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 4);
