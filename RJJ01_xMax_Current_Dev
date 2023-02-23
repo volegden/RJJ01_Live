@@ -3843,7 +3843,8 @@ rule("Mode_10 - Target_Carry_Control")
 			Start Forcing Player Position(Event Player.Target_Lock, World Vector Of(Vector(X Component Of(Event Player), (
 				Vertical Facing Angle Of(Event Player) - Vertical Facing Angle Of(Event Player) * 2) / 10, Z Component Of(Event Player) + 5),
 				Event Player, Rotation And Translation), True);
-			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == False || Is Button Held(Event Player, Button(Secondary Fire))
+			Wait(0.500, Ignore Condition);
+			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == True || Is Button Held(Event Player, Button(Secondary Fire))
 				== True, 99999);
 			Stop Forcing Player Position(Event Player.Target_Lock);
 			If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
