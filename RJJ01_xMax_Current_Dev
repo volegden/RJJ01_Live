@@ -246,6 +246,8 @@ variables
 		53: Jumppad_Animation
 		54: Jumppad_Radius
 		55: Kanezaka_Teleports
+		56: Fading_Color_Sequence
+		57: Fading_Color
 
 	player:
 		0: High_Rank
@@ -745,6 +747,29 @@ rule("Dynamic Blue Color")
 	}
 }
 
+rule("Dynamic Fading Color")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		While(Global.Fading_Color_Sequence < 255);
+			Global.Fading_Color_Sequence += 2;
+			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		While(Global.Fading_Color_Sequence > 0);
+			Global.Fading_Color_Sequence -= 2;
+			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
+			Wait(0.100, Ignore Condition);
+		End;
+		Loop;
+	}
+}
+
 rule ("Custom Strings") 
 {
     event 
@@ -905,7 +930,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("Ghost"), Array(Custom String("sad ghost")), Color(Black)),
 			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
 			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
-				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Color(Gray)),
+				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading")),
 			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
 			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
@@ -931,7 +956,11 @@ rule ("Custom nameplates list")
 			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
 			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
-			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red))
+			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red)),
+			Array(Custom String("To0lsPandaro"), Array(Custom String("{0} Zeus {0}", Icon String(Bolt)), 
+				Custom String("† Tokyow †"), Custom String("{0}  Wanted  {0}", Icon String(Skull)), 
+				Custom String("{0}  The Devil  {0}", Ability Icon String(Hero(Genji), Button(Ultimate))),
+				Custom String("{0}  The Death  {0}", Ability Icon String(Hero(Reaper), Button(Ultimate)))), Custom String("Blue"))
 		);
 	}
 }
@@ -988,6 +1017,11 @@ rule ("Subroutine: Give_Custom_Nameplate")
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
 				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
 				Global.Blue_Color, Default Visibility);
+		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
+			Destroy In-World Text(Event Player.Player_Nameplates);
+			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				Global.Fading_Color, Default Visibility);
 		Else;
 			Destroy In-World Text(Event Player.Player_Nameplates);
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
@@ -1014,6 +1048,11 @@ rule ("Subroutine: Give_Custom_Outline")
 		Event Player.Is_Title_Given = True;
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
 			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Rainbow_Color, Always);
+			Wait(0.036, Ignore Condition);
+			Loop;
+		End;
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Fading_Color, Always);
 			Wait(0.036, Ignore Condition);
 			Loop;
 		End;
@@ -1093,7 +1132,8 @@ rule("Listed_Player")
 			Custom String("xMaxuss"),Custom String("Vanessav"), Custom String("Jelish"), Custom String("Ezio"), Custom String("BluTyde"), 
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
 			Custom String("squid"), Custom String("rin"), Custom String("commander"), Custom String("Sithrael"), Custom String("LilHanzo"),
-			Custom String("kosmos"), Custom String("Heather"), Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"));
+			Custom String("kosmos"), Custom String("Heather"), Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"),
+			Custom String("To0lsPandaro"));
 		"Automatic Mod"
 		Global.Mod_Rank = Empty Array;
 		"Automatic Ban"
@@ -3707,6 +3747,7 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 		If(Event Player.Modification_Target_Selector == 0);
 			Event Player.Modification_Target_Check = Event Player;
 		Else;
+			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Event Player.Modification_Target_Check = Player Closest To Reticle(Event Player, All Teams);
 		End;
 		If(Is Button Held(Event Player, Button(Primary Fire)));
