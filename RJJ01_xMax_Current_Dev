@@ -248,6 +248,9 @@ variables
 		55: Kanezaka_Teleports
 		56: Fading_Color_Sequence
 		57: Fading_Color
+		58: UNO_Random
+		59: UNO_Colors
+		60: UNO_Players
 
 	player:
 		0: High_Rank
@@ -298,48 +301,50 @@ variables
 		45: Index_Help
 		46: Modification_Mode_Selector
 		47: Modification_Scalar_Selector
-		48: Modification_Target_Selector
-		49: Modification_Target_Check
-		50: Auto_Respawn
-		51: In_Battle_Mode
-		52: Icons_Selector
-		53: Icons_Colors_Selector
-		54: Regular_Player_Has_Title
-		55: M32_Players_Nameplate
-		56: NamesAndOutlines_Colors_Selector
-		57: Is_Menu_Active
-		58: Non_Moderator_Menu
-		59: Non_Moderator_Menu_Description
-		60: Laser_ID
-		61: Laser_Selector
-		62: Status_Selector
-		63: Jumppad_Helper
-		64: Jumppad_Entry
-		65: Jumppad_Loop
-		66: Jumppad_Color_In_Selector
-		67: Jumppad_Color_Out_Selector
-		68: Jumppad_Radius_Selector
-		69: Jumppad_Strength_Selector
-		70: Jumppad_Preview
-		71: Camera_ID
-		72: Camera_Position
-		73: Camera_Started
-		74: Camera_Placed
-		75: Camera_Smooth
-		76: Camera_Player
-		77: Camera_Text
-		78: Camera_Dot
-		79: Camera_Helper
-		80: Camera_Loop
-		81: Camera_LOS
-		82: Camera_Default
-		83: Camera_Target
-		84: Cinematic_Storage
-		85: Cinematic_Helper
-		86: Signal
-		87: Mode_Cycle_Default
-		88: Spam_Cooldown
-		89: Beams
+		48: Modification_Target_Check
+		49: Auto_Respawn
+		50: In_Battle_Mode
+		51: Icons_Selector
+		52: Icons_Colors_Selector
+		53: Regular_Player_Has_Title
+		54: M32_Players_Nameplate
+		55: NamesAndOutlines_Colors_Selector
+		56: Is_Menu_Active
+		57: Non_Moderator_Menu
+		58: Non_Moderator_Menu_Description
+		59: Laser_ID
+		60: Laser_Selector
+		61: Status_Selector
+		62: Jumppad_Helper
+		63: Jumppad_Entry
+		64: Jumppad_Loop
+		65: Jumppad_Color_In_Selector
+		66: Jumppad_Color_Out_Selector
+		67: Jumppad_Radius_Selector
+		68: Jumppad_Strength_Selector
+		69: Jumppad_Preview
+		70: Camera_ID
+		71: Camera_Position
+		72: Camera_Started
+		73: Camera_Placed
+		74: Camera_Smooth
+		75: Camera_Player
+		76: Camera_Text
+		77: Camera_Dot
+		78: Camera_Helper
+		79: Camera_Loop
+		80: Camera_LOS
+		81: Camera_Default
+		82: Camera_Target
+		83: Cinematic_Storage
+		84: Cinematic_Helper
+		85: Signal
+		86: Mode_Cycle_Default
+		87: Spam_Cooldown
+		88: UNO_Hand
+		89: UNO_Helper
+		90: UNO_Ingame
+		91: UNO_Is_Turn
 }
 
 subroutines
@@ -354,6 +359,7 @@ subroutines
 	7: Give_Custom_Nameplate
 	8: Give_Custom_Outline
 	9: Jail_Leaver
+	10: UNO_Draw
 }
 
 rule("Anti-Crash-ON")
@@ -571,7 +577,6 @@ rule("Default_Player_Settings")
 
 		Event Player.Modification_Mode_Selector = 0;
 		Event Player.Modification_Scalar_Selector = 2;
-		Event Player.Modification_Target_Selector = 0;
 		
 		Event Player.Drawing_Obj_Preview = Null;
 		Event Player.Drawing_Obj_Effects_Selector = 0;
@@ -616,7 +621,8 @@ rule("Default_Player_Settings")
 		Event Player.Spam_Cooldown = 3;
 		Chase Player Variable Over Time(Event Player, Spam_Cooldown, 0, 3, None);
 
-		Event Player.Beams = Array(Null, Null, Null);
+		Event Player.UNO_Hand = Empty Array;
+		Event Player.UNO_Helper = Array(Null, Null);
 
 		"Is menu Active"
 		Event Player.Is_Menu_Active = True;
@@ -804,6 +810,12 @@ rule ("Custom Strings")
 
 		Global.Jumppad_Radius = Array(0.75, 1.75, 3, 6);
 		Global.Kanezaka_Teleports = Array(Vector(-17.86, 10.50, 17.91), Vector(-1.06, 9.00, -46.18), Vector(-44.15, 11.00, -12.76), Vector(-28.72, 4.00, 41.27));
+
+		"Uno Cards colors: 0=black, 1=red, 2=green, 3=blue, 4=yellow"
+		"Uno Color Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw"
+		"Uno Black Cards meaning: 0=choose, 1=draw"
+		Global.UNO_Random = Array(0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4);
+		Global.UNO_Colors = Array(Color(Black), Color(Red), Color(Green), Color(Blue), Color(Yellow));
 	}
 
 }
@@ -1133,7 +1145,7 @@ rule("Listed_Player")
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
 			Custom String("squid"), Custom String("rin"), Custom String("commander"), Custom String("Sithrael"), Custom String("LilHanzo"),
 			Custom String("kosmos"), Custom String("Heather"), Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"),
-			Custom String("To0lsPandaro"));
+			Custom String("To0lsPandaro"), Custom String("GhostPunch"));
 		"Automatic Mod"
 		Global.Mod_Rank = Empty Array;
 		"Automatic Ban"
@@ -1293,7 +1305,8 @@ rule("Show_And_Hide_Menu")
 	conditions
 	{
 		(Is Button Held(Event Player, Button(Crouch)) && Is Button Held(Event Player, Button(Melee)))== True;
-		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 6;
+		Event Player.Mode_Cycle != 8;
 		Event Player.Mode_Cycle != 9;
 		Event Player.Mode_Cycle != 15;
 		Event Player.Mode_Cycle != 31;
@@ -1727,20 +1740,13 @@ rule("Mode_Headline_Desc_Mod")
 					Input Binding String(Button(Ultimate)), Global.Status_String[Event Player.Status_Selector]
 				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 3);
-			Event Player.Mode_Headline = Custom String("Beams");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
-				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
-				Custom String("{0} : Place first beam point\r\n{1} : Place second beam point\r\n{2} : Remove Beam", 
-					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), Input Binding String(Button(Reload)) 
-				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 4);
 			Event Player.Mode_Headline = Custom String("Protection");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
 				Custom String("{0} : Give Target Immunity\r\n{1} : Revoke Target Immunity", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
 				), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 5);
+		Else If(Event Player.Mode_Cycle == 4);
 			Event Player.Mode_Headline = Custom String("1v1-Mode");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
@@ -1755,7 +1761,7 @@ rule("Mode_Headline_Desc_Mod")
 				Custom String("Gravity: {0}%\r\n{1}", Global.Battle_Stats_Main[3],
 				Custom String("Size/HP: {0}%", Global.Battle_Stats_Main[4]
 				)))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 6);
+		Else If(Event Player.Mode_Cycle == 5);
 			Event Player.Mode_Headline = Custom String("Outlines & names");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
@@ -1764,7 +1770,7 @@ rule("Mode_Headline_Desc_Mod")
 				Custom String("{0} : Give Outline To Yourself\r\n{1} : Remove Outline from Youself\r\n{2} : Remove Outline from Target",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 7);
+		Else If(Event Player.Mode_Cycle == 6);
 			Event Player.Mode_Headline = Custom String("Jumppad");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
@@ -1777,7 +1783,7 @@ rule("Mode_Headline_Desc_Mod")
 				Custom String("{0} : Delete All Jumppads\r\nCurrent Strength: {1}\r\nOnly placeable on the ground.\r\nCrouch to stop bouncing.",
 					Input Binding String(Button(Melee)), (Event Player.Jumppad_Strength_Selector+1)*5
 				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 8);
+		Else If(Event Player.Mode_Cycle == 7);
 			Event Player.Mode_Headline = Custom String("Flying | Global Gravity");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
@@ -1786,14 +1792,12 @@ rule("Mode_Headline_Desc_Mod")
 				Custom String("{0} : Give | Remove Yourself Flying\r\n{1} : Move Up\r\n{2} : Move Down",
 					Input Binding String(Button(Ultimate)), Input Binding String(Button(Jump)), Input Binding String(Button(Crouch))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
-		Else If(Event Player.Mode_Cycle == 9);
-			Event Player.Mode_Headline = Custom String("DMG | Speed | Knockback | Gravity");
+		Else If(Event Player.Mode_Cycle == 8);
+			Event Player.Mode_Headline = Custom String("DMG | Speed | KB | Grav (Self)");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
 				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
 				Custom String("Your {0} is currently set to: {1}%!\r\n{2}", 
 					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Player_Modification[Event Player.Modification_Mode_Selector],
-				Custom String("Target {0} is currently set to: {1}%!\r\n{2}",
-					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Player Closest To Reticle(Event Player, All Teams).Player_Modification[Event Player.Modification_Mode_Selector],
 				Custom String("{0} : Increase by {1}%\r\n{2}", 
 					Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
 				Custom String("{0} : Decrease by {1}%\r\n{2}", 
@@ -1802,13 +1806,30 @@ rule("Mode_Headline_Desc_Mod")
 					Input Binding String(Button(Ultimate)),
 				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}", 
 					Input Binding String(Button(Ability 2)), 
-				Custom String("{0} : Switch target\r\n [Currently Modifying: {1}]\r\n{2}",
-					Input Binding String(Button(Ability 1)), Global.Modification_Target_String[Event Player.Modification_Target_Selector],
 				Custom String("{0} : Reset {1}\r\n{2}", 
 					Input Binding String(Button(Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector],
 				Custom String("{0} : Reset all stats",
 					Input Binding String(Button(Melee))
-				))))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+				))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 9);
+			Event Player.Mode_Headline = Custom String("DMG | Speed | KB | Grav (Target)");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("Target {0} is currently set to: {1}%!\r\n{2}",
+					Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Player Closest To Reticle(Event Player, All Teams).Player_Modification[Event Player.Modification_Mode_Selector],
+				Custom String("{0} : Increase by {1}%\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector), 
+				Custom String("{0} : Decrease by {1}%\r\n{2}", 
+					Input Binding String(Button(Secondary Fire)), Raise To Power(10, Event Player.Modification_Scalar_Selector),
+				Custom String("{0} : Cycle Mode [DMG, Speed, KB, Gravity]\r\n{1}", 
+					Input Binding String(Button(Ultimate)),
+				Custom String("{0} : Cycle Amount [1%, 10%, 100%, 1000%]\r\n{1}",
+					Input Binding String(Button(Ability 2)),
+				Custom String("{0} : Reset {1}\r\n{2}", 
+					Input Binding String(Button(Reload)), Global.Modification_Mode_String[Event Player.Modification_Mode_Selector],
+				Custom String("{0} : Reset all stats",
+					Input Binding String(Button(Melee))
+				))))))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 10);
 			Event Player.Mode_Headline = Custom String("Carry | Bonk | Unstuck");
 			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
@@ -2812,7 +2833,7 @@ rule("Mode_02 - Apply Status")
 }
 
 
-rule("Mode_03 - Player_Rays_Painting")
+rule("Mode_03 - Protection")
 {
 	event
 	{
@@ -2824,53 +2845,6 @@ rule("Mode_03 - Player_Rays_Painting")
 	conditions
 	{
 		Event Player.Mode_Cycle == 3;
-		Event Player.Signal == True;
-		Event Player.Is_Menu_Active == True;
-	}
-
-	actions
-	{
-		Event Player.Signal = False;
-		Abort If(Not(Is Button Held(Event Player, Button(Reload))) && Not(Is Button Held(Event Player, Button(Primary Fire))) && Not(Is Button Held(Event Player, Button(Secondary Fire))));
-		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
-			Event Player.Beams[0] = Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + 
-				Facing Direction Of(Event Player) * 2, Null, Event Player, True);
-			Small Message(Event Player, Custom String("  Beam Position 1 set"));
-			disabled Create Effect(All Players(All Teams), Sphere, Color(Blue), Ray Cast Hit Position(Eye Position(Event Player), Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 2, All Players(All Teams), Event Player, True), 0.100, Visible To);
-        Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
-			Event Player.Beams[1] = Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player) + 
-				Facing Direction Of(Event Player) * 2, Null, Event Player, True);
-			Small Message(Event Player, Custom String("  Beam Position 2 set"));
-			disabled Create Effect(All Players(All Teams), Sphere, Color(Blue), Ray Cast Hit Position(Eye Position(Event Player), Eye Position(
-				Event Player) + Facing Direction Of(Event Player) * 2, All Players(All Teams), Event Player, True), 0.100, Visible To);
-		Else If(Is Button Held(Event Player, Button(Reload)) == True);
-			Destroy Effect(Event Player.Beams[2]);
-			Event Player.Beams[0] = Null;
-			Event Player.Beams[1] = Null;
-			Event Player.Beams[2] = Null;
-			Small Message(Event Player, Custom String("  Beam removed"));
-		End;
-		If(((Event Player.Beams[0] != Null) && (Event Player.Beams[1] != Null)) == True);
-			Destroy Effect(Event Player.Beams[2]);
-			Create Beam Effect(All Players(All Teams), Good Beam, Evaluate Once(Event Player.Beams[0]), Evaluate Once(Event Player.Beams[1]), Color(Orange), Visible To Position and Radius);
-			Event Player.Beams[2] = Last Created Entity;
-		End;
-	}
-}
-
-rule("Mode_04 - Protection")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Event Player.Mode_Cycle == 4;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).Restricted == False;
@@ -2893,7 +2867,7 @@ rule("Mode_04 - Protection")
 	}
 }
 
-rule("Mode_04 - Protection (Subroutine)")
+rule("Mode_03 - Protection (Subroutine)")
 {
 	event
 	{
@@ -2926,7 +2900,7 @@ rule("Mode_04 - Protection (Subroutine)")
 	}
 }
 
-rule("Mode_05 - Battle-Mode_ON")
+rule("Mode_04 - Battle-Mode_ON")
 {
 	event
 	{
@@ -2937,7 +2911,7 @@ rule("Mode_05 - Battle-Mode_ON")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 5 || Event Player.Mode_Cycle_Default == 2) == True;
+		(Event Player.Mode_Cycle == 4 || Event Player.Mode_Cycle_Default == 2) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.Signal == True;
 		Event Player.In_Battle_Mode == False;
@@ -3364,7 +3338,7 @@ rule("Mode_05 - Battle_Leaver_Handler")
 }
 
 
-rule("Mode_06 - De-Elitate Outlines")
+rule("Mode_05 - De-Elitate Outlines")
 {
 	event
 	{
@@ -3375,7 +3349,7 @@ rule("Mode_06 - De-Elitate Outlines")
 
 	conditions
 	{
-		(Event Player.Mode_Cycle == 6 || Event Player.Mode_Cycle_Default == 3) == True;
+		(Event Player.Mode_Cycle == 5 || Event Player.Mode_Cycle_Default == 3) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3466,7 +3440,7 @@ rule("Mode_06 - De-Elitate Outlines")
 }
 
 
-rule("Mode_07 - Jumppad_Create_Custom")
+rule("Mode_06 - Jumppad_Create_Custom")
 {
 	event
 	{
@@ -3477,7 +3451,7 @@ rule("Mode_07 - Jumppad_Create_Custom")
 
 	conditions
 	{
-		Event Player.Mode_Cycle == 7;
+		Event Player.Mode_Cycle == 6;
 		Event Player.Signal == True;
 		Event Player.Is_Menu_Active == True;
 		Is On Ground(Event Player) == True;
@@ -3563,7 +3537,7 @@ rule("Mode_07 - Jumppad_Create_Custom")
 	}
 }
 
-rule("Mode_07 - Jumppad_Preview_Create")
+rule("Mode_06 - Jumppad_Preview_Create")
 {
 	event
 	{
@@ -3574,7 +3548,7 @@ rule("Mode_07 - Jumppad_Preview_Create")
 
 	conditions
 	{
-		Event Player.Mode_Cycle == 7;
+		Event Player.Mode_Cycle == 6;
 		Event Player.Is_Menu_Active == True;
 	}
 
@@ -3591,7 +3565,7 @@ rule("Mode_07 - Jumppad_Preview_Create")
 	}
 }
 
-rule("Mode_07 - Jumppad_Preview_Remove")
+rule("Mode_06 - Jumppad_Preview_Remove")
 {
 	event
 	{
@@ -3602,7 +3576,7 @@ rule("Mode_07 - Jumppad_Preview_Remove")
 
 	conditions
 	{
-		Event Player.Mode_Cycle != 7;
+		Event Player.Mode_Cycle != 6;
 	}
 
 	actions
@@ -3612,7 +3586,7 @@ rule("Mode_07 - Jumppad_Preview_Remove")
 	}
 }
 
-rule("Mode_07 - Jumppad_Logic")
+rule("Mode_06 - Jumppad_Logic")
 {
 	event
 	{
@@ -3636,7 +3610,7 @@ rule("Mode_07 - Jumppad_Logic")
 	}
 }
 
-rule("Mode_08 - Flying_Gravity")
+rule("Mode_07 - Flying_Gravity")
 {
 	event
 	{
@@ -3648,7 +3622,7 @@ rule("Mode_08 - Flying_Gravity")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 8 || Event Player.Mode_Cycle_Default == 4) == True;
+		(Event Player.Mode_Cycle == 7 || Event Player.Mode_Cycle_Default == 4) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3693,7 +3667,7 @@ rule("Mode_08 - Flying_Gravity")
 	}
 }
 
-rule("Mode_08 - Flying_Controls")
+rule("Mode_07 - Flying_Controls")
 {
 	event
 	{
@@ -3724,7 +3698,7 @@ rule("Mode_08 - Flying_Controls")
 	}
 }
 
-rule("Mode_09 - Damage_Speed_KB_Gravity")
+rule("Mode_08 - Damage_Speed_KB_Gravity_Self")
 {
 	event
 	{
@@ -3736,7 +3710,7 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		(Event Player.Mode_Cycle == 9 || Event Player.Mode_Cycle_Default == 5) == True;
+		(Event Player.Mode_Cycle == 8 || Event Player.Mode_Cycle_Default == 5) == True;
 		Event Player.Signal == True;
 	}
 
@@ -3744,12 +3718,9 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 	{
 		"TODO: Check if broken after menu rework, do we set non-mod caps?"
 		Event Player.Signal = False;
-		If(Event Player.Modification_Target_Selector == 0);
-			Event Player.Modification_Target_Check = Event Player;
-		Else;
-			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
-			Event Player.Modification_Target_Check = Player Closest To Reticle(Event Player, All Teams);
-		End;
+		
+		Event Player.Modification_Target_Check = Event Player;
+
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] += Raise To Power(10, Event Player.Modification_Scalar_Selector);
 			If(Event Player.Modification_Target_Check.Player_Modification[0] > 10000);
@@ -3790,15 +3761,85 @@ rule("Mode_09 - Damage_Speed_KB_Gravity")
 			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] = 100;
 			Small Message(Event Player, Custom String("  {0} of {1} has been reset.", 
 				Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Modification_Target_Check));
-		Else If(Is Button Held(Event Player, Button(Ability 1)));
-			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
-			If(Event Player.Modification_Target_Selector >=1);
-				Event Player.Modification_Target_Selector = 0;
-				Event Player.Modification_Target_Check = Event Player;
-			Else;
-				Event Player.Modification_Target_Selector += 1;
-				Event Player.Modification_Target_Check = Player Closest To Reticle(Event Player, All Teams);
+		Else If(Is Button Held(Event Player, Button(Melee)));
+			Event Player.Modification_Target_Check.Player_Modification = Array(100, 100, 100, 100, 100);
+			Small Message(Event Player, Custom String("  All stats of {0} have been reset.",
+				Event Player.Modification_Target_Check));
+		End;
+		
+		Set Damage Dealt(Event Player.Modification_Target_Check, Event Player.Modification_Target_Check.Player_Modification[0]);
+		Set Move Speed(Event Player.Modification_Target_Check, Event Player.Modification_Target_Check.Player_Modification[1]);
+		Set Knockback Dealt(Event Player.Modification_Target_Check, Event Player.Modification_Target_Check.Player_Modification[2]);
+		If(Global.Gravity_Toggle == False);
+			Set Gravity(Event Player.Modification_Target_Check, Event Player.Modification_Target_Check.Player_Modification[3]);
+		End;
+	}
+}
+
+rule("Mode_09 - Damage_Speed_KB_Gravity_Target")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 9;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		"TODO: Check if broken after menu rework, do we set non-mod caps?"
+		Event Player.Signal = False;
+
+		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
+		Event Player.Modification_Target_Check = Player Closest To Reticle(Event Player, All Teams);
+
+		If(Is Button Held(Event Player, Button(Primary Fire)));
+			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] += Raise To Power(10, Event Player.Modification_Scalar_Selector);
+			If(Event Player.Modification_Target_Check.Player_Modification[0] > 10000);
+				Event Player.Modification_Target_Check.Player_Modification[0] = 10000;
+				Small Message(Event Player, Custom String("  {0} is at maximum! That's gotta sting...", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
 			End;
+			If(Event Player.Modification_Target_Check.Player_Modification[1] > 1000);
+				Event Player.Modification_Target_Check.Player_Modification[1] = 1000;
+				Small Message(Event Player, Custom String("  {0} is at maximum! Gotta go fast!", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+			If(Event Player.Modification_Target_Check.Player_Modification[2] > 5000);
+				Event Player.Modification_Target_Check.Player_Modification[2] = 5000;
+				Small Message(Event Player, Custom String("  {0} is at maximum! Don't launch them into orbit.", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+			If(Event Player.Modification_Target_Check.Player_Modification[3] > 500);
+				Event Player.Modification_Target_Check.Player_Modification[3] = 500;
+				Small Message(Event Player, Custom String("  {0} is at maximum! You're grounded, go to your room.", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
+			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] -= Raise To Power(10, Event Player.Modification_Scalar_Selector);
+			If(Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] < 0);
+				Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] = 0;
+				Small Message(Event Player, Custom String("  {0} is at minimum! Can't go below 0...", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
+			End;
+		Else If(Is Button Held(Event Player, Button(Ultimate)));
+			If(Event Player.Modification_Mode_Selector >=3);
+				Event Player.Modification_Mode_Selector = 0;
+			Else;
+				Event Player.Modification_Mode_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)));
+			If(Event Player.Modification_Scalar_Selector >=3);
+				Event Player.Modification_Scalar_Selector = 0;
+			Else;
+				Event Player.Modification_Scalar_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Reload)));
+			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] = 100;
+			Small Message(Event Player, Custom String("  {0} of {1} has been reset.", 
+				Global.Modification_Mode_String[Event Player.Modification_Mode_Selector], Event Player.Modification_Target_Check));
 		Else If(Is Button Held(Event Player, Button(Melee)));
 			Event Player.Modification_Target_Check.Player_Modification = Array(100, 100, 100, 100, 100);
 			Small Message(Event Player, Custom String("  All stats of {0} have been reset.",
@@ -6342,6 +6383,107 @@ rule("Mode_32 - LOS_Lost")
 	}
 }
 
+disabled rule("Mode_3? - UNO_Enter")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 33;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		Abort;
+		Event Player.UNO_Ingame = True;
+		Destroy HUD Text(Event Player.Mode_Description);
+		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
+		Destroy HUD Text(Event Player.Mode_Hud_ID);
+
+		Call Subroutine(UNO_Draw);
+		Call Subroutine(UNO_Draw);
+		Call Subroutine(UNO_Draw);
+	}
+}
+
+disabled rule("Mode_3? - UNO_Play")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.Is_Menu_Active == True;
+		Event Player.Mode_Cycle == 33;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		Event Player.UNO_Ingame = True;
+	}
+}
+
+disabled rule ("Subroutine: UNO_Draw_Card")
+{
+    event 
+	{
+		Subroutine;
+		UNO_Draw;
+    }
+
+    actions 
+	{	
+		"Uno Cards colors: 1=red, 2=green, 3=blue, 4=yellow, 0=black"
+		"Uno Color Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw"
+		"Uno Black Cards meaning: 0=choose, 1=draw"
+		Event Player.UNO_Helper[0] = Random Value In Array(Global.UNO_Random);
+		If(Event Player.UNO_Helper[0] == 0);
+			Event Player.UNO_Helper[1] = Random Integer(0, 1);
+		Else;
+			Event Player.UNO_Helper[1] = Random integer(0, 12);
+		End;
+		
+		If(Event Player.UNO_Helper[0] == 0);
+			If(Event Player.UNO_Helper[1] == 0);
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Ability Icon String(Hero(Sombra), Button(Ability 2)))), 
+					Null, Null, Left, 0, Color(Black), Color(White), Color(White), Sort Order and String, Visible Never);
+			Else;
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Plus))), Null, Null, Left, 0, Color(Black), Color(White), Color(White), Sort Order and String, Visible Never);
+			End;
+		Else;
+			If(Event Player.UNO_Helper[1] == 10);
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(No))), 
+					Null, Null, Left, 100, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
+			Else If(Event Player.UNO_Helper[1] == 11);
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Recycle))), 
+					Null, Null, Left, 200, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
+			Else If(Event Player.UNO_Helper[1] == 12);
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Plus))), 
+					Null, Null, Left, 300, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
+			Else;
+				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Event Player.UNO_Helper[1])), 
+					Null, Null, Left, 400, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
+			End;
+		End;
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Helper);
+
+    }
+}
+
 disabled rule("")
 {
 	event
@@ -6428,8 +6570,7 @@ rule("Extra_3 - Short_Hop")
 		Is Button Held(Event Player, Button(Ability 1)) == True;
 		Is Button Held(Event Player, Button(Crouch)) == True;
 		Is Alive(Event Player) == True;
-		Event Player.Mode_Cycle != 7;
-		Event Player.Mode_Cycle != 9;
+		Event Player.Mode_Cycle != 6;
 		Event Player.Mode_Cycle != 29;
 		Event Player.Mode_Cycle != 31;
 		Event Player.In_Battle_Mode == False;
