@@ -3032,7 +3032,14 @@ rule("Mode_04 - Battle-Mode_ON")
 					))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 			End;
 			Event Player.Mode_Description = Last Text ID;
-			Event Player.Camera = 5;
+			
+			Event Player.Camera = 0;
+			Event Player.Camera_Placed = False;
+			Event Player.Camera_Started = False;
+			Destroy Effect(Event Player.Camera_ID);
+			Destroy In-World Text(Event Player.Camera_Text);
+			Destroy Effect(Event Player.Camera_Dot);
+			
 			Event Player.In_Battle_Mode = True;
 			Event Player.Protection = False;
 		
@@ -3887,6 +3894,7 @@ rule("Mode_10 - Target_Carry_Control")
 			Wait(0.500, Ignore Condition);
 			Wait Until(Is Button Held(Event Player, Button(Primary Fire)) == True || Is Button Held(Event Player, Button(Secondary Fire))
 				== True, 99999);
+			Event Player.Signal = False;
 			Stop Forcing Player Position(Event Player.Target_Lock);
 			If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 				Apply Impulse(Event Player.Target_Lock, Direction Towards(Event Player, Event Player.Target_Lock), 70, To World,
