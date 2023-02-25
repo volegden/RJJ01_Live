@@ -3804,10 +3804,28 @@ rule("Mode_09 - Damage_Speed_KB_Gravity_Target")
 		"TODO: Check if broken after menu rework, do we set non-mod caps?"
 		Event Player.Signal = False;
 
-		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 		Event Player.Modification_Target_Check = Player Closest To Reticle(Event Player, All Teams);
 
-		If(Is Button Held(Event Player, Button(Primary Fire)));
+		If(Is Button Held(Event Player, Button(Primary Fire)) || Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload)));
+			If(Event Player.Modification_Target_Check.High_Rank || Event Player.Modification_Target_Check.Mod_Rank);
+				Small Message(Event Player, Custom String("  Cannot Modify Modded Players"));
+				Abort;
+			End;
+		End;
+		
+		If(Is Button Held(Event Player, Button(Ultimate)));
+			If(Event Player.Modification_Mode_Selector >=3);
+				Event Player.Modification_Mode_Selector = 0;
+			Else;
+				Event Player.Modification_Mode_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)));
+			If(Event Player.Modification_Scalar_Selector >=3);
+				Event Player.Modification_Scalar_Selector = 0;
+			Else;
+				Event Player.Modification_Scalar_Selector += 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] += Raise To Power(10, Event Player.Modification_Scalar_Selector);
 			If(Event Player.Modification_Target_Check.Player_Modification[0] > 10000);
 				Event Player.Modification_Target_Check.Player_Modification[0] = 10000;
@@ -3830,18 +3848,6 @@ rule("Mode_09 - Damage_Speed_KB_Gravity_Target")
 			If(Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] < 0);
 				Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] = 0;
 				Small Message(Event Player, Custom String("  {0} is at minimum! Can't go below 0...", Global.Modification_Mode_String[Event Player.Modification_Mode_Selector]));
-			End;
-		Else If(Is Button Held(Event Player, Button(Ultimate)));
-			If(Event Player.Modification_Mode_Selector >=3);
-				Event Player.Modification_Mode_Selector = 0;
-			Else;
-				Event Player.Modification_Mode_Selector += 1;
-			End;
-		Else If(Is Button Held(Event Player, Button(Ability 2)));
-			If(Event Player.Modification_Scalar_Selector >=3);
-				Event Player.Modification_Scalar_Selector = 0;
-			Else;
-				Event Player.Modification_Scalar_Selector += 1;
 			End;
 		Else If(Is Button Held(Event Player, Button(Reload)));
 			Event Player.Modification_Target_Check.Player_Modification[Event Player.Modification_Mode_Selector] = 100;
@@ -4307,6 +4313,7 @@ rule("Mode_15 - Painting_NEW")
 						Visible To);
 					Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
 					Wait(0.15, Ignore Condition);
+					Event Player.Signal = False;
 				End;
 				Abort;
 			Else If(Global.Drawing_Obj_Effects[Event Player.Drawing_Obj_Effects_Selector] == Custom String("Sparkles"));
