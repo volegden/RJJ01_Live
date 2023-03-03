@@ -261,6 +261,7 @@ variables
 		68: UNO_Info
 		69: Beams
 		70: Drawing_Obj_Storage_Beams
+		71: Skins_Check
 
 	player:
 		0: High_Rank
@@ -523,6 +524,8 @@ rule("Global_Settings")
 		Global.UNO_Looper = 0;
 		Global.UNO_Inworld = Array(False, Null, Null, Null);
 		Global.UNO_Info = Null;
+		Wait(5, Ignore Condition);
+		Global.Skins_Check = True;
 	}
 }
 
@@ -2438,12 +2441,38 @@ rule("Disable assembling heroes all modes")
 	conditions
 	{
 		Is Assembling Heroes == True;
+		Global.Skins_Check != True;
 	}
 
 	actions
 	{
 		"Disabling this feature to not wait 30s before match starts"
 		Set Match Time(0);
+	}
+}
+
+rule("Skin Swap Test - Enabled only in TDM for now")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player == Host Player;
+		Is Button Held(Event Player, Button(Jump)) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+	}
+
+	actions
+	{
+		Wait(10, Abort When False);
+		Big Message(Event Player, Custom String("Works only in TDM for now"));
+		Wait(5, Ignore Condition);
+		Go To Assemble Heroes;
 	}
 }
 
@@ -2457,6 +2486,7 @@ rule("Remaining Time: 10 Sec")
 	conditions
 	{
 		Match Time <= 10;
+		Is Assembling Heroes == False;
 	}
 
 	actions
