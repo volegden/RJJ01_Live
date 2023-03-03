@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\n Developers version.\nLastest code (27 Feb 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n    We now have UNO! x)\n* Press Crouch + Interact or Jump to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
+		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\n Developers version.\nLastest code (03 Mar 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n    We now have UNO! x)\n* Press Crouch + Interact or Jump to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
 		Mode Name: "<FGe96df3FF>Fri<FGe656f1FF>en<FGe23eefFF>dly (Now with UNO)<FGff003fFF>♥"
 	}
 
