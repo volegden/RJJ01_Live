@@ -844,7 +844,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
 			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), 
-				Custom String("Pocket Knight")), Custom String("Blue")),
+				Custom String("Pocket Knight")), Custom String("Fading"), Array(25,25,120), Array(25,25,255)),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -900,7 +900,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Xenolysith"), Array(Custom String("Stargazer"),
 				 Custom String("{0}  Rattenkönig  {1}", Icon String(Poison), Icon String(Radioactive))), Custom Color(241, 196, 15, 255)), 
 			Array(Custom String("Sexypudding"), Array(Custom String("Edgerunner")), Custom Color(248, 139, 231, 255)),
-			Array(Custom String("kwally"), Array(Custom String("tsuki"), Custom String("月"), Custom String("Луна"), Custom String("Luna")), Custom String("Blue")),
+			Array(Custom String("kwally"), Array(Custom String("tsuki"), Custom String("月"), Custom String("Луна"), Custom String("Luna")), 
+				Custom String("Fading"), Array(25,25,120), Array(25,25,255)),
 			Array(Custom String("Dead"), Array(Custom String("Supernova")), Color(Black)), 
 			Array(Custom String("Darling"), Array(Custom String("♥ Darl ♥")), Custom Color(175, 118, 250, 255)),
 			Array(Custom String("DerBomber"), Array(Custom String("Are you piece of cake?")), Custom Color(109, 0, 255, 255)), 
@@ -922,7 +923,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("ori6072"), Array(Custom String("♣ DEMON KING DIO ♣")), Color(Black)), 
 			Array(Custom String("FlowRow"), Array(Custom String("最大的鳥")), Custom Color(5, 228, 1, 255)), 
 			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("♥ Queen Of Moth ♥")), 
-				Custom String("Fading"), Array(251,195,216), Array(58,11,97), Array(154,103,156)), 
+				Custom String("Fading"), Array(251,195,216), Array(58,11,97)), 
 			Array(Custom String("valkaP"), Array(Custom String("♥ Cutty Ramji ♥")), Custom Color(0, 240, 252, 255)), 
 			Array(Custom String("Katsuki"), Array(Custom String("☆ ♪ Streetrunner ♪ ★")), Custom Color(99, 5, 156, 255)), 
 			Array(Custom String("OperativeLyn"), Array(Custom String("♥ WISHY WASHY's ♥")), Color(Rose)), 
@@ -944,7 +945,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
 			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
 				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading"),
-				Array(0,120,255), Array(152,120,255)),
+				Array(0,0,0), Array(255,255,255)),
 			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
 			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
@@ -966,8 +967,9 @@ rule ("Custom nameplates list")
 			Array(Custom String("kosmos"), Array(Custom String("{0} I'm so full from uranium yum {0}", Icon String(Radioactive)), 
 				Custom String("{0} I am in your walls {0}", Icon String(Radioactive))), Custom Color(80, 179, 149, 255)), 
 			Array(Custom String("LilHanzo"), Array(Custom String("Esskatter")), Color(Sky Blue)), 
-			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥"), Custom String("♥ Bebe Lil Pet ♥"), 
-				Custom String("{0}  The Sweetest Angel  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate)))), Custom Color(153, 0, 76, 255)), 
+			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥"), Custom String("♥ Bebe's Lil Pet ♥"), 
+				Custom String("{0}  The Sweetest Angel  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate)))), Custom String("Fading"),
+				Array(153, 0, 76), Array(63, 12, 94)), 
 			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Custom String("Fading"),
 				Array(152,120,255), Array(0,120,255)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
@@ -1029,7 +1031,7 @@ rule ("Subroutine: Give_Custom_Nameplate")
 	{	
 		Abort If (Event Player.In_Battle_Mode == True);
 		Disable Nameplates(Event Player, All Players(All Teams));
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
 			Destroy In-World Text(Event Player.Player_Nameplates);
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
 				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
