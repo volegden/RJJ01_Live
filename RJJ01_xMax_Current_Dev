@@ -217,51 +217,47 @@ variables
 		24: Anti_Crash
 		25: Map_Teleport_Locations
 		26: Drawing_Obj_Storage
-		27: Blue_Color_Sequence
-		28: Blue_Color
-		29: Players_Global_Array
-		30: Each_Player_Array
-		31: Titles_And_Outlines
-		32: Jail_List
-		33: Jail_Helper
-		34: Drawing_Obj_Size
-		35: Drawing_Obj_Effects
-		36: Modification_Mode_String
-		37: Modification_Target_String
-		38: Battle_Player_1
-		39: Battle_Player_2
-		40: Battle_Stats_Main
-		41: Battle_Stats_Save
-		42: Battle_Score
-		43: Battle_String
-		44: Battle_Random
-		45: Battle_Hero_1
-		46: Battle_Hero_2
-		47: Icons_Colors_List
-		48: Icons_List
-		49: Icons_List_For_Menu
-		50: Colors
-		51: Status_String
-		52: Jumppad_Storage
-		53: Jumppad_Animation
-		54: Jumppad_Radius
-		55: Kanezaka_Teleports
-		56: Fading_Color_Sequence
-		57: Fading_Color
-		58: Fading_Color_Reverse
-		59: UNO_Random
-		60: UNO_Colors
-		61: UNO_Players
-		62: UNO_Deck
-		63: UNO_Help
-		64: UNO_Started
-		65: UNO_Looper
-		66: UNO_Colorblind
-		67: UNO_Inworld
-		68: UNO_Info
-		69: Beams
-		70: Drawing_Obj_Storage_Beams
-		71: Skins_Check
+		27: Players_Global_Array
+		28: Each_Player_Array
+		29: Titles_And_Outlines
+		30: Jail_List
+		31: Jail_Helper
+		32: Drawing_Obj_Size
+		33: Drawing_Obj_Effects
+		34: Modification_Mode_String
+		35: Modification_Target_String
+		36: Battle_Player_1
+		37: Battle_Player_2
+		38: Battle_Stats_Main
+		39: Battle_Stats_Save
+		40: Battle_Score
+		41: Battle_String
+		42: Battle_Random
+		43: Battle_Hero_1
+		44: Battle_Hero_2
+		45: Icons_Colors_List
+		46: Icons_List
+		47: Icons_List_For_Menu
+		48: Colors
+		49: Status_String
+		50: Jumppad_Storage
+		51: Jumppad_Animation
+		52: Jumppad_Radius
+		53: Kanezaka_Teleports
+		54: UNO_Random
+		55: UNO_Colors
+		56: UNO_Players
+		57: UNO_Deck
+		58: UNO_Help
+		59: UNO_Started
+		60: UNO_Looper
+		61: UNO_Colorblind
+		62: UNO_Inworld
+		63: UNO_Info
+		64: Beams
+		65: Drawing_Obj_Storage_Beams
+		66: Skins_Check
+		67: Color_Chaser
 
 	player:
 		0: High_Rank
@@ -524,6 +520,10 @@ rule("Global_Settings")
 		Global.UNO_Looper = 0;
 		Global.UNO_Inworld = Array(False, Null, Null, Null);
 		Global.UNO_Info = Null;
+
+		Global.Color_Chaser = 0;
+		Chase Global Variable At Rate(Color_Chaser, 999999, 0.2, None);
+
 		Wait(5, Ignore Condition);
 		Global.Skins_Check = True;
 	}
@@ -772,56 +772,6 @@ rule("Dynamic_Color")
 	}
 }
 
-rule("Dynamic Blue Color")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		While(Global.Blue_Color_Sequence < 255);
-			Global.Blue_Color_Sequence += 1.500;
-			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		While(Global.Blue_Color_Sequence > 80);
-			Global.Blue_Color_Sequence -= 1.500;
-			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		Loop;
-	}
-}
-
-rule("Dynamic Fading Color")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		While(Global.Fading_Color_Sequence < 255);
-			Global.Fading_Color_Sequence += 2;
-			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
-			Global.Fading_Color_Reverse = Custom Color(Absolute Value(Global.Fading_Color_Sequence - 255), 
-				Absolute Value(Global.Fading_Color_Sequence - 255), Absolute Value(Global.Fading_Color_Sequence - 255), 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		While(Global.Fading_Color_Sequence > 0);
-			Global.Fading_Color_Sequence -= 2;
-			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
-			Global.Fading_Color_Reverse = Custom Color(Absolute Value(Global.Fading_Color_Sequence - 255), 
-				Absolute Value(Global.Fading_Color_Sequence - 255), Absolute Value(Global.Fading_Color_Sequence - 255), 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		Loop;
-	}
-}
-
 rule ("Custom Strings") 
 {
     event 
@@ -971,12 +921,14 @@ rule ("Custom nameplates list")
 			Array(Custom String("RUBY"), Array(Custom String("☆ RUBYX CUBE ☆")), Color(Lime Green)),
 			Array(Custom String("ori6072"), Array(Custom String("♣ DEMON KING DIO ♣")), Color(Black)), 
 			Array(Custom String("FlowRow"), Array(Custom String("最大的鳥")), Custom Color(5, 228, 1, 255)), 
-			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("♥ Queen Of Moth ♥")), Color(Red)), 
+			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("♥ Queen Of Moth ♥")), 
+				Custom String("Fading"), Array(251,195,216), Array(58,11,97), Array(154,103,156)), 
 			Array(Custom String("valkaP"), Array(Custom String("♥ Cutty Ramji ♥")), Custom Color(0, 240, 252, 255)), 
 			Array(Custom String("Katsuki"), Array(Custom String("☆ ♪ Streetrunner ♪ ★")), Custom Color(99, 5, 156, 255)), 
 			Array(Custom String("OperativeLyn"), Array(Custom String("♥ WISHY WASHY's ♥")), Color(Rose)), 
 			Array(Custom String("MOOOUSH"), Array(Custom String("{0}  4-inch King  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate))), 
-				Custom String("{0}  Ky's Hasbulla  {0}", Ability Icon String(Hero(Torbjörn), Button(Ultimate)))), Custom String("Fading_Rev")),
+				Custom String("{0}  Ky's Hasbulla  {0}", Ability Icon String(Hero(Torbjörn), Button(Ultimate)))), Custom String("Fading"),
+				Array(152,120,255), Array(0,120,255)),
 			Array(Custom String("Metalgy"), Array(Custom String("♥ Metalgy ♥")), Custom Color(245, 14, 10, 255)),
 			Array(Custom String("NNkGame"), Array(Custom String(" • SAD  •")), Custom Color(107, 186, 255, 255)),
 			Array(Custom String("Neo"), Array(Custom String("★ PET MASTER ★")), Color(Blue)), 
@@ -991,7 +943,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("Ghost"), Array(Custom String("sad ghost")), Color(Black)),
 			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
 			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
-				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading_Norm")),
+				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading"),
+				Array(0,120,255), Array(152,120,255)),
 			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
 			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
@@ -1015,7 +968,8 @@ rule ("Custom nameplates list")
 			Array(Custom String("LilHanzo"), Array(Custom String("Esskatter")), Color(Sky Blue)), 
 			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥"), Custom String("♥ Bebe Lil Pet ♥"), 
 				Custom String("{0}  The Sweetest Angel  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate)))), Custom Color(153, 0, 76, 255)), 
-			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Custom String("Fading_Rev")),
+			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Custom String("Fading"),
+				Array(152,120,255), Array(0,120,255)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
 			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
 			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red)),
@@ -1047,8 +1001,14 @@ rule ("Search for players in custom nameplates list and call subroutines")
         For Global Variable(Players_Global_Array, 0, Count Of(Global.Titles_And_Outlines), 1);
 			For Global Variable(Each_Player_Array, 0, 3, 1);
 				If(Custom String("{0}", Event Player) == Global.Titles_And_Outlines[Global.Players_Global_Array][0]); 
-					Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
-						Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2]);
+					If(Global.Titles_And_Outlines[Global.Players_Global_Array][2] == Custom String("Fading"));
+						Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
+							Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2],
+							Global.Titles_And_Outlines[Global.Players_Global_Array][3], Global.Titles_And_Outlines[Global.Players_Global_Array][4]);
+					Else;
+						Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
+							Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2]);
+					End;
 					Start Rule(Give_Custom_Nameplate, Do Nothing);
 					Start Rule(Give_Custom_Outline, Do Nothing);
 				End;
@@ -1074,21 +1034,19 @@ rule ("Subroutine: Give_Custom_Nameplate")
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
 				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
 				Global.Rainbow_Color, Default Visibility);
-		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
+		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
 			Destroy In-World Text(Event Player.Player_Nameplates);
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
 				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Blue_Color, Default Visibility);
-		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading_Norm"));
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Fading_Color, Default Visibility);
-		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading_Rev"));
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Fading_Color_Reverse, Default Visibility);
+				Custom Color(
+					Round To Integer((Event Player.Player_Title_And_Outline[3][0] + Event Player.Player_Title_And_Outline[4][0])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][0] - Event Player.Player_Title_And_Outline[4][0])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][1] + Event Player.Player_Title_And_Outline[4][1])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][1] - Event Player.Player_Title_And_Outline[4][1])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][2] + Event Player.Player_Title_And_Outline[4][2])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][2] - Event Player.Player_Title_And_Outline[4][2])/2), Down), 
+					255), 
+				Default Visibility);
 		Else;
 			Destroy In-World Text(Event Player.Player_Nameplates);
 			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
@@ -1118,18 +1076,16 @@ rule ("Subroutine: Give_Custom_Outline")
 			Wait(0.036, Ignore Condition);
 			Loop;
 		End;
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading_Norm"));
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Fading_Color, Always);
-			Wait(0.036, Ignore Condition);
-			Loop;
-		End;
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading_Rev"));
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Fading_Color_Reverse, Always);
-			Wait(0.036, Ignore Condition);
-			Loop;
-		End;
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Blue_Color, Always);
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, 
+				Custom Color(
+					Round To Integer((Event Player.Player_Title_And_Outline[3][0] + Event Player.Player_Title_And_Outline[4][0])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][0] - Event Player.Player_Title_And_Outline[4][0])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][1] + Event Player.Player_Title_And_Outline[4][1])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][1] - Event Player.Player_Title_And_Outline[4][1])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][2] + Event Player.Player_Title_And_Outline[4][2])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][2] - Event Player.Player_Title_And_Outline[4][2])/2), Down), 
+					255), Always);
 			Wait(0.036, Ignore Condition);
 			Loop;
 		Else;
