@@ -2,8 +2,8 @@ settings
 {
 	main
 	{
-		Description: "<FGFF00FFFF>Friendly server ♥<FGFFFFFFFF>\nDevelopers version.\nLastest code (22 Feb 2023)\r: <FG00FF00FF>TXNZ7<FGFFFFFFFF>\n\n* Press Crouch + Interact or Jump to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
-		Mode Name: "<FGe96df3FF>Fri<FGe656f1FF>en<FGe23eefFF>dly <FGff003fFF>♥"
+		Description: "Friendly server ♥\nDevelopers version.\nLastest code (11 Mar 2023)\r: TXNZ7\n\n    We now have UNO!\n* New functions in menu!\n* Press Crouch + Interact or Jump to scroll menu\n* Hold 'R' (reload) to enable/disable protection\n* Hold 'V' (melee) to change hero\n* Hold 'F' (interact) to switch camera\n\nCoded by: Warloy, xMaxuss, TbyCoLive.\n"
+		Mode Name: "Friendly (Now with UNO) ♥"
 	}
 
 	lobby
@@ -39,6 +39,7 @@ settings
 
 		Team Deathmatch
 		{
+			Game Mode Start: Immediately
 			Self Initiated Respawn: Off
 
 			enabled maps
@@ -52,9 +53,28 @@ settings
 			}
 		}		
 
+		Capture The Flag
+		{
+			Game Mode Start: Manual
+
+			enabled maps
+			{
+				Ayutthaya 0
+			}
+		}
+
+		Hybrid
+		{
+			Game Mode Start: Manual
+
+			enabled maps
+			{
+				Midtown 0
+			}
+		}		
+
 		General
 		{
-			Game Mode Start: Immediately
 			Health Pack Respawn Time Scalar: 50%
 			Hero Limit: Off
 			Kill Cam: Off
@@ -217,42 +237,47 @@ variables
 		24: Anti_Crash
 		25: Map_Teleport_Locations
 		26: Drawing_Obj_Storage
-		27: Blue_Color_Sequence
-		28: Blue_Color
-		29: Players_Global_Array
-		30: Each_Player_Array
-		31: Titles_And_Outlines
-		32: Jail_List
-		33: Jail_Helper
-		34: Drawing_Obj_Size
-		35: Drawing_Obj_Effects
-		36: Modification_Mode_String
-		37: Modification_Target_String
-		38: Battle_Player_1
-		39: Battle_Player_2
-		40: Battle_Stats_Main
-		41: Battle_Stats_Save
-		42: Battle_Score
-		43: Battle_String
-		44: Battle_Random
-		45: Battle_Hero_1
-		46: Battle_Hero_2
-		47: Icons_Colors_List
-		48: Icons_List
-		49: Icons_List_For_Menu
-		50: Colors
-		51: Status_String
-		52: Jumppad_Storage
-		53: Jumppad_Animation
-		54: Jumppad_Radius
-		55: Kanezaka_Teleports
-		56: Fading_Color_Sequence
-		57: Fading_Color
-		58: UNO_Random
-		59: UNO_Colors
-		60: UNO_Players
-		61: Beams
-		62: Drawing_Obj_Storage_Beams
+		27: Players_Global_Array
+		28: Each_Player_Array
+		29: Titles_And_Outlines
+		30: Jail_List
+		31: Jail_Helper
+		32: Drawing_Obj_Size
+		33: Drawing_Obj_Effects
+		34: Modification_Mode_String
+		35: Modification_Target_String
+		36: Battle_Player_1
+		37: Battle_Player_2
+		38: Battle_Stats_Main
+		39: Battle_Stats_Save
+		40: Battle_Score
+		41: Battle_String
+		42: Battle_Random
+		43: Battle_Hero_1
+		44: Battle_Hero_2
+		45: Icons_Colors_List
+		46: Icons_List
+		47: Icons_List_For_Menu
+		48: Colors
+		49: Status_String
+		50: Jumppad_Storage
+		51: Jumppad_Animation
+		52: Jumppad_Radius
+		53: Kanezaka_Teleports
+		54: UNO_Random
+		55: UNO_Colors
+		56: UNO_Players
+		57: UNO_Deck
+		58: UNO_Help
+		59: UNO_Started
+		60: UNO_Looper
+		61: UNO_Colorblind
+		62: UNO_Inworld
+		63: UNO_Info
+		64: Beams
+		65: Drawing_Obj_Storage_Beams
+		66: Skins_Check
+		67: Color_Chaser
 
 	player:
 		0: High_Rank
@@ -314,42 +339,50 @@ variables
 		56: Is_Menu_Active
 		57: Non_Moderator_Menu
 		58: Non_Moderator_Menu_Description
-		59: Laser_ID
-		60: Laser_Selector
-		61: Status_Selector
-		62: Jumppad_Helper
-		63: Jumppad_Entry
-		64: Jumppad_Loop
-		65: Jumppad_Color_In_Selector
-		66: Jumppad_Color_Out_Selector
-		67: Jumppad_Radius_Selector
-		68: Jumppad_Strength_Selector
-		69: Jumppad_Preview
-		70: Camera_ID
-		71: Camera_Position
-		72: Camera_Started
-		73: Camera_Placed
-		74: Camera_Smooth
-		75: Camera_Player
-		76: Camera_Text
-		77: Camera_Dot
-		78: Camera_Helper
-		79: Camera_Loop
-		80: Camera_LOS
-		81: Camera_Default
-		82: Camera_Target
-		83: Cinematic_Storage
-		84: Cinematic_Helper
-		85: Signal
-		86: Mode_Cycle_Default
-		87: Spam_Cooldown
-		88: UNO_Hand
-		89: UNO_Helper
-		90: UNO_Ingame
-		91: UNO_Is_Turn
-		92: Positions_For_Beams
-		93: Spheres_For_Beams
-		94: Beams_Selector
+		59: Status_Selector
+		60: Jumppad_Helper
+		61: Jumppad_Entry
+		62: Jumppad_Loop
+		63: Jumppad_Color_In_Selector
+		64: Jumppad_Color_Out_Selector
+		65: Jumppad_Radius_Selector
+		66: Jumppad_Strength_Selector
+		67: Jumppad_Preview
+		68: Camera_ID
+		69: Camera_Position
+		70: Camera_Started
+		71: Camera_Placed
+		72: Camera_Smooth
+		73: Camera_Player
+		74: Camera_Text
+		75: Camera_Dot
+		76: Camera_Helper
+		77: Camera_Loop
+		78: Camera_LOS
+		79: Camera_Default
+		80: Camera_Target
+		81: Cinematic_Storage
+		82: Cinematic_Helper
+		83: Signal
+		84: Mode_Cycle_Default
+		85: Spam_Cooldown
+		86: UNO_Hand
+		87: UNO_Helper
+		88: UNO_Ingame
+		89: UNO_Is_Turn
+		90: UNO_Loop
+		91: UNO_Arrow_Pos
+		92: UNO_Draw_Cards
+		93: UNO_Has_Drawn
+		94: UNO_Restore
+		95: UNO_Black_Logic
+		96: UNO_Black_Text
+		97: UNO_Black_Selector
+		98: UNO_Sorter
+		99: Positions_For_Beams
+		100: Spheres_For_Beams
+		101: Beams_Selector
+		102: Each_Title
 }
 
 subroutines
@@ -365,6 +398,10 @@ subroutines
 	8: Give_Custom_Outline
 	9: Jail_Leaver
 	10: UNO_Draw
+	11: UNO_Update_Deck
+	12: UNO_Update_Hand
+	13: UNO_Turn
+	14: UNO_End
 }
 
 rule("Anti-Crash-ON")
@@ -496,6 +533,20 @@ rule("Global_Settings")
 		Global.Jumppad_Storage = Empty Array;
 		Global.Jumppad_Animation = 0;
 		Chase Global Variable At Rate(Jumppad_Animation, 999999, 0.8, None);
+
+		Global.UNO_Players = Empty Array;
+		Global.UNO_Deck = Array(Null, Null, Null, Null);
+		Global.UNO_Help = Null;
+		Global.UNO_Started = False;
+		Global.UNO_Looper = 0;
+		Global.UNO_Inworld = Array(False, Null, Null, Null);
+		Global.UNO_Info = Null;
+
+		Global.Color_Chaser = 0;
+		Chase Global Variable At Rate(Color_Chaser, 999999, 0.2, None);
+
+		Wait(5, Ignore Condition);
+		Global.Skins_Check = True;
 	}
 }
 
@@ -590,10 +641,6 @@ rule("Default_Player_Settings")
 		Event Player.Icon_ID = Empty Array;
 		Event Player.Icons_Selector = 0;
 		Event Player.Icons_Colors_Selector = 0;
-
-		Event Player.Laser_Selector = 9;
-		Event Player.Laser_ID = Null;
-
 		Event Player.Status_Selector = 0;
 
 		Event Player.Jumppad_Helper = 0;
@@ -627,7 +674,23 @@ rule("Default_Player_Settings")
 		Chase Player Variable Over Time(Event Player, Spam_Cooldown, 0, 3, None);
 
 		Event Player.UNO_Hand = Empty Array;
-		Event Player.UNO_Helper = Array(Null, Null);
+		Event Player.UNO_Helper = Array(Null, Null, Null, Null);
+		Event Player.UNO_Ingame = False;
+		Event Player.UNO_Is_Turn = False;
+		Event Player.UNO_Loop = 0;
+		Event Player.UNO_Arrow_Pos = 0;
+		Event Player.UNO_Draw_Cards = 0;
+		Event Player.UNO_Has_Drawn = False;
+		Event Player.UNO_Restore = False;
+		Event Player.UNO_Black_Logic = False;
+		Event Player.UNO_Black_Text = Null;
+		Event Player.UNO_Black_Selector = 1;
+		Event Player.UNO_Sorter = Array(Null, Null, Null, Null, Null);
+
+		"CtF"
+		If(Current Game Mode == Game Mode(Capture The Flag));
+			Disable Game Mode HUD(Event Player);
+		End;
 
 		"Is menu Active"
 		Event Player.Is_Menu_Active = True;
@@ -735,52 +798,6 @@ rule("Dynamic_Color")
 	}
 }
 
-rule("Dynamic Blue Color")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		While(Global.Blue_Color_Sequence < 255);
-			Global.Blue_Color_Sequence += 1.500;
-			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		While(Global.Blue_Color_Sequence > 80);
-			Global.Blue_Color_Sequence -= 1.500;
-			Global.Blue_Color = Custom Color(0, 0, Global.Blue_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		Loop;
-	}
-}
-
-rule("Dynamic Fading Color")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	actions
-	{
-		While(Global.Fading_Color_Sequence < 255);
-			Global.Fading_Color_Sequence += 2;
-			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		While(Global.Fading_Color_Sequence > 0);
-			Global.Fading_Color_Sequence -= 2;
-			Global.Fading_Color = Custom Color(Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, Global.Fading_Color_Sequence, 255);
-			Wait(0.100, Ignore Condition);
-		End;
-		Loop;
-	}
-}
-
 rule ("Custom Strings") 
 {
     event 
@@ -817,12 +834,13 @@ rule ("Custom Strings")
 		Global.Kanezaka_Teleports = Array(Vector(-17.86, 10.50, 17.91), Vector(-1.06, 9.00, -46.18), Vector(-44.15, 11.00, -12.76), Vector(-28.72, 4.00, 41.27));
 
 		Global.Beams = Array(Custom String("Good Beam"), Custom String("Bad Beam"), Custom String("Grapple Beam"));
-
+		
 		"Uno Cards colors: 0=black, 1=red, 2=green, 3=blue, 4=yellow"
-		"Uno Color Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw"
-		"Uno Black Cards meaning: 0=choose, 1=draw"
+		"Uno Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw2, 13=pick, 14=draw4"
+		"TODO: Readd black color!"
 		Global.UNO_Random = Array(0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4);
 		Global.UNO_Colors = Array(Color(Black), Color(Red), Color(Green), Color(Blue), Color(Yellow));
+		Global.UNO_Colorblind = Array(Custom String("D"), Custom String("R"), Custom String("G"), Custom String("B"), Custom String("Y"));
 	}
 
 }
@@ -837,8 +855,8 @@ rule ("Custom nameplates list")
     actions 
 	{
 		Global.Titles_And_Outlines = Array(
-			Array(Custom String("LƐafa"), Array(Custom String("☆ Leafa me alone ☆")), Custom Color(201, 161, 251, 255)),
-			Array(Custom String("ORCHȊD"), Array(Custom String("• SERVER MOM •")), Color(Black)),
+			Array(Custom String("LƐafa"), Array(Custom String("☆ Leafa me alone ☆")), Custom Color(255, 192, 203, 255)),
+			Array(Custom String("ORCHȊD"), Array(Custom String("DAD")), Color(Black)),
 			Array(Custom String("TbyCoLive"), Array(Custom String("♣ ★ D.vastation ★ ♣")), Custom String("Rainbow")),
 			Array(Custom String("Ƙenzai"), Array(Custom String("♠ ★ Ƙenzai ★ ♠")), Custom String("Rainbow")),
 			Array(Custom String("Gregi"), Array(Custom String("♥ ★ Baby D.va ★ ♥")), Custom String("Rainbow")), 
@@ -851,8 +869,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("JJelly"), Array(Custom String("Putin")), Custom String("Rainbow")), 
 			Array(Custom String("solevaya"), Array(Custom String("sole")), Custom String("Rainbow")), 
 			Array(Custom String("Mars"), Array(Custom String("♥ Goddess Of Mercy ♥")), Color(Rose)),
-			Array(Custom String("Warloy"), Array(Custom String("Coup De Grâce"), 
-				Custom String("Pocket Knight")), Custom String("Blue")),
+			Array(Custom String("Warloy"), Array(Custom String("Notakichiōnā"), Custom String("Coup de grâce")), Custom String("Fading"), Array(46,107,107), Array(0,153,153)),
 			Array(Custom String("ŜǓƘǓŊǍ"), Array(Custom String("{0} ŜǓƘǓŊǍ {0}", Icon String(Heart))), Custom String("Rainbow")),
 			Array(Custom String("Ciri"), Array(Custom String("Umbra Witch")), Custom String("Rainbow")), 
 			Array(Custom String("Hoxy"), Array(Custom String("{0}  Kiriko-Chan  {0}",
@@ -882,8 +899,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("DrMonti"), Array(Custom String("★♪★BANDANA★♪★")), Color(White)), 
 			Array(Custom String("Catgirl"), Array(Custom String("★ Femboi Gayming ★")), Custom Color(242, 135, 190, 255)),
 			Array(Custom String("Eŧhereal"), Array(Custom String("♥ E T H E R ♥")), Custom Color(254, 202, 203, 255)), 
-			Array(Custom String("Boney"), Array(Custom String("{0} BonBon {0}",
-				Ability Icon String(Hero(Kiriko), Button(Ultimate)))), Color(Green)),
+			Array(Custom String("Boney"), Array(Custom String("Boney")), Color(Green)),
 			Array(Custom String("AsyCorn"), Array(Custom String("AsyCorn")), Custom Color(200, 134, 238, 255)),
 			Array(Custom String("Mustika"), Array(Custom String("♣ M u s t i k a ♣")), Custom Color(18, 12, 219, 255)),
 			Array(Custom String("ElDiablo"), Array(Custom String("† DIABLO †")), Color(Red)),
@@ -898,7 +914,7 @@ rule ("Custom nameplates list")
 			Array(Custom String("AliceRowe"), Array(Custom String("{0} Umi {0}",
 				Ability Icon String(Hero(Kiriko), Button(Ultimate)))), Custom Color(74, 255, 249, 255)),
 			Array(Custom String("Shiun"), Array(Custom String("♥ ~ Her Moon ~ ♥")), Custom Color(255, 108, 125, 255)),
-			Array(Custom String("Tari"), Array(Custom String("Tari ùwú")), Custom String("Rainbow")),
+			Array(Custom String("Tari"), Array(Custom String("Tari ùwú"), Custom String("{0} tari님 {0}", Ability Icon String(Hero(Kiriko), Button(Ability 2))), Custom String("★ 여우 ★")), Custom String("Rainbow")),
 			Array(Custom String("Katt"), Array(Custom String("Enemy Spy")), Color(Sky Blue)),
 			Array(Custom String("Kaïd"), Array(Custom String("Whole Hog")), Color(Red)),
 			Array(Custom String("jigzax"), Array(Custom String("♥ Zax ♥")), Custom Color(255, 192, 203, 255)), 
@@ -909,11 +925,24 @@ rule ("Custom nameplates list")
 			Array(Custom String("Xenolysith"), Array(Custom String("Stargazer"),
 				 Custom String("{0}  Rattenkönig  {1}", Icon String(Poison), Icon String(Radioactive))), Custom Color(241, 196, 15, 255)), 
 			Array(Custom String("Sexypudding"), Array(Custom String("Edgerunner")), Custom Color(248, 139, 231, 255)),
-			Array(Custom String("kwally"), Array(Custom String("tsuki"), Custom String("月"), Custom String("Луна"), Custom String("Luna")), Custom String("Blue")),
+			Array(Custom String("kwally"), Array(
+				Custom String("Ｋｗａｌｌｙ"),
+				Custom String("Сакура"), 
+				Custom String("桜の花"), 
+				Custom String("notakichi"), 
+				Custom String("不機嫌な"),
+				Custom String("poumpy"),
+				Custom String("malevolum cattus"),
+				Custom String("Тюльпановая Леди"),
+				Custom String("bittersweet symphony"),
+				Custom String("Дракон"),
+				Custom String("Unbelievable")
+				), 
+				Custom String("Fading"), Array(210,0,100), Array(255,153,202)),
 			Array(Custom String("Dead"), Array(Custom String("Supernova")), Color(Black)), 
 			Array(Custom String("Darling"), Array(Custom String("♥ Darl ♥")), Custom Color(175, 118, 250, 255)),
 			Array(Custom String("DerBomber"), Array(Custom String("Are you piece of cake?")), Custom Color(109, 0, 255, 255)), 
-			Array(Custom String("PapaRomeo"), Array(Custom String("• PAPA •")), Color(White)), 
+			Array(Custom String("PapaRomeo"), Array(Custom String("DAD")), Color(White)), 
 			Array(Custom String("KAMƐROŊ"), Array(Custom String("★★ KAM THE DJ ★★")), Custom String("Rainbow")), 
 			Array(Custom String("Nightfire"), Array(Custom String("• UNCLE •")), Color(Orange)),
 			Array(Custom String("JeyJey79"), Array(Custom String("♥ Jey Jey ♥")), Custom Color(235, 109, 255, 255)), 
@@ -930,31 +959,35 @@ rule ("Custom nameplates list")
 			Array(Custom String("RUBY"), Array(Custom String("☆ RUBYX CUBE ☆")), Color(Lime Green)),
 			Array(Custom String("ori6072"), Array(Custom String("♣ DEMON KING DIO ♣")), Color(Black)), 
 			Array(Custom String("FlowRow"), Array(Custom String("最大的鳥")), Custom Color(5, 228, 1, 255)), 
-			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("Queen Of Moth")), Color(Red)), 
+			Array(Custom String("BebeUwU"), Array(Custom String("♥ Bebe ♥"), Custom String("♥ Queen Of Moth ♥")), 
+				Custom String("Fading"), Array(251,195,216), Array(58,11,97)), 
 			Array(Custom String("valkaP"), Array(Custom String("♥ Cutty Ramji ♥")), Custom Color(0, 240, 252, 255)), 
 			Array(Custom String("Katsuki"), Array(Custom String("☆ ♪ Streetrunner ♪ ★")), Custom Color(99, 5, 156, 255)), 
 			Array(Custom String("OperativeLyn"), Array(Custom String("♥ WISHY WASHY's ♥")), Color(Rose)), 
-			Array(Custom String("MOOOUSH"), Array(Custom String(" † 4-inch King  †"), 
-				Custom String("{0}  Ky's Hasbulla  {0}", Ability Icon String(Hero(Torbjörn), Button(Ultimate)))), Color(White)),
+			Array(Custom String("MOOOUSH"), Array(
+				Custom String("{0}  4-inch King  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate))), 
+				Custom String("{0}  Ky's Hasbulla  {0}", Ability Icon String(Hero(Torbjörn), Button(Ultimate)))), 
+				Custom String("Fading"), Array(152,120,255), Array(0,120,255)),
 			Array(Custom String("Metalgy"), Array(Custom String("♥ Metalgy ♥")), Custom Color(245, 14, 10, 255)),
 			Array(Custom String("NNkGame"), Array(Custom String(" • SAD  •")), Custom Color(107, 186, 255, 255)),
 			Array(Custom String("Neo"), Array(Custom String("★ PET MASTER ★")), Color(Blue)), 
-			Array(Custom String("Hecatia"), Array(Custom String("★ Friendly DJ Reindeer ★")), Custom String("Rainbow")), 
+			Array(Custom String("Lunar"), Array(Custom String("★ Friendly DJ Reindeer ★")), Custom String("Rainbow")), 
 			Array(Custom String("Mikasa"), Array(Custom String("♥ Mikasa ♥")), Custom Color(86, 0, 99, 255)), 
 			Array(Custom String("BananaMercy"), Array(Custom String("Banana Karlik"), Custom String("the man behind the slaughter")), Custom Color(255, 255, 0, 255)), 
-			Array(Custom String("Leestick"), Array(Custom String("LeafLover")), Color(Green)), 
+			Array(Custom String("Leestick"), Array(Custom String("LeafLover")), Custom Color(128, 0, 128, 255)), 
 			Array(Custom String("Nutzee"), Array(Custom String("☆ DEEZ NUTZ ☆")), Color(Blue)), 
-			Array(Custom String("ThatAspect"), Array(Custom String("† ASPECT †")), Color(Purple)), 
+			Array(Custom String("ThatAspect"), Array(Custom String("† ASPECT †")), Color(Black)), 
 			Array(Custom String("DONUT"), Array(Custom String("ALPHA DONUT")), Color(Red)), 
 			Array(Custom String("xMaxuss"), Array(Custom String("{0}  TO THE MAX  {0}", Ability Icon String(Hero(Sombra), Button(Ultimate)))), Color(Sky Blue)), 
 			Array(Custom String("Ghost"), Array(Custom String("sad ghost")), Color(Black)),
 			Array(Custom String("BlueSky"), Array(Custom String("{0}  Skies of Blue  {0}", Ability Icon String(Hero(Mercy), Button(Ability 1)))), Color(Sky Blue)),
 			Array(Custom String("Kysp"), Array(Custom String("Brokan Heardt"),
-				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading")),
+				Custom String("{0}  Moush's Soldier Boy  {0}", Ability Icon String(Hero(Soldier: 76), Button(Ultimate))), Custom String("k")), Custom String("Fading"),
+				Array(0,0,0), Array(255,255,255)),
 			Array(Custom String("AndrewKnoll"), Array(Custom String("⁂ COOKIE ANDREW ⁂")), Custom Color(250, 182, 220, 255)),
 			Array(Custom String("Silvaris"), Array(Custom String("Silvaris")), Custom Color(39, 174, 96, 255)),
 			Array(Custom String("Security!"), Array(Custom String("SCHIZOPHRENIC!")), Color(Black)),
-			Array(Custom String("fa89"), Array(Custom String("{0}  fa89  {1}", Ability Icon String(Hero(Zenyatta), Button(Ability 1)),
+			Array(Custom String("fa89"), Array(Custom String("{0}  Zenyatta Gaming  {1}", Ability Icon String(Hero(Zenyatta), Button(Ability 1)),
 				Ability Icon String(Hero(Zenyatta), Button(Ability 2)))), Color(Red)),
 			Array(Custom String("MÎÜ"), Array(Custom String("♥ Eggroll ♥")), Color(Violet)),
 			Array(Custom String("Eggman"), Array(Custom String("The only orthodox")), Color(Yellow)),
@@ -967,21 +1000,30 @@ rule ("Custom nameplates list")
 			Array(Custom String("BluTyde"), Array(Custom String("Radiance")), Color(Turquoise)),
 			Array(Custom String("Ezio"), Array(Custom String("eclipse")), Custom Color(39, 70, 155, 255)),
 			Array(Custom String("Blueberry"), Array(Custom String("♥blueberry♥")), Color(Sky Blue)),
-			Array(Custom String("Toguro"), Array(Custom String("Six tirs, un mort")), Color(Red)),
+			Array(Custom String("Toguro"), Array(
+				Custom String("six tirs, un mort"),
+				Custom String("Doomslayer"),
+				Custom String("Tarnished"),
+				Custom String("Unkindled"),
+				Custom String("Metalhead")
+				), Custom String("Fading"), Array(178,34,34), Array(255,69,0)),
 			Array(Custom String("Sithrael"), Array(Custom String("Sleepy Mercy")), Color(Blue)),
 			Array(Custom String("kosmos"), Array(Custom String("{0} I'm so full from uranium yum {0}", Icon String(Radioactive)), 
 				Custom String("{0} I am in your walls {0}", Icon String(Radioactive))), Custom Color(80, 179, 149, 255)), 
 			Array(Custom String("LilHanzo"), Array(Custom String("Esskatter")), Color(Sky Blue)), 
-			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥")), Color(Purple)), 
-			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Color(White)),
+			Array(Custom String("LilDanny"), Array(Custom String("Tonowari")), Color(Yellow)), 			
+			Array(Custom String("Heather"), Array(Custom String("♥ Heather ♥"), Custom String("♥ Bebe's Lil Pet ♥"), 
+				Custom String("{0}  The Sweetest Angel  {0}", Ability Icon String(Hero(Mercy), Button(Ultimate)))), Custom String("Fading"),
+				Array(153, 0, 76), Array(63, 12, 94)), 
+			Array(Custom String("Widowmaker"), Array(Custom String("MOOOUSH's Ex")), Custom String("Fading"),
+				Array(152,120,255), Array(0,120,255)),
 			Array(Custom String("squid"), Array(Custom String("Squidward")), Custom Color(37, 103, 148, 255)),
 			Array(Custom String("rin"), Array(Custom String("{0} sleepy rin", Ability Icon String(Hero(Ana), Button(Ability 1)))), Color(Blue)),
 			Array(Custom String("commander"), Array(Custom String("{0} speed demon {0}", Ability Icon String(Hero(Lúcio), Button(Ultimate)))), Color(Red)),
-			Array(Custom String("To0lsPandaro"), Array(Custom String("{0} Zeus {0}", Icon String(Bolt)), 
-			Array(Custom String("Ikawu"), Array(Custom String("♥ smoll kitten ♥")), Color(Rose)),
-				Custom String("† Tokyow †"), Custom String("{0}  Wanted  {0}", Icon String(Skull)), 
-				Custom String("{0}  The Devil  {0}", Ability Icon String(Hero(Genji), Button(Ultimate))),
-				Custom String("{0}  The Death  {0}", Ability Icon String(Hero(Reaper), Button(Ultimate)))), Color(Blue))
+            Array(Custom String("Ikawu"), Array(Custom String("♥ smoll kitten ♥")), Color(Rose)), 
+			Array(Custom String("Atlas"), Array(Custom String("Kit"), Custom String("Drawing Enthusiast"), Custom String("Foxlore")), Custom Color(220, 20, 60, 255)), 
+			Array(Custom String("Beastman"), Array(Custom String("Starguardian"), Custom String("TariBigFan"), Custom String("Tari's dummy")), Custom Color(255, 192, 203, 255)), 
+			Array(Custom String("FactAttend"), Array(Custom String("☆ Avenged 7Fact ☆"), Custom String("♤ Unholy Confessions ♤")), Custom Color(96, 10, 113, 255))
 		);
 	}
 }
@@ -1006,8 +1048,14 @@ rule ("Search for players in custom nameplates list and call subroutines")
         For Global Variable(Players_Global_Array, 0, Count Of(Global.Titles_And_Outlines), 1);
 			For Global Variable(Each_Player_Array, 0, 3, 1);
 				If(Custom String("{0}", Event Player) == Global.Titles_And_Outlines[Global.Players_Global_Array][0]); 
-					Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
-						Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2]);
+					If(Global.Titles_And_Outlines[Global.Players_Global_Array][2] == Custom String("Fading"));
+						Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
+							Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2],
+							Global.Titles_And_Outlines[Global.Players_Global_Array][3], Global.Titles_And_Outlines[Global.Players_Global_Array][4]);
+					Else;
+						Event Player.Player_Title_And_Outline = Array(Global.Titles_And_Outlines[Global.Players_Global_Array][0], 
+							Global.Titles_And_Outlines[Global.Players_Global_Array][1], Global.Titles_And_Outlines[Global.Players_Global_Array][2]);
+					End;
 					Start Rule(Give_Custom_Nameplate, Do Nothing);
 					Start Rule(Give_Custom_Outline, Do Nothing);
 				End;
@@ -1028,29 +1076,42 @@ rule ("Subroutine: Give_Custom_Nameplate")
 	{	
 		Abort If (Event Player.In_Battle_Mode == True);
 		Disable Nameplates(Event Player, All Players(All Teams));
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow") );
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Rainbow_Color, Default Visibility);
-		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Blue_Color, Default Visibility);
+		If(Event Player.Player_Title_And_Outline[2] == Custom String("Rainbow"));
+            For Player Variable(Event Player, Each_Title, 0, Count Of(Event Player.Player_Title_And_Outline[1]), 1);
+			    Destroy In-World Text(Event Player.Player_Nameplates);
+			    Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				    Event Player.Player_Title_And_Outline[1][Event Player.Each_Title], Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				    Global.Rainbow_Color, Default Visibility);
+		        Event Player.Player_Nameplates = Last Text Id;
+                Wait(30, Abort When False);
+            End;
 		Else If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Global.Fading_Color, Default Visibility);
+            For Player Variable(Event Player, Each_Title, 0, Count Of(Event Player.Player_Title_And_Outline[1]), 1);
+		    	Destroy In-World Text(Event Player.Player_Nameplates);
+			    Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				    Event Player.Player_Title_And_Outline[1][Event Player.Each_Title], Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				    Custom Color(
+					    Round To Integer((Event Player.Player_Title_And_Outline[3][0] + Event Player.Player_Title_And_Outline[4][0])/2 + Sine From Radians(Global.Color_Chaser) * 
+						    ((Event Player.Player_Title_And_Outline[3][0] - Event Player.Player_Title_And_Outline[4][0])/2), Down),
+		    			Round To Integer((Event Player.Player_Title_And_Outline[3][1] + Event Player.Player_Title_And_Outline[4][1])/2 + Sine From Radians(Global.Color_Chaser) * 
+			    			((Event Player.Player_Title_And_Outline[3][1] - Event Player.Player_Title_And_Outline[4][1])/2), Down),
+		    			Round To Integer((Event Player.Player_Title_And_Outline[3][2] + Event Player.Player_Title_And_Outline[4][2])/2 + Sine From Radians(Global.Color_Chaser) * 
+			    			((Event Player.Player_Title_And_Outline[3][2] - Event Player.Player_Title_And_Outline[4][2])/2), Down), 
+				    	255), 
+		    		Default Visibility);
+		        Event Player.Player_Nameplates = Last Text Id;
+                Wait(30, Abort When False);
+            End;
 		Else;
-			Destroy In-World Text(Event Player.Player_Nameplates);
-			Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
-				Random Value In Array(Event Player.Player_Title_And_Outline[1]), Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
-				Event Player.Player_Title_And_Outline[2], Default Visibility);
+            For Player Variable(Event Player, Each_Title, 0, Count Of(Event Player.Player_Title_And_Outline[1]), 1);
+			    Destroy In-World Text(Event Player.Player_Nameplates);
+			    Create In-World Text(Filtered Array(All Players(All Teams), Current Array Element.Is_Crouch_On == False), 
+				    Event Player.Player_Title_And_Outline[1][Event Player.Each_Title], Event Player, 0.98, Clip Against Surfaces, Visible To Position and Color, 
+				    Event Player.Player_Title_And_Outline[2], Default Visibility);
+                Event Player.Player_Nameplates = Last Text Id;
+                Wait(30, Abort When False);
+            End;
 		End;
-		Event Player.Player_Nameplates = Last Text Id;
-		Wait(30, Abort When False);
 		Loop;
     }
 }
@@ -1073,12 +1134,15 @@ rule ("Subroutine: Give_Custom_Outline")
 			Loop;
 		End;
 		If(Event Player.Player_Title_And_Outline[2] == Custom String("Fading"));
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Fading_Color, Always);
-			Wait(0.036, Ignore Condition);
-			Loop;
-		End;
-		If(Event Player.Player_Title_And_Outline[2] == Custom String("Blue"));
-			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, Global.Blue_Color, Always);
+			Start Forcing Player Outlines(Event Player, All Players(All Teams), True, 
+				Custom Color(
+					Round To Integer((Event Player.Player_Title_And_Outline[3][0] + Event Player.Player_Title_And_Outline[4][0])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][0] - Event Player.Player_Title_And_Outline[4][0])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][1] + Event Player.Player_Title_And_Outline[4][1])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][1] - Event Player.Player_Title_And_Outline[4][1])/2), Down),
+					Round To Integer((Event Player.Player_Title_And_Outline[3][2] + Event Player.Player_Title_And_Outline[4][2])/2 + Sine From Radians(Global.Color_Chaser) * 
+						((Event Player.Player_Title_And_Outline[3][2] - Event Player.Player_Title_And_Outline[4][2])/2), Down), 
+					255), Always);
 			Wait(0.036, Ignore Condition);
 			Loop;
 		Else;
@@ -1145,7 +1209,7 @@ rule("Listed_Player")
 			Custom String("Erin"), Custom String("skilledBOT"), Custom String("RUBY"), Custom String("MopuD"), Custom String("FlowRow"),
 			Custom String("ori6072"), Custom String("BebeUwU"), Custom String("valkaP"), Custom String("Katsuki"), Custom String(
 			"OperativeLyn"), Custom String("DONUT"), Custom String("BabyLooperxo"), Custom String("NNkGame"),
-			Custom String("Metalgy"), Custom String("Leestick"), Custom String("Nutzee"), Custom String("Hecatia"), Custom String(
+			Custom String("Metalgy"), Custom String("Leestick"), Custom String("Nutzee"), Custom String("Lunar"), Custom String(
 			"Mikasa"), Custom String("BananaMercy"), Custom String("MÎÜ"), Custom String("ThatAspect"), Custom String("KNG"),
 			Custom String("Ghost"), Custom String("solevaya"), Custom String("Moistra"), Custom String("fa89"),
 			Custom String("AndrewKnoll"), Custom String("froggygutz"), Custom String("Nfmjwjbo"), Custom String("Slafii"), 
@@ -1154,14 +1218,16 @@ rule("Listed_Player")
 			Custom String("Drakosha"), Custom String("Blueberry"), Custom String("DerBomber"), Custom String("DrMonti"), Custom String("Vigil"),
 			Custom String("squid"), Custom String("rin"), Custom String("commander"), Custom String("Sithrael"), Custom String("LilHanzo"),
 			Custom String("kosmos"), Custom String("Heather"), Custom String("Kysp"), Custom String("PHEINU"), Custom String("Warloy"),
-			Custom String("To0lsPandaro"), Custom String("GhostPunch"), Custom String("Ikawu"), Custom String("Jermuseppo"));
+			Custom String("GhostPunch"), Custom String("wheyfuwu"), Custom String("Ikawu"), Custom String("Jermuseppo"),
+			Custom String("FactAttend"), Custom String("Beastman"), Custom String("Atlas"));
 		"Automatic Mod"
 		Global.Mod_Rank = Empty Array;
 		"Automatic Ban"
 		Global.Perma_Banned = Array(Custom String("xqcOW"), Custom String("TrickyHunter"), Custom String("Gerike27"), 
 			Custom String("yeti"), Custom String("YETI"), Custom String("RocketChimpp"),
 			Custom String("sanji"), Custom String("Miku"), Custom String("Amon"), Custom String("Axel"), Custom String("newyves"),
-			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("Justin"));
+			Custom String("ItsLowNoon"), Custom String("ItsHighNoon"), Custom String("itsHIGHNOON"), Custom String("Justin"), Custom String("Aconitum"),
+			Custom String("To0lsPandaro"));
 	}
 }
 
@@ -1318,9 +1384,18 @@ rule("Show_And_Hide_Menu")
 		Event Player.Mode_Cycle != 8;
 		Event Player.Mode_Cycle != 9;
 		Event Player.Mode_Cycle != 15;
+		Event Player.Mode_Cycle != 18;
+		Event Player.Mode_Cycle != 23;
+		Event Player.Mode_Cycle != 24;
 		Event Player.Mode_Cycle != 31;
+		Event Player.Mode_Cycle != 33;
+		Event Player.Mode_Cycle != 34;
 		Event Player.Mode_Cycle_Default != 5;
+		Event Player.Mode_Cycle_Default != 10;
 		Event Player.Mode_Cycle_Default != 13;
+		Event Player.Mode_Cycle_Default != 15;
+		Event Player.In_Battle_Mode == False;
+		Array Contains(Global.UNO_Players, Event Player) == False;
 	}
 
 	actions
@@ -1588,10 +1663,9 @@ rule("Mod_Ability_OFF")
 
 	actions
 	{
-		Skip If((Event Player.High_Rank || Event Player.Mod_Rank) == False, 4);
+		Destroy Icon(Event Player.Target_Arrow_ID);
 		Destroy Effect(Event Player.Target_Effect);
 		Event Player.Target_Effect = Null;
-		Destroy Icon(Event Player.Target_Arrow_ID);
 		Event Player.Target_Arrow_ID = Null;
 		Event Player.Is_Crouch_On = False;
 		Allow Button(Event Player, Button(Primary Fire));
@@ -1622,6 +1696,7 @@ rule("Mode_Cycle")
 		(Is Button Held(Event Player, Button(Interact)) || Is Button Held(Event Player, Button(Jump))) == True;
 		Event Player.Is_Flying == False;
 		Event Player.In_Battle_Mode == False;
+		Event Player.UNO_Ingame == False;
 	}
 
 	actions
@@ -1632,14 +1707,14 @@ rule("Mode_Cycle")
 		If((Event Player.High_Rank || Event Player.Mod_Rank) == True);
 			Event Player.Mode_Cycle_Default = -1;
 			If(Is Button Held(Event Player, Button(Interact)) == True);
-				If(Event Player.Mode_Cycle >= 33);
+				If(Event Player.Mode_Cycle >= 34);
 					Event Player.Mode_Cycle = 0;
 				Else;
 					Event Player.Mode_Cycle += 1;
 				End;
 			Else If(Is Button Held(Event Player, Button(Jump)) == True);
 				If(Event Player.Mode_Cycle <= 0);
-					Event Player.Mode_Cycle = 33;
+					Event Player.Mode_Cycle = 34;
 				Else;
 					Event Player.Mode_Cycle -= 1;
 				End;
@@ -1647,14 +1722,14 @@ rule("Mode_Cycle")
 		Else;
 			Event Player.Mode_Cycle = -1;
 			If(Is Button Held(Event Player, Button(Interact)) == True);
-				If(Event Player.Mode_Cycle_Default >= 14);
+				If(Event Player.Mode_Cycle_Default >= 15);
 					Event Player.Mode_Cycle_Default = 0;
 				Else;
 					Event Player.Mode_Cycle_Default += 1;
 				End;
 			Else If(Is Button Held(Event Player, Button(Jump)) == True);
 				If(Event Player.Mode_Cycle_Default <= 0);
-					Event Player.Mode_Cycle_Default = 14;
+					Event Player.Mode_Cycle_Default = 15;
 				Else;
 					Event Player.Mode_Cycle_Default -= 1;
 				End;
@@ -1677,7 +1752,8 @@ rule("Menu_Keys_Signal")
 		Event Player.Is_Crouch_On == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.In_Battle_Mode == False;
-		Event Player.Signal == False;
+		"TODO: test if line (signal == false) and uno check can be removed"
+		
 		(Is Button Held(Event Player, Button(Primary Fire)) ||  Is Button Held(Event Player, Button(Secondary Fire)) || Is Button Held(Event Player, Button(Reload)) ||
 			Is Button Held(Event Player, Button(Ultimate)) || Is Button Held(Event Player, Button(Ability 1)) || Is Button Held(Event Player, Button(Ability 2)) ||
 			Is Button Held(Event Player, Button(Melee))) == True;
@@ -1706,6 +1782,7 @@ rule("Mode_Headline_Desc_Mod")
 		(Event Player.Mode_Description != Null) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.In_Battle_Mode == False;
+		Event Player.UNO_Ingame == False;
 	}
 
 	actions
@@ -2059,14 +2136,25 @@ rule("Mode_Headline_Desc_Mod")
 					Input Binding String(Button(Interact))
 				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		Else If(Event Player.Mode_Cycle == 33);
-			Event Player.Mode_Headline = Custom String("Beams");
-			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2} to cycle pages ──", Input Binding String(Button(Crouch)),
-				Input Binding String(Button(Jump)), Input Binding String(Button(Interact))), 
+			Event Player.Mode_Headline = Custom String("Beam Drawing");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
 				Custom String("{0} : Draw Beam\r\n{1} : Choose Beam\r\n{2}", 
 					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
-				Custom String("{0} : Choose Color\r\n{1} : Clear Beams", 
-					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload))
+				Custom String("{0} : Choose Color\r\n{1} : Remove previous bream\r\n{2} : Clear All Beams", 
+					Input Binding String(Button(Ability 2)), Input Binding String(Button(Reload)), Input Binding String(Button(Melee))
 				)), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle == 34);
+			Event Player.Mode_Headline = Custom String("U N O");
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Enter UNO match\r\n{1} : Leave UNO Match\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start UNO Match\r\nPlayers in queue: {1}\r\n{2}",
+					Input Binding String(Button(Ultimate)), Count Of(Global.UNO_Players),
+				Custom String("{0} : (Optional):\r\nPlace/Remove In-world UNO deck",
+					Input Binding String(Button(Reload))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -2089,6 +2177,7 @@ rule("Mode_Headline_Desc_Default")
 		(Event Player.Mode_Description != Null) == True;
 		Event Player.Is_Menu_Active == True;
 		Event Player.In_Battle_Mode == False;
+		Event Player.UNO_Ingame == False;
 	}
 
 	actions
@@ -2249,6 +2338,16 @@ rule("Mode_Headline_Desc_Default")
 				Custom String("If multiple cameras can see you,\r\nthe closest will take Priority.\r\nReminder: Hold {0} to reset Camera",
 					Input Binding String(Button(Interact))
 				)))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Else If(Event Player.Mode_Cycle_Default == 15);
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Enter UNO match\r\n{1} : Leave UNO Match\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start UNO Match\r\nPlayers in queue: {1}\r\n{2}",
+					Input Binding String(Button(Ultimate)), Count Of(Global.UNO_Players),
+				Custom String("{0} : (Optional):\r\nPlace/Remove In-world UNO deck",
+					Input Binding String(Button(Reload))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
 		End;
 
 		Event Player.Mode_Description = Last Text ID;
@@ -2319,12 +2418,23 @@ rule("Set match time to 1800s")
 	conditions
 	{
 		Is Assembling Heroes == False;
+		Is In Setup == False;
 	}
 
 	actions
 	{
 		"Forcing game time to 30 min, because default settings are 10 min maximum"
 		Set Match Time(1800);
+		If(Current Game Mode == Game Mode(Capture The Flag));
+			"Hardcoded to 30 min to avoid game stages (manual)"
+			Wait(1800, Ignore Condition);
+			Declare Match Draw;
+		End;
+		If(Current Game Mode == Game Mode(Hybrid));
+			"Hardcoded to 30 min to avoid game stages (manual)"
+			Wait(1800, Ignore Condition);
+			Declare Match Draw;
+		End;
 	}
 }
 
@@ -2339,6 +2449,8 @@ rule("Declare draw if match time == 0")
 	{
 		Match Time == 0;
 		Is Assembling Heroes == False;
+		Current Game Mode != Game Mode(Capture The Flag);
+		Current Game Mode != Game Mode(Hybrid);
 	}
 
 	actions
@@ -2357,12 +2469,58 @@ rule("Disable assembling heroes all modes")
 	conditions
 	{
 		Is Assembling Heroes == True;
+		Global.Skins_Check != True;
 	}
 
 	actions
 	{
 		"Disabling this feature to not wait 30s before match starts"
 		Set Match Time(0);
+	}
+}
+
+rule("Disable Preparation Stage")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is In Setup == True;
+		Global.Skins_Check != True;
+	}
+
+	actions
+	{
+		"Disabling this feature to not wait 30s before match starts"
+		Set Match Time(0);
+	}
+}
+
+rule("Skin Swap Test - Enabled only in TDM for now")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player == Host Player;
+		Is Button Held(Event Player, Button(Jump)) == True;
+		Is Button Held(Event Player, Button(Crouch)) == True;
+	}
+
+	actions
+	{
+		Wait(10, Abort When False);
+		Big Message(Event Player, Custom String("Works only in TDM for now"));
+		Wait(5, Ignore Condition);
+		Go To Assemble Heroes;
 	}
 }
 
@@ -2376,6 +2534,7 @@ rule("Remaining Time: 10 Sec")
 	conditions
 	{
 		Match Time <= 10;
+		Is Assembling Heroes == False;
 	}
 
 	actions
@@ -2710,7 +2869,12 @@ rule("Mode_02 - Apply Status")
 		Event Player.Signal = False;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
+			If(Is Communicating Any(Player Closest To Reticle(Event Player, All Teams)));
+				Small Message(Event Player, Custom String("   Cannot apply status to emoting players"));
+				Abort;
+			End;
 			
 			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
 				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
@@ -2879,6 +3043,7 @@ rule("Mode_03 - Protection")
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Protection == False);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Is Communicating Any(Player Closest To Reticle(Event Player, All Teams)));
 			Player Closest To Reticle(Event Player, All Teams).Protection = False;
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
 		End;
@@ -2939,6 +3104,10 @@ rule("Mode_04 - Battle-Mode_ON")
 	{	
 		Event Player.Signal = False;
 		"TODO: FIX RESET WITH CAM, Leaver Check+Abort?, handle ALL outside player interactions?, fix 0 0?, fix white nameplate bug?, handle nameplates?, CD adjustment?, reset CD on death?"
+		If(Array Contains(Global.UNO_Players, Event Player));
+			Small Message(Event Player, Custom String("   Leave UNO queue first"));
+			Abort;
+		End;
 		If(Is Button Held(Event Player, Button(Ultimate)) == True);
 			If (Global.Battle_Player_1 == Null);
 				Global.Battle_Player_1 = Event Player;
@@ -3076,7 +3245,7 @@ rule("Mode_04 - Battle-Mode_ON")
 	}
 }
 
-rule("Mode_05 - Battle-Mode_OFF")
+rule("Mode_04 - Battle-Mode_OFF")
 {
 	event
 	{
@@ -3189,7 +3358,7 @@ rule("Mode_05 - Battle-Mode_OFF")
 	}
 }
 
-rule("Mode_05 - Respawn_Logic")
+rule("Mode_04 - Respawn_Logic")
 {
 	event
 	{
@@ -3260,7 +3429,7 @@ rule("Mode_05 - Respawn_Logic")
 	}
 }
 
-rule("Mode_05 - Punish_Battle_Disruptor")
+rule("Mode_04 - Punish_Battle_Disruptor")
 {
 	event
 	{
@@ -3292,7 +3461,7 @@ rule("Mode_05 - Punish_Battle_Disruptor")
 	}
 }
 
-rule("Mode_05 - Battle_Leaver_Handler")
+rule("Mode_04 - Battle_Leaver_Handler")
 {
 	event
 	{
@@ -3625,6 +3794,7 @@ rule("Mode_06 - Jumppad_Logic")
 		(Filtered Array(Global.Jumppad_Storage, Distance Between(Current Array Element[0], Event Player) <= Current Array Element[4] + 0.2) != Empty Array);
 		Is On Ground(Event Player) == True;
 		Event Player.Is_Crouch_On == False;
+		Is Communicating Any(Event Player) == False;
 	}
 
 	actions
@@ -3905,6 +4075,10 @@ rule("Mode_10 - Target_Carry_Control")
 	actions
 	{
 		Event Player.Signal = False;
+		disabled If(Is Communicating Any(Player Closest To Reticle(Event Player, All Teams)));
+			disabled Small Message(Event Player, Custom String("   Cannot carry emoting players"));
+			disabled Abort;
+		disabled End;
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
@@ -4330,7 +4504,7 @@ rule("Mode_15 - Painting_NEW")
 						All Players(All Teams), Event Player, True), Global.Drawing_Obj_Size[Event Player.Drawing_Obj_Size_Selector],
 						Visible To);
 					Global.Drawing_Obj_Storage = Append To Array(Global.Drawing_Obj_Storage, Last Created Entity);
-					Wait(0.15, Ignore Condition);
+					Wait(0.125, Ignore Condition);
 					Event Player.Signal = False;
 				End;
 				Abort;
@@ -4548,6 +4722,7 @@ rule("Mode_16 - Mute")
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).Restricted == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			Player Closest To Reticle(Event Player, All Teams).Restricted = True;
 			If(Player Closest To Reticle(Event Player, All Teams).Protection == True);
 				Clear Status(Player Closest To Reticle(Event Player, All Teams), Phased Out);
@@ -5093,6 +5268,7 @@ rule("Mode_21 - Kick_&_Ban")
 		"Authorization Accepted"
 		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 		Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+		Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
@@ -5132,6 +5308,7 @@ rule("Mode_22 - Brazil")
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
 			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 		Else If(Is Button Held(Event Player, Button(Ultimate)) == True);
@@ -5495,6 +5672,7 @@ rule("Mode_25 - Give_Revoke_Mod_And_Teamswap")
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 				Small Message(Event Player, Custom String("  This player has auto-mod."));
 				Abort;
@@ -5509,6 +5687,7 @@ rule("Mode_25 - Give_Revoke_Mod_And_Teamswap")
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 				Small Message(Event Player, Custom String("  {0} has auto-mod, you can't demote them...", 
 					Player Closest To Reticle(Event Player, All Teams)));
@@ -5558,6 +5737,7 @@ rule("Mode_25 - Give_Revoke_Mod_And_Teamswap")
 			Abort If((Event Player.High_Rank || Event Player.Mod_Rank) == False);
 			Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 			If(Team Of(Event Player.Target_Lock) == Team 1);
 				If(Number of Players(Team 2) <= 5);
@@ -5720,6 +5900,7 @@ rule("Mode_28 - Create_Bodyguard")
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
 			Abort If(Team Of(Player Closest To Reticle(Event Player, All Teams)) == Team Of(Event Player));
 			Abort If(Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == True);
+			Abort If(Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == True);
 			Play Effect(All Players(All Teams), Bad Pickup Effect, Color(Red), Player Closest To Reticle(Event Player, All Teams), 1);
 			Global.AI_Target = Null;
 			Wait(0.020, Ignore Condition);
@@ -5893,11 +6074,16 @@ rule("Mode_29 - Remote_Control")
 		Event Player.Mode_Cycle == 29;
 		Event Player.Signal == True;
 		Player Closest To Reticle(Event Player, All Teams).In_Battle_Mode == False;
+		Player Closest To Reticle(Event Player, All Teams).UNO_Ingame == False;
 	}
 
 	actions
 	{
 		Event Player.Signal = False;
+		If(Is Communicating Any(Player Closest To Reticle(Event Player, All Teams)));
+			Small Message(Event Player, Custom String("   Cannot control emoting players"));
+			Abort;
+		End;
 		Abort If(Array Contains(Global.High_Rank, Custom String("{0}", Player Closest To Reticle(Event Player, All Teams))) == True);
 		Event Player.Target_Lock = Player Closest To Reticle(Event Player, All Teams);
 		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
@@ -6441,7 +6627,7 @@ rule("Mode_33 - Player Rays Painting")
 			Else;
 				Event Player.Drawing_Obj_Colors_Selector += 1;
 			End;
-			Small Message(Event Player, Custom String(" {0}", Global.Colors[Event Player.Drawing_Obj_Colors_Selector]));
+			Small Message(Event Player, Custom String("  {0}", Global.Colors[Event Player.Drawing_Obj_Colors_Selector]));
 
 		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
 			If(Event Player.Beams_Selector >= 2);
@@ -6449,14 +6635,25 @@ rule("Mode_33 - Player Rays Painting")
 			Else;
 				Event Player.Beams_Selector += 1;
 			End;
-			Small Message(Event Player, Custom String(" {0}", Global.Beams[Event Player.Beams_Selector]));
-
+			Small Message(Event Player, Custom String("  {0}", Global.Beams[Event Player.Beams_Selector]));
 		Else If(Is Button Held(Event Player, Button(Reload)) == True);
+			If(Global.Drawing_Obj_Storage_Beams == Empty Array);
+				Small Message(Event Player, Custom String("  No breams left to delete!"));
+				Abort;
+			End;
+			Destroy Effect(Last Of(Global.Drawing_Obj_Storage_Beams));
+			Global.Drawing_Obj_Storage_Beams = Array Slice(Global.Drawing_Obj_Storage_Beams, 0, Count Of (Global.Drawing_Obj_Storage_Beams) - 1);
+		
+		Else If(Is Button Held(Event Player, Button(Melee)) == True);
 			Destroy Effect(Global.Drawing_Obj_Storage_Beams);
 			Global.Drawing_Obj_Storage_Beams = Empty Array;
-			Small Message(All Players(All Teams), Custom String("Beams Are Cleared"));
+			Small Message(All Players(All Teams), Custom String("   All Beams Are Cleared"));
 
 		Else If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Entity Count >= 123);
+				Small Message(Event Player, Custom String("  Maximum entity count reached!"));
+				Abort;
+			End;
 			Event Player.Positions_For_Beams[0] = Ray Cast Hit Position(Eye Position(Event Player), Eye Position(Event Player)
 				+ Facing Direction Of(Event Player) * 2, All Players(All Teams), Event Player, True);
 			Create Effect(All Players(All Teams), Sphere, Color(Orange), Ray Cast Hit Position(Eye Position(Event Player), Eye Position(
@@ -6489,8 +6686,7 @@ rule("Mode_33 - Player Rays Painting")
 	}
 }
 
-
-disabled rule("Mode_3? - UNO_Enter")
+rule("UNO_Main")
 {
 	event
 	{
@@ -6502,49 +6698,575 @@ disabled rule("Mode_3? - UNO_Enter")
 	conditions
 	{
 		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 33;
+		(Event Player.Mode_Cycle == 34 || Event Player.Mode_Cycle_Default == 15) == True;
+		Event Player.UNO_Ingame == False;
 		Event Player.Signal == True;
 	}
 
 	actions
 	{
 		Event Player.Signal = False;
-		Abort;
-		Event Player.UNO_Ingame = True;
+		If(Is Button Held(Event Player, Button(Primary Fire)) == True);
+			If(Global.UNO_Started == True);
+				Small Message(Event Player, Custom String("  Game already in progress"));
+				Abort;
+			End;
+			If(Array Contains(Global.UNO_Players, Event Player));
+				Small Message(Event Player, Custom String("  Already in queue"));
+				Abort;
+			Else;
+				Modify Global Variable(UNO_Players, Append To Array, Event Player);
+				Small Message(All Players(All Teams), Custom String("  {0} has entered UNO queue", Event Player));
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)) == True);
+			If(Array Contains(Global.UNO_Players, Event Player));
+				Modify Global Variable(UNO_Players, Remove From Array By Value, Event Player);
+				Small Message(All Players(ALl Teams), Custom String("  {0} has left UNO queue", Event Player));
+			Else;
+				Small Message(Event Player, Custom String("  Not in queue"));
+				Abort;
+			End;
+		Else If(Is Button Held(Event Player, Button(Ultimate)));
+			Wait Until(Is Button Held(Event Player, Button(Ultimate)) == False, 9999);
+			If(Count Of(Global.UNO_Players) < 2);
+				Small Message(Event Player, Custom String("  Minimum 2 players"));
+				Abort;
+			End;
+			If(Global.UNO_Started);
+				Small Message(Event Player, Custom String("  Game already in progress"));
+				Abort;
+			End;
+			If(Not(Array Contains(Global.UNO_Players, Event Player)));
+				Small Message(Event Player, Custom String("  Can only start if in queue"));
+				Abort;
+			End;
+			Big Message(All Players(All Teams), Custom String("  UNO Match started!"));
+			Global.UNO_Started = True;
+		Else If(Is Button Held(Event Player, Button(Reload)));
+			If(Global.UNO_Started);
+				Small Message(Event Player, Custom String("  Game already in progress"));
+				Abort;
+			End;
+			If(Global.UNO_Inworld[0] == True);
+				Global.UNO_Inworld[0] = False;
+				Global.UNO_Inworld[1] = Null;
+				Destroy In-World Text(Global.UNO_Inworld[2]);
+				Destroy In-World Text(Global.UNO_Inworld[3]);
+				Small Message(Event Player, Custom String("  In-World UNO deck removed"));
+			Else;
+				Global.UNO_Inworld[1] = Add(Ray Cast Hit Position(Eye Position(Event Player), 
+					Eye Position(Event Player) + 5 * Event Player.Scale_Real * Facing Direction Of(Event Player), 
+					Null, Event Player, True), Vector(0,1,0));
+				Create In-World Text(All Players(All Teams), Custom String("UNO"), Global.UNO_Inworld[1], 1.8, 
+					Clip Against Surfaces, Visible To String and Color, Global.Rainbow_Color, Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+				Create In-World Text(All Players(All Teams), Custom String("Current player Display\r\nNext Player Display\r\n"), Global.UNO_Inworld[1], 1.2, 
+					Clip Against Surfaces, Visible To String and Color, Color(White), Visible Never);
+				Global.UNO_Inworld[3] = Last Text ID;
+				Global.UNO_Inworld[0] = True;
+				Small Message(Event Player, Custom String("  In-World UNO deck placed"));
+			End;
+		End;
+	}
+}
+
+rule("UNO_Game_Started")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.UNO_Started == True;
+	}
+
+	actions
+	{
+		For Global Variable(UNO_Looper, 0, Count Of(Global.UNO_Players), 1);
+
+			Destroy Progress Bar HUD Text(Global.UNO_Players[Global.UNO_Looper].Scale_Hud_ID);
+			Destroy HUD Text(Global.UNO_Players[Global.UNO_Looper].Mode_Hud_ID);
+			Destroy HUD Text(Global.UNO_Players[Global.UNO_Looper].Mode_Description);
+			Global.UNO_Players[Global.UNO_Looper].UNO_Hand = Empty Array;
+			Global.UNO_Players[Global.UNO_Looper].UNO_Draw_Cards = 7;
+			Global.UNO_Players[Global.UNO_Looper].UNO_Is_Turn = False;
+			Global.UNO_Players[Global.UNO_Looper].UNO_Arrow_Pos = 0;
+			Global.UNO_Players[Global.UNO_Looper].UNO_Has_Drawn = False;
+			Global.UNO_Players[Global.UNO_Looper].Is_Flying = False;
+			Global.UNO_Players[Global.UNO_Looper].UNO_Ingame = True;
+			If((Global.UNO_Players[Global.UNO_Looper].High_Rank || Global.UNO_Players[Global.UNO_Looper].Mod_Rank) == True);
+				Global.UNO_Players[Global.UNO_Looper].Mode_Cycle = 34;
+			Else;
+				Global.UNO_Players[Global.UNO_Looper].Mode_Cycle_Default = 15;
+			End;
+			
+			Create HUD Text(Evaluate Once(Global.UNO_Players[Global.UNO_Looper]), Null, Custom String("UNO Instructions:"),
+				Custom String("{0} must be held for inputs.\r\n{1}",
+					Input Binding String(Button(Crouch)),
+				Custom String("{0}/{1} : Cycle Cards.\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Play Selected Card.\r\n{1} : Draw Card.\r\n{2}",
+					Input Binding String(Button(Ultimate)), Input Binding String(Button(Reload)),
+				Custom String("{0} : End Turn.\r\n{1} : Hold for 5 sec to leave match.\r\nUNO is called automatically.",
+					Input Binding String(Button(Ability 2)), Input Binding String(Button(Melee))
+				)))), Left, 0, Color(White), Global.Rainbow_Color, Color(White), Visible To and String, Visible Never);
+			Set Player Variable(Global.UNO_Players[Global.UNO_Looper], Mode_Description, Last Text ID);
+			
+		End;
+		
+		
+		Global.UNO_Help = First Of(Global.UNO_Players);
+		Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+
+		Destroy HUD Text(Global.UNO_Deck[2]);
+		Destroy HUD Text(Global.UNO_Deck[3]);
+		If(Global.UNO_Inworld[0] == True);
+			Destroy In-World Text(Global.UNO_Inworld[2]);
+			Destroy In-World Text(Global.UNO_Inworld[3]);
+			Create In-World Text(All Players(All Teams), Custom String("Current Player: {0}\r\nNext Player: {1}\r\n", 
+				Global.UNO_Players[0], Global.UNO_Players[1]), Global.UNO_Inworld[1], 1.2, Clip Against Surfaces, Visible To String and Color, Color(White), Visible Never);
+			Global.UNO_Inworld[3] = Last Text ID;
+		End;
+
+		Create HUD Text(Global.UNO_Players, Null, Null, 
+			Custom String(" \r\nCurrent Player: {0}\r\nNext Player: {1}", 
+			Global.UNO_Players[0], Global.UNO_Players[1]), Top, 1, 
+			Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+		Global.UNO_Deck[3] = Last Text ID;
+
+		Create HUD Text(Global.UNO_Players, Null, Custom String("UNO Cards:"),
+			Custom String("{0} : Next player skipped.\r\n +  : Next player +2 cards/skipped.\r\n{1}", 
+				Icon String(No),  
+			Custom String("{0} : Reverse Play direction.\r\n{1} : Pick Color.\r\n{2}",
+				Icon String(Recycle), Ability Icon String(Hero(Sombra), Button(Ability 2)),
+			Custom String("{0} : Pick color. Next player \r\n   +4 cards/skipped.",
+				Ability Icon String(Hero(Baptiste), Button(Ability 1))
+			))), Right, 5, Color(White), Global.Rainbow_Color, Color(White), Visible To, Visible Never);
+		Global.UNO_Info = Last Text ID;
+		
+		Global.UNO_Deck[0] = Random Integer(1, 4);
+		Global.UNO_Deck[1] = Random Integer(0, 9);
+		If(Global.UNO_Deck[1] == 0);
+			Global.UNO_Deck[1] = Random Integer(0, 9);
+		End;
+
+		Call Subroutine(UNO_Update_Deck);
+	}
+}
+
+rule("UNO_Play")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.UNO_Ingame == True;
+		Event Player.UNO_Black_Logic == False;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		If(Is Button Held(Event Player, Button(Primary Fire)));
+			Event Player.UNO_Arrow_Pos += 1;
+			If(Event Player.UNO_Arrow_Pos >= Count Of(Event Player.UNO_Hand));
+				Event Player.UNO_Arrow_Pos = 0;
+			End;
+			For Player Variable(Event Player, UNO_Loop, 0, Count Of(Event Player.UNO_Hand), 1);
+				Event Player.UNO_Hand[Event Player.UNO_Loop] = Array(Event Player.UNO_Hand[Event Player.UNO_Loop][0], 
+					Event Player.UNO_Hand[Event Player.UNO_Loop][1], Event Player.UNO_Hand[Event Player.UNO_Loop][2], Custom String(""));
+			End;
+			Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos] = Array(Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][0], 
+				Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][1], Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][2], Custom String("{0}", Icon String(Arrow: Left)));
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
+			Event Player.UNO_Arrow_Pos -= 1;
+			If(Event Player.UNO_Arrow_Pos <= -1);
+				Event Player.UNO_Arrow_Pos = Count Of(Event Player.UNO_Hand) - 1;
+			End;
+			For Player Variable(Event Player, UNO_Loop, 0, Count Of(Event Player.UNO_Hand), 1);
+				Event Player.UNO_Hand[Event Player.UNO_Loop] = Array(Event Player.UNO_Hand[Event Player.UNO_Loop][0], 
+					Event Player.UNO_Hand[Event Player.UNO_Loop][1], Event Player.UNO_Hand[Event Player.UNO_Loop][2], Custom String(""));
+			End;
+			Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos] = Array(Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][0], 
+				Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][1], Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][2], Custom String("{0}", Icon String(Arrow: Left)));
+		Else If(Is Button Held(Event Player, Button(Ultimate)));
+			Wait Until(Not(Is Button Held(Event Player, Button(Ultimate))) , 9999);
+			If(Not(Event Player.UNO_Is_Turn));
+				Small Message(Event Player, Custom String("  It's not your turn yet."));
+				Abort;
+			End;
+			
+			If(Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][0] == 0);
+				If(Count Of (Event Player.UNO_Hand) == 1);
+					Big Message(All Players(All Teams), Custom String("{0} has won in UNO!", Event Player));
+					Call Subroutine(UNO_End);
+					Abort;
+				End;
+				
+				Event Player.UNO_Black_Selector = 1;
+				Create HUD Text(Event Player, Custom String("   {0}   ", Global.UNO_Colorblind[Event Player.UNO_Black_Selector]), Null, 
+					Custom String("{0} : Cycle Color\r\n{1} : Select\r\n{2} : Abort", 
+						Input Binding String(Button(Ultimate)), Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire))
+					), Top, 3, Global.UNO_Colors[Event Player.UNO_Black_Selector], Color(White), Color(White), Visible To String and Color, Visible Never);
+				Event Player.UNO_Black_Text = Last Text ID;
+				
+				Event Player.UNO_Black_Logic = True;
+
+			Else If((Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][0] == Global.UNO_Deck[0]) || (Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][1] == Global.UNO_Deck[1]));
+				Global.UNO_Deck[0] = Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][0];
+				Global.UNO_Deck[1] = Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][1];
+				Call Subroutine(UNO_Update_Deck);
+
+				Destroy HUD Text(Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][2]);
+				Modify Player Variable(Event Player, UNO_Hand, Remove From Array By Index, Event Player.UNO_Arrow_Pos);
+
+				If(Event Player.UNO_Hand == Empty Array);
+					Big Message(All Players(All Teams), Custom String("{0} has won in UNO!", Event Player));
+					Call Subroutine(UNO_End);
+					Abort;
+				End;
+				
+				If(Count Of (Event Player.UNO_Hand) == 1);
+					Big Message(Global.UNO_Players, Custom String("{0}: UNO!", Event Player));
+				End;
+				
+				Event Player.UNO_Is_Turn = False;
+				Event Player.UNO_Has_Drawn = False;
+
+				Call Subroutine(UNO_Update_Hand);
+				
+				If((Global.UNO_Deck[1] == 10) || (Global.UNO_Deck[1] == 12));
+					
+					Global.UNO_Help = First Of(Global.UNO_Players);
+					Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+					Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+
+					If(Global.UNO_Deck[1] == 12);
+						
+						Global.UNO_Help = First Of(Global.UNO_Players);
+						Set Player Variable(Global.UNO_Help, UNO_Draw_Cards, 2);
+						Small Message(Global.UNO_Players, Custom String("  {0} gave +2 to {1}", Event Player, Global.UNO_Players[1]));
+					Else;
+						
+						Small Message(Global.UNO_Players, Custom String("  {0} skipped {1}", Event Player, Global.UNO_Players[1]));
+					End;
+					
+					Global.UNO_Help = First Of(Global.UNO_Players);
+					Play Effect(Global.UNO_Help, Explosion Sound, Null, Global.UNO_Help, 30);
+
+					Global.UNO_Help = First Of(Global.UNO_Players);
+					Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+					Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+				Else If(Global.UNO_Deck[1] == 11);
+					If(Count Of(Global.UNO_Players) == 2);
+						
+						Global.UNO_Help = Last Of(Global.UNO_Players);
+						Play Effect(Global.UNO_Help, Explosion Sound, Null, Global.UNO_Help, 30);
+					Else;
+						Global.UNO_Players = Sorted Array(Global.UNO_Players, Current Array Index * -1);
+					End;
+					Small Message(Global.UNO_Players, Custom String("  {0} reversed direction", Event Player));
+				Else;
+					
+					Global.UNO_Help = First Of(Global.UNO_Players);
+					Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+					Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+				End;
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+				Play Effect(Global.UNO_Help, Buff Impact Sound, Null, Global.UNO_Help, 20);
+			Else;
+				Small Message(Event Player, Custom String("  Cannot play this card."));
+				Abort;
+			End;
+		Else If(Is Button Held(Event Player, Button(Reload)));
+			If(Not(Event Player.UNO_Is_Turn));
+				Small Message(Event Player, Custom String("  It's not your turn yet."));
+				Abort;
+			End;
+			If(Event Player.UNO_Has_Drawn);
+				Small Message(Event Player, Custom String("  You have already drawn a card."));
+				Abort;
+			Else;
+				Call Subroutine(UNO_Draw);
+				Call Subroutine(UNO_Update_Hand);
+				Small Message(Global.UNO_Players, Custom String("  {0} draws a card", Event Player));
+				Event Player.UNO_Has_Drawn = True;
+			End;
+		Else If(Is Button Held(Event Player, Button(Ability 2)));
+			If(Not(Event Player.UNO_Is_Turn));
+				Small Message(Event Player, Custom String("  It's not your turn yet."));
+				Abort;
+			End;
+			If(Event Player.UNO_Has_Drawn);
+				Event Player.UNO_Is_Turn = False;
+				Event Player.UNO_Has_Drawn = False;
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+				Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+				Play Effect(Global.UNO_Help, Buff Impact Sound, Null, Global.UNO_Help, 20);
+				Small Message(Global.UNO_Players, Custom String("  {0} ends turn", Event Player));
+			Else;
+				Small Message(Event Player, Custom String("  You must have drawn a card to end turn."));
+				Abort;
+			End;
+		Else If(Is Button Held(Event Player, Button(Melee)));
+			Wait Until(Not(Is Button Held(Event Player, Button(Melee))), 5);
+			If(Is Button Held(Event Player, Button(Melee)));
+				If(Count Of(Global.UNO_Players) == 2);
+					If(Event Player.UNO_Is_Turn);
+						Big Message(All Players(All Teams), Custom String("{0} has left UNO, so {1} wins!", Event Player, Last Of(Global.UNO_Players)));
+					Else;
+						Big Message(All Players(All Teams), Custom String("{0} has left UNO, so {1} wins!", Event Player, First Of(Global.UNO_Players)));
+					End;
+					Call Subroutine(UNO_End);
+				Else;
+					Big Message(Global.UNO_Players, Custom String("{0} has left the match!", Event Player));
+					Modify Global Variable(UNO_Players, Remove From Array By Value, Event Player);
+					If(Event Player.UNO_Is_Turn);
+						Global.UNO_Help = First Of(Global.UNO_Players);
+						Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+					End;
+					Event Player.UNO_Restore = True;
+				End;
+			Else;
+				Small Message(Event Player, Custom String("  Hold {0} for 5 sec to leave the match.", Input Binding String(Button(Melee))));
+			End;
+		End;
+	}
+}
+
+rule ("UNO_Black_Logic")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+	conditions
+	{
+		Event Player.UNO_Black_Logic == True;
+		Event Player.Signal == True;
+	}
+
+	actions
+	{
+		Event Player.Signal = False;
+		If(Is Button Held(Event Player, Button(Ultimate)));
+			Event Player.UNO_Black_Selector += 1;
+			If(Event Player.UNO_Black_Selector >= 5);
+				Event Player.UNO_Black_Selector = 1;
+			End;
+		Else If(Is Button Held(Event Player, Button(Secondary Fire)));
+			Wait Until(Not(Is Button Held(Event Player, Button(Secondary Fire))), 9999);
+			Abort If (Not(Event Player.UNO_Black_Logic));
+			Small Message(Event Player, Custom String("  Aborted black card placement"));
+			Destroy HUD Text(Event Player.UNO_Black_Text);
+			Event Player.UNO_Black_Logic = False;
+		Else If(Is Button Held(Event Player, Button(Primary Fire)));
+			Wait Until(Not(Is Button Held(Event Player, Button(Primary Fire))), 9999);
+			Abort If (Not(Event Player.UNO_Black_Logic));
+			Event Player.UNO_Is_Turn = False;
+			Global.UNO_Deck[0] = Event Player.UNO_Black_Selector;
+			Global.UNO_Deck[1] = Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][1];
+			Call Subroutine(UNO_Update_Deck);
+
+			Destroy HUD Text(Event Player.UNO_Hand[Event Player.UNO_Arrow_Pos][2]);
+			Modify Player Variable(Event Player, UNO_Hand, Remove From Array By Index, Event Player.UNO_Arrow_Pos);
+
+			Call Subroutine(UNO_Update_Hand);
+			
+			If(Global.UNO_Deck[1] == 14);
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+				Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+				Small Message(Global.UNO_Players, Custom String("  {0} changed color and gave +4 to {1}", Event Player, Global.UNO_Players[1]));
+				
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Set Player Variable(Global.UNO_Help, UNO_Draw_Cards, 4);
+			
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Play Effect(Global.UNO_Help, Explosion Sound, Null, Global.UNO_Help, 30);
+
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+				Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+			Else;
+				
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Modify Global Variable(UNO_Players, Remove From Array By Index, 0);
+				Modify Global Variable(UNO_Players, Append To Array, Global.UNO_Help);
+				Small Message(Global.UNO_Players, Custom String("  {0} changed color", Event Player));
+			End;
+			
+			Event Player.UNO_Has_Drawn = False;
+			
+			Global.UNO_Help = First Of(Global.UNO_Players);
+			Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+			Play Effect(Global.UNO_Help, Buff Impact Sound, Null, Global.UNO_Help, 20);
+			
+			Destroy HUD Text(Event Player.UNO_Black_Text);
+			If(Count Of (Event Player.UNO_Hand) == 1);
+				Big Message(Global.UNO_Players, Custom String("{0}: UNO!", Event Player));
+			End;
+			Event Player.UNO_Black_Logic = False;
+		End;
+	}
+}
+
+rule ("UNO_Draw_Some")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+	conditions
+	{
+		Event Player.UNO_Draw_Cards > 0;
+	}
+
+	actions
+	{
+		While(Event Player.UNO_Draw_Cards > 0);
+			Call Subroutine(UNO_Draw);
+			Event Player.UNO_Draw_Cards -= 1;
+		End;
+
+		Call Subroutine(UNO_Update_Hand);
+
+		Event Player.UNO_Draw_Cards = 0;
+	}
+}
+
+rule("UNO_Restore")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Event Player.UNO_Restore == True;
+	}
+
+	actions
+	{
+		For Player Variable(Event Player, UNO_Loop, 0, Count Of(Event Player.UNO_Hand), 1);
+			Destroy HUD Text(Event Player.UNO_Hand[Event Player.UNO_Loop][2]);
+		End;
+
+		Event Player.UNO_Ingame = False;
+		Event Player.UNO_Hand = Empty Array;
+		Event Player.UNO_Is_Turn = False;
+		Event Player.UNO_Arrow_Pos = 0;
+		Event Player.UNO_Has_Drawn = False;
 		Destroy HUD Text(Event Player.Mode_Description);
-		Destroy Progress Bar HUD Text(Event Player.Scale_Hud_ID);
-		Destroy HUD Text(Event Player.Mode_Hud_ID);
+		Event Player.Mode_Headline = Custom String("U N O");
+		If((Event Player.High_Rank || Event Player.Mod_Rank) == True);
+			Event Player.Mode_Cycle = 34;
+			
+			Create HUD Text(Event Player, Event Player.Mode_Cycle, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+				Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+				Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+			Event Player.Mode_Hud_ID = Last Text ID;
+			
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Mod Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Enter UNO match\r\n{1} : Leave UNO Match\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start UNO Match\r\nPlayers in queue: {1}\r\n{2}",
+					Input Binding String(Button(Ultimate)), Count Of(Global.UNO_Players),
+				Custom String("{0} : (Optional):\r\nPlace/Remove In-world UNO deck",
+					Input Binding String(Button(Reload))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Event Player.Mode_Description = Last Text ID;
+		Else;
+			Event Player.Mode_Cycle_Default = 15;
 
-		Call Subroutine(UNO_Draw);
-		Call Subroutine(UNO_Draw);
-		Call Subroutine(UNO_Draw);
+			Create HUD Text(Event Player, Event Player.Mode_Cycle_Default, Custom String("{0} {1}", Hero Icon String(Hero Of(Player Closest To Reticle(
+				Event Player, All Teams))), Player Closest To Reticle(Event Player, All Teams)), Event Player.Mode_Headline, Left, 0,
+				Global.Rainbow_Color, Color(Yellow), Global.Rainbow_Color, Visible To String and Color, Default Visibility);
+			Event Player.Mode_Hud_ID = Last Text ID;
+
+			Create HUD Text(Event Player, Null, Custom String("── Press {0} + {1} or {2}", Input Binding String(Button(Crouch)), Input Binding String(Button(Jump)),
+				Custom String("{0} to cycle pages ──\r\n Default Menu: Press {1} + input for action", Input Binding String(Button(Interact)), Input Binding String(Button(Crouch)))),
+				Custom String("{0} : Enter UNO match\r\n{1} : Leave UNO Match\r\n{2}", 
+					Input Binding String(Button(Primary Fire)), Input Binding String(Button(Secondary Fire)), 
+				Custom String("{0} : Start UNO Match\r\nPlayers in queue: {1}\r\n{2}",
+					Input Binding String(Button(Ultimate)), Count Of(Global.UNO_Players),
+				Custom String("{0} : (Optional):\r\nPlace/Remove In-world UNO deck",
+					Input Binding String(Button(Reload))
+				))), Left, 1, Color(White), Color(White), Color(White), Visible To and String, Visible Never);
+			Event Player.Mode_Description = Last Text ID;
+		End;
+		
+		
+		Event Player.UNO_Restore = False;
 	}
 }
 
-disabled rule("Mode_3? - UNO_Play")
+rule("UNO_Leaver_Handler")
 {
 	event
 	{
-		Ongoing - Each Player;
+		Player Left Match;
 		All;
 		All;
 	}
 
 	conditions
 	{
-		Event Player.Is_Menu_Active == True;
-		Event Player.Mode_Cycle == 33;
-		Event Player.Signal == True;
+		Array Contains(Global.UNO_Players, Event Player) == True;
 	}
 
 	actions
 	{
-		Event Player.Signal = False;
-		Event Player.UNO_Ingame = True;
+		If(Global.UNO_Started);
+			Modify Global Variable(UNO_Players, Remove From Array By Value, Event Player);
+			If(Count Of(Global.UNO_Players) == 1);
+				Global.UNO_Help = First Of(Global.UNO_Players);
+				Big Message(All Players(All Teams), Custom String("{0} has left UNO, so {1} wins!", Event Player, Global.UNO_Help));
+				Call Subroutine(UNO_End);
+			Else;
+				Big Message(Global.UNO_Players, Custom String("{0} has left the match!", Event Player));
+				If(Not(Is True For Any(Global.UNO_Players, Current Array Element.UNO_Is_Turn == True)));
+					Global.UNO_Help = First Of(Global.UNO_Players);
+					Set Player Variable(Global.UNO_Help, UNO_Is_Turn, True);
+				End;
+			End;
+		Else;
+			Modify Global Variable(UNO_Players, Remove From Array By Value, Event Player);
+			Small Message(All Players(ALl Teams), Custom String("  {0} was removed from UNO queue", Event Player));
+			Else;
+		End;
 	}
 }
 
-disabled rule ("Subroutine: UNO_Draw_Card")
+
+rule ("Subroutine: UNO_Draw_Card")
 {
     event 
 	{
@@ -6555,39 +7277,186 @@ disabled rule ("Subroutine: UNO_Draw_Card")
     actions 
 	{	
 		"Uno Cards colors: 1=red, 2=green, 3=blue, 4=yellow, 0=black"
-		"Uno Color Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw"
-		"Uno Black Cards meaning: 0=choose, 1=draw"
+		"Uno Cards meaning: 0-9=normal, 10=skip, 11=reverse, 12=draw2, 13=pick, 14=draw4"
+
+		Event Player.UNO_Helper = Array(Null, Null, Null, Null);
 		Event Player.UNO_Helper[0] = Random Value In Array(Global.UNO_Random);
 		If(Event Player.UNO_Helper[0] == 0);
-			Event Player.UNO_Helper[1] = Random Integer(0, 1);
+			Event Player.UNO_Helper[1] = Random Integer(13, 14);
 		Else;
-			Event Player.UNO_Helper[1] = Random integer(0, 12);
-		End;
-		
-		If(Event Player.UNO_Helper[0] == 0);
+			Event Player.UNO_Helper[1] = Random Integer(0, 12);
 			If(Event Player.UNO_Helper[1] == 0);
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Ability Icon String(Hero(Sombra), Button(Ability 2)))), 
-					Null, Null, Left, 0, Color(Black), Color(White), Color(White), Sort Order and String, Visible Never);
-			Else;
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Plus))), Null, Null, Left, 0, Color(Black), Color(White), Color(White), Sort Order and String, Visible Never);
-			End;
-		Else;
-			If(Event Player.UNO_Helper[1] == 10);
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(No))), 
-					Null, Null, Left, 100, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
-			Else If(Event Player.UNO_Helper[1] == 11);
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Recycle))), 
-					Null, Null, Left, 200, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
-			Else If(Event Player.UNO_Helper[1] == 12);
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Icon String(Plus))), 
-					Null, Null, Left, 300, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
-			Else;
-				Create HUD Text(Event Player, Evaluate Once(Custom String("{0}", Event Player.UNO_Helper[1])), 
-					Null, Null, Left, 400, Global.UNO_Colors[Event Player.UNO_Helper[0]], Color(White), Color(White), Sort Order and String, Visible Never);
+				Event Player.UNO_Helper[1] = Random Integer(0, 12);
 			End;
 		End;
-		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Helper);
 
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Array(Event Player.UNO_Helper));
+    }
+}
+
+rule ("Subroutine: UNO_Update_Hand")
+{
+    event 
+	{
+		Subroutine;
+		UNO_Update_Hand;
+    }
+
+    actions 
+	{	
+		For Player Variable(Event Player, UNO_Loop, 0, Count Of(Event Player.UNO_Hand), 1);
+			Destroy HUD Text(Event Player.UNO_Hand[Event Player.UNO_Loop][2]);
+		End;
+
+		Event Player.UNO_Sorter[0] = Sorted Array(Filtered Array(Event Player.UNO_Hand, Current Array Element[0] == 0), Current Array Element[1]);
+		Event Player.UNO_Sorter[1] = Sorted Array(Filtered Array(Event Player.UNO_Hand, Current Array Element[0] == 1), Current Array Element[1]);
+		Event Player.UNO_Sorter[2] = Sorted Array(Filtered Array(Event Player.UNO_Hand, Current Array Element[0] == 2), Current Array Element[1]);
+		Event Player.UNO_Sorter[3] = Sorted Array(Filtered Array(Event Player.UNO_Hand, Current Array Element[0] == 3), Current Array Element[1]);
+		Event Player.UNO_Sorter[4] = Sorted Array(Filtered Array(Event Player.UNO_Hand, Current Array Element[0] == 4), Current Array Element[1]);
+		Event Player.UNO_Hand = Empty Array;
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Sorter[0]);
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Sorter[1]);
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Sorter[2]);
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Sorter[3]);
+		Modify Player Variable(Event Player, UNO_Hand, Append To Array, Event Player.UNO_Sorter[4]);
+		
+		For Player Variable(Event Player, UNO_Loop, 0, Count Of(Event Player.UNO_Hand), 1);
+			
+			If(Event Player.UNO_Hand[Event Player.UNO_Loop][1] == 13);
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} D ", Ability Icon String(Hero(Sombra), Button(Ability 2)))), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, Color(Black), Color(White), Color(White), String, Visible Never);
+			Else If(Event Player.UNO_Hand[Event Player.UNO_Loop][1] == 14);
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} D ", Ability Icon String(Hero(Baptiste), Button(Ability 1)))), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, Color(Black), Color(White), Color(White), String, Visible Never);
+			Else If(Event Player.UNO_Hand[Event Player.UNO_Loop][1] == 10);
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} {1} ", Icon String(No), Global.UNO_Colorblind[Event Player.UNO_Hand[Event Player.UNO_Loop][0]])), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, 
+					Global.UNO_Colors[Event Player.UNO_Hand[Event Player.UNO_Loop][0]], Color(White), Color(White), String, Visible Never);
+			Else If(Event Player.UNO_Hand[Event Player.UNO_Loop][1] == 11);
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} {1} ", Icon String(Recycle), Global.UNO_Colorblind[Event Player.UNO_Hand[Event Player.UNO_Loop][0]])), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, 
+					Global.UNO_Colors[Event Player.UNO_Hand[Event Player.UNO_Loop][0]], Color(White), Color(White), String, Visible Never);
+			Else If(Event Player.UNO_Hand[Event Player.UNO_Loop][1] == 12);
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} {1} ", Icon String(Plus), Global.UNO_Colorblind[Event Player.UNO_Hand[Event Player.UNO_Loop][0]])), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, 
+					Global.UNO_Colors[Event Player.UNO_Hand[Event Player.UNO_Loop][0]], Color(White), Color(White), String, Visible Never);
+			Else;
+				Create HUD Text(Event Player, Evaluate Once(Custom String(" {0} {1} ", Event Player.UNO_Hand[Event Player.UNO_Loop][1], Global.UNO_Colorblind[Event Player.UNO_Hand[Event Player.UNO_Loop][0]])), 
+					Null, Event Player.UNO_Hand[Evaluate Once(Event Player.UNO_Loop)][3], Left, Event Player.UNO_Loop + 5, 
+					Global.UNO_Colors[Event Player.UNO_Hand[Event Player.UNO_Loop][0]], Color(White), Color(White), String, Visible Never);
+			End;
+
+			Event Player.UNO_Hand[Event Player.UNO_Loop] = Array(Event Player.UNO_Hand[Event Player.UNO_Loop][0], 
+				Event Player.UNO_Hand[Event Player.UNO_Loop][1], Last Text ID, Custom String(""));
+		End;
+
+		Event Player.UNO_Arrow_Pos = 0;
+		Event Player.UNO_Hand[0] =  Array(Event Player.UNO_Hand[0][0], Event Player.UNO_Hand[0][1],  Event Player.UNO_Hand[0][2], Custom String("{0}", Icon String(Arrow: Left)));
+    }
+}
+
+rule ("Subroutine: UNO_Update_Deck")
+{
+    event 
+	{
+		Subroutine;
+		UNO_Update_Deck;
+    }
+
+    actions 
+	{	
+		Destroy HUD Text(Global.UNO_Deck[2]);
+		If(Global.UNO_Inworld[0] == True);
+			Destroy In-World Text(Global.UNO_Inworld[2]);
+		End;
+		If(Global.UNO_Deck[1] == 13);
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}   \r\n ", Ability Icon String(Hero(Sombra), Button(Ability 2)), Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}", Ability Icon String(Hero(Sombra), Button(Ability 2)), Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		Else If(Global.UNO_Deck[1] == 14);
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}   \r\n ", Ability Icon String(Hero(Baptiste), Button(Ability 1)), Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}", Ability Icon String(Hero(Baptiste), Button(Ability 1)), Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		Else If(Global.UNO_Deck[1] == 10);
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}   \r\n ", Icon String(No), Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}", Icon String(No), Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		Else If(Global.UNO_Deck[1] == 11);
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}  \r\n ", Icon String(Recycle), Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}", Icon String(Recycle), Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		Else If(Global.UNO_Deck[1] == 12);
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}   \r\n ", Icon String(Plus), Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}", Icon String(Plus), Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		Else;
+			Create HUD Text(Global.UNO_Players, Custom String(" \r\n   {0} {1}   \r\n ",  Global.UNO_Deck[1], Global.UNO_Colorblind[Global.UNO_Deck[0]]), Null, Null, Top, 2, 
+				Global.UNO_Colors[Global.UNO_Deck[0]], Color(White), Color(White), Visible To String and Color, Visible Never);
+			Global.UNO_Deck[2] = Last Text ID;
+			If(Global.UNO_Inworld[0] == True);
+				Create In-World Text(All Players(All Teams), Custom String("{0} {1}",  Global.UNO_Deck[1], Global.UNO_Colorblind[Global.UNO_Deck[0]]), 
+					Global.UNO_Inworld[1], 1.8, Clip Against Surfaces, Visible To String and Color, Global.UNO_Colors[Global.UNO_Deck[0]], Visible Never);
+				Global.UNO_Inworld[2] = Last Text ID;
+			End;
+		End;
+
+    }
+}
+
+rule ("Subroutine: UNO_End")
+{
+    event 
+	{
+		Subroutine;
+		UNO_End;
+    }
+
+    actions 
+	{	
+		Destroy HUD Text(Global.UNO_Info);
+		Global.UNO_Started = False;
+		Destroy HUD Text(Global.UNO_Deck[2]);
+		Destroy HUD Text(Global.UNO_Deck[3]);
+		If(Global.UNO_Inworld[0] == True);
+			Destroy In-World Text(Global.UNO_Inworld[2]);
+			Destroy In-World Text(Global.UNO_Inworld[3]);
+			Create In-World Text(All Players(All Teams), Custom String("UNO"), Global.UNO_Inworld[1], 1.8, 
+				Clip Against Surfaces, Visible To String and Color, Global.Rainbow_Color, Visible Never);
+			Global.UNO_Inworld[2] = Last Text ID;
+			Create In-World Text(All Players(All Teams), Custom String("Current player Display\r\nNext Player Display\r\n"), Global.UNO_Inworld[1], 1.2, 
+				Clip Against Surfaces, Visible To String and Color, Color(White), Visible Never);
+			Global.UNO_Inworld[3] = Last Text ID;
+		End;
+		Global.UNO_Deck = Array(Null, Null, Null, Null);
+		For Global Variable(UNO_Looper, 0, Count Of(Global.UNO_Players), 1);
+			Global.UNO_Players[Global.UNO_Looper].UNO_Restore = True;
+		End;
+		Global.UNO_Players = Empty Array;
     }
 }
 
